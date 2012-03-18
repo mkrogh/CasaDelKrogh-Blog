@@ -1,0 +1,1 @@
+My name is {{ site.author.name }} and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.

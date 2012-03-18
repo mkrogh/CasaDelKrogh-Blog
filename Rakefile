@@ -252,6 +252,33 @@ namespace :theme do
   
 end # end namespace :theme
 
+desc "Compile all haml files in haml folder "
+task :haml do
+  theme_path = JB::Path.build(:themes)
+
+  abort("rake aborted: '#{theme_path}' directory not found.") unless FileTest.directory?(theme_path)
+  haml_files = Dir.glob("./**/haml/*.haml")
+
+  require "haml"
+  #Process haml files
+  haml_files.each do |file|
+    begin
+      content = File.read(file)
+      output = Haml::Engine.new(content).render
+      File.open(haml_output_file(file),'w') {|f| f.write output} 
+      puts "Compiled #{file} => #{haml_output_file(file)}"
+    rescue StandardError => e
+      puts "!!! (#{File.basename file}) Haml Error : " + e.message
+    end
+  end
+end
+
+def haml_output_file(file)
+  file.sub("/haml","").sub(".haml",".html")
+end  # task :haml
+
+
+
 # Internal: Download and process a theme from a git url.
 # Notice we don't know the name of the theme until we look it up in the manifest.
 # So we'll have to change the folder name once we get the name.
