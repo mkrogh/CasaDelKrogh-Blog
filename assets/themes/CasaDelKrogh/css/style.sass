@@ -54,7 +54,19 @@ body
   float: left
   margin: 0 6px 6px 0 
 
-
+.tweet-feed
+  height: 70px
+  overflow: hidden
+  li
+    position: relative
+    margin: 2px 2px 0 0
+    background-color: #ccc
+    @include transition(all 1s ease-in-out)
+    @include box-shadow(0 0 5px #999)
+  li, blockquote
+    @include border-radius(2px)
+  blockquote
+    margin: 0
 
 /* tag_box ======================================================== */
 .tag_box

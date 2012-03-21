@@ -34,3 +34,10 @@
   -moz-box-shadow: $shadow
   -webkit-box-shadow: $shadow
   box-shadow: $shadow
+
+@mixin transition($conf)
+  -webkit-transition: $conf
+  -moz-transition: $conf
+  -ms-transition: $conf
+  -o-transition: $conf
+  transition: $conf
