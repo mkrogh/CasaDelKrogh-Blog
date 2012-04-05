@@ -50,6 +50,10 @@ App.animateFeed = ->
   App.animateFeedState = 0 if App.animateFeedState >= tweets.length
   setTimeout(App.animateFeed, 5000)
 
+# Handlebar extensions
+Handlebars.registerHelper "tweet", (tweet) ->
+  tweet
+
 #App-Start up
 $(document).ready ->
   App.Feed.loadTweets()
