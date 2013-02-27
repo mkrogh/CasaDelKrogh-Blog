@@ -47,6 +47,10 @@ Manage it
 
 In order to manage it all I created a simple CRUD interface protected by omniauth.
 As something new I decided to make a mailer that sends me (the admin) a mail when someone without access tries to log into the manager interface. 
-This way I did not have to make an explicit signup procedure:
+This way I did not have to make an explicit signup procedure, see: [https://gist.github.com/mkrogh/3995995](https://gist.github.com/mkrogh/3995995)
 
-<script type="text/javascript" src="https://gist.github.com/3995995.js?file=sessions_controller.rb"></script>
+
+The end
+-------
+
+There probably was an end to this post but I ended up beeing to drunk to write it, or I ran out of power on the laptop.
