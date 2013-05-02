@@ -33,12 +33,6 @@ task :set_permissions do
   run "chmod -R g+w #{deploy_to}"
 end
 
-namespace :deploy do
-  task :update_jekyll do
-    run "jekyll --no-auto #{release_path} #{release_path}/_site"
-  end
-end
 
 after 'deploy', 'set_permissions'
 after 'deploy:setup', 'set_permissions'
-after 'deploy:update_code', "deploy:update_jekyll"
