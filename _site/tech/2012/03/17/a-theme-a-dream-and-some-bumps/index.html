@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>A theme, a dream and some bumps</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>A theme, a dream and some bumps <small>tech</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>So after a days work or so the theme is coming along, as mentioned before the theme is based on <a href='http://twitter.github.com/bootstrap/'>Twitter Bootstrap</a>. The background image still needs some work, but my GIMP skills seems to have rusted a bit.</p>
+
+<p>However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named <em>adaptive design</em> rather than <em>responsive design</em>?)</p>
+<!--more-->
+<p>I have also added some sweet sweet Haml and Sass support. The Sass support was possible to implement via a Jekyll Converter, Haml however ended up as a <code>rake haml</code> task. The reason behind the rake task is the way Jekyll handles the <code>_</code> folders, it does not process these folders, and it makes most sense to place my haml files in the theme folder.</p>
+
+<p>The Sass converter is mostly based on a gist I found https://gist.github.com/960150. To enable Sass partials I had to specify my full theme path, however I am quite sure it is possible to derive it from the <code>_config.yml</code> or the Jekyll configuration. Also the Sass files have to start with a <em>YAML Front Matter</em> block in order to be processed automagically.</p>
+
+<p>Other than than I have made a couple of small liquid filters, a read-more filter that triggers on <code>&lt;!--more--&gt;</code> and a simple <code>or</code> filter, which could be seen as an attempt to make a simple <em>default to a piece of text</em> if <code>nil</code> or empty.</p>
+<p><span class='label label-info'>Update</span> Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/03/11/jekyll-seems-usable" title="Jekyll seems usable">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/tech/2012/03/24/backup-backup-backup" title="Backup, backup, backup">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>17 March 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#jekyll-ref">jekyll <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#design-ref">design <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

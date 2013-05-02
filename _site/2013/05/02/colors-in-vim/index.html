@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Colors... in vim</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Colors... in vim <small></small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>Today at work I sat down to create a small automatic pull-deploy shell script. I fired up vim on a development server and nearly had my eyes torn out. The default theme for vim is bad, well at least I do not like the way that you cannot see comments (dark blue on a black background does not really work).</p>
+
+<p>At home my <code>.vimrc</code> sets up my colorscheme, but I could not remember which I tend to use. I tried to seach online for some proper screenshots of the differnt themes in vim, but could not find any good comparison/gallery.</p>
+
+<p>That is why I decided to make a bunch of screenshots of vim themes sporting different code snippets.</p>
+<!--more-->
+<p>The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/02/27/diving-for-dahab" title="Diving for Dahab">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>02 May 2013</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#vim-ref">vim <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#coding-ref">coding <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#themes-ref">themes <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#colors-ref">colors <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

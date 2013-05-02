@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Backup, backup, backup</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Backup, backup, backup <small>tech</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>Backup is something you always wish you had, when you have had a system failure. Sometimes you have a backup, but no way to restore it quickly. If done right backup can be a godsend, but backups are not just for system failures.</p>
+
+<p>During some spring cleaning when I moved to a new <abbr title='Virtual Private Server'>VPS</abbr> recently I ended up needing my backup as I had not gotten round to move everything. But my backup/archive turned out not to be that recent. This however gave me an excuse to play around with the <a href='https://sm.beginrescueend.com/'>SM Framework</a>, a shell scripting abstraction devised by <a href='https://twitter.com/#!/wayneeseguin'>Wayne E. Seguin</a> and <a href='https://twitter.com/#!/mpapis'>Michal Papis</a>.</p>
+<!--more--><aside class='right span2 well'>I have a VPS at <a href='http://www.hosteurope.de/'>Host Europe</a>, which btw. is an awesome German based hosting firm. They provide a service where you can upgrade your VPS for free, and when you upgrade from an older series to a newer series you get 7 days as a transfer period. During these 7 days you have access to two VPSs, your current and your future VPS. You are in charge of moving everything to the new VPS yourself. This is great if you want to change something in your production setup.</aside>
+<h2 id='but_why'>But why?</h2>
+
+<p>The reason for giving the SM Framework a go was because I personally find sh scripting a pain to read and write. SM provides a tonne of abstractions that make it easier to follow what the script is doing.</p>
+
+<p>Initially I had some problems getting the SM Framework up and running, this was mainly due to the lack of updated documentation, or rather; The framework was undergoing a name change, from bdsm to SM Framework, and the site did not really reflect the changes, and a lot of the pages were missing. Luckily Michal Papis was at hand on the #beginrescueend irc channel on freenode and patiently answered my questions and helped me get SM up and running.</p>
+
+<p>Michal Papis had actually made a bdsm extension called <a href='https://github.com/mpapis/sm_backup'>sm_backup</a> that covered a lot of standard backup stuff, such as shorthand functions for using mysqldump, rsync data and file rotation. I was however not able to get it to work on the newer version of the SM framework (0.10.2). Papis did offer to look into fixing the extension, but said he did not actively use it.</p>
+
+<p>Since my needs were quite basic there were no reason to try and rush the extension update, and I therefore went about and dabbled with creating my own set of functions whilst looking closely, and trying to learn from the functions in sm_backup.</p>
+
+<h2 id='documentation'>Documentation</h2>
+
+<p>As mentioned the documentation at the time of writing is a bit sparse, but one of the things I can recommend is to install the <code>apidoc</code> extension.</p>
+
+<pre><code>sm ext install apidoc</code></pre>
+
+<p>With the apidoc installed you can now run:</p>
+
+<pre><code>sm apidoc paths create</code></pre>
+
+<p>Which will output:</p>
+
+<pre><code># path(s) module api is loaded with the line &#39;api/paths&#39; in shell/includes.
+
+# Now we will create a path
+path create /tmp/paths/remove
+
+# Now let&#39;s checkout the path and it&#39;s contents,
+
+ls -l /tmp/paths/
+total 4
+drwxr-xr-x 2 markus markus 4096 2012-03-24 19:37 remove
+
+# Cleanup after ourselves
+path remove /tmp/paths</code></pre>
+
+<p>The <code>sm apidoc</code> is the little <a href='http://en.wikipedia.org/wiki/The_Hitchhiker&apos;s_Guide_to_the_Galaxy'>HHGTTG</a> of the SM framework, although it does still contain some <em>Add an example</em> type of entries.</p>
+
+<h2 id='the_power_of_sm'>The power of SM</h2>
+
+<p>Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:</p>
+
+<p>Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.</p>
+
+<h3 id='backing_up_mysql'>Backing up mysql</h3>
+
+<p>The simple answer is just use <code>mysqldump</code> and be done with it, but wrapping it up in a function can make it much simpler to work with it.</p>
+
+<pre><code># usage:
+#   dump_mysql [db_name] [mysql_opts] [backup_file]
+# db_name defaults to $NAME
+# db_params defaults to &#39;-ubackup&#39;
+# backup_file defaults to &#39;$db_name&#39;_db-
+function dump_mysql() {
+  local db_name=${1:-$NAME}
+  local mysql_opts=${2:--ubackup}
+  local backup_file=${3:-$db_name\_db-}
+  local file=&quot;$backup_file$(today).sql.gz&quot;
+  
+  log step &quot;Dumping database to $file&quot;
+  mysqldump $mysql_opts $db_name | gzip -c &gt; $file
+  if file exists $file
+  then
+    log step success
+  else
+    log step fail
+  fi
+}</code></pre>
+
+<p>This function adds defaults that I find useful, e.g. figure out the backup file name based on input, but still allow you to define it if necessary.</p>
+
+<p>The log function is fantastic, and combined with log step it makes it easy to generate sane console output that change based on whether or not a function succeeds.</p>
+
+<h3 id='the_rest'>The rest</h3>
+
+<p>Now this post is heading in the direction of being overpopulated with code examples, so to keep it a bit more tidy I will just add my backup.sh file at the <a href='#files'>bottom of this post</a>.</p>
+
+<h2 id='putting_it_together'>Putting it together</h2>
+
+<p>The final concrete backup script ends up looking like this:</p>
+
+<pre><code>#!/usr/bin/env sm
+
+includes &quot;api/filesystem&quot;
+includes &quot;api/paths&quot;
+
+. ./functions/backup.sh
+
+backup_dir &quot;db_backup&quot;
+dump_mysql &quot;nice_db&quot;
+rotate &quot;nice_db&quot;</code></pre>
+
+<h3 id='just_add_cron'>Just add CRON</h3>
+
+<p>All that is left is to add this script to CRON on the server I wish to backup. And of cause add another script that uses rsync to retrieve the backups.</p>
+
+<p>To use the SM framework from CRON you will have to set your CRON path, first find out what your current path contains:</p>
+
+<pre><code>echo $PATH</code></pre>
+
+<p>Then add this string to your CRON file, <code>crontab -e</code> as:</p>
+
+<pre><code>PATH=THAT_INSANELY_LONG_PATH</code></pre>
+
+<h2 id='not_using_bash'>Not using bash</h2>
+
+<p>Another challenge I had was that just the day before I decided to use the SM framework I had changed my shell to <a href='http://www.zsh.org/'>zsh</a>. The default SM installer sets up a lot of stuff for you, such as adding SM to <code>/etc/profile.d/</code> which bash includes in its environment setup. A newly installed zsh however does not, as not to impose any preferences onto you. So after countless questions back and forth with a very patient Michal Papis I got it working.</p>
+
+<p>I ended up just sourcing SM in my <code>~/.zshrc</code> file, this is perhaps not the ideal place, but it works for now:</p>
+
+<pre><code>#load sm
+. /etc/profile.d/sm.sh</code></pre>
+
+<h2 id='ahh_now_safe_no_longer_sorry'>Ahh now safe, no longer sorry</h2>
+
+<p>All in all, using the SM framework has probably taken longer than to just crank out a standard shell script, but the framework definitely has some potential. And if you embrace it fully and create your own extension etc. then the re-usability will be awesome.</p>
+
+<p>But now my files are safe again, my database is being backuped and all that remains would be to run a restore firedrill, but given the simplicity of my setup that wont be necessary, I can live with being offline for a day.</p>
+
+<h2 id='files'>Files</h2>
+
+<ul>
+<li><a href='/files/backup.sh'>backup.sh</a> - functions to use in a backup script.</li>
+</ul>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/tech/2012/03/17/a-theme-a-dream-and-some-bumps" title="A theme, a dream and some bumps">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/code/2012/04/20/creating-a-ruby-project" title="Creating a ruby project">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>24 March 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#bash-ref">bash <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#SM Framework-ref">SM Framework <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#backup-ref">backup <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

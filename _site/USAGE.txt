@@ -1,0 +1,6 @@
+Forgot how to generate pages again?
+
+Just run:
+
+rake post title="Hello World"
+

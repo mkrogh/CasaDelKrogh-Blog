@@ -1,0 +1,148 @@
+html {
+  background-color: #677386;
+  background-image: url("../imgs/flare-bg.png");
+  background-repeat: no-repeat;
+  background-position: center top; }
+
+body {
+  background: transparent; }
+
+.container {
+  margin-top: 20px; }
+  .container > footer {
+    margin-top: 20px; }
+    .container > footer p {
+      text-align: center; }
+
+.content {
+  background-color: white;
+  padding: 20px;
+  margin: 0 -20px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); }
+
+.navbar-inner {
+  padding: 0 20px;
+  margin: 0 -20px; }
+
+/* Page header tweaks */
+.page-header {
+  background-color: whitesmoke;
+  padding: 20px 20px 10px;
+  margin: 0 -20px 20px;
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  -o-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0; }
+
+/* Author bio =============================== */
+.autor-bio {
+  background: #9ea7b5;
+  margin: -20px 0 0 -20px;
+  padding: 15px 20px 0;
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  -o-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
+  width: 100%; }
+  .autor-bio .span7 {
+    margin: 0; }
+
+.autor-bio img {
+  height: 60px;
+  padding: 3px;
+  background: white;
+  -moz-box-shadow: 0 0 5px #333333;
+  -webkit-box-shadow: 0 0 5px #333333;
+  box-shadow: 0 0 5px #333333;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  float: left;
+  margin: 0 6px 6px 0; }
+
+.tweet-feed {
+  height: 70px;
+  overflow: hidden; }
+  .tweet-feed li {
+    position: relative;
+    margin: 2px 2px 0 0;
+    background-color: #cccccc;
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+    -moz-box-shadow: 0 0 5px #999999;
+    -webkit-box-shadow: 0 0 5px #999999;
+    box-shadow: 0 0 5px #999999; }
+  .tweet-feed li, .tweet-feed blockquote {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px; }
+  .tweet-feed blockquote {
+    margin: 0; }
+
+/* tag_box ======================================================== */
+.tag_box {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+  overflow: hidden; }
+  .tag_box li {
+    line-height: 28px; }
+  .tag_box.inline li {
+    float: left; }
+  .tag_box a {
+    padding: 3px 6px;
+    margin: 2px;
+    background: #eeeeee;
+    color: #005f6b;
+    border-radius: 3px;
+    text-decoration: none; }
+    .tag_box a span {
+      vertical-align: super;
+      font-size: 0.8em; }
+    .tag_box a.active {
+      background: #57a957;
+      border: 1px solid #4c964d;
+      color: white; }
+
+/* dates tag */
+.date-note {
+  display: block;
+  float: left;
+  width: 50px;
+  background-color: #3b424c;
+  padding: 5px;
+  margin: 0 10px 5px -20px;
+  -webkit-border-radius: 0 6px 6px 0;
+  -moz-border-radius: 0 6px 6px 0;
+  -o-border-radius: 0 6px 6px 0;
+  border-radius: 0 6px 6px 0;
+  -moz-box-shadow: 2px 2px 6px #cccccc;
+  -webkit-box-shadow: 2px 2px 6px #cccccc;
+  box-shadow: 2px 2px 6px #cccccc;
+  color: white; }
+
+/* clear fix ================================ */
+.cf:before, .cf:after {
+  content: "";
+  display: table; }
+
+.cf:after {
+  clear: both; }
+
+/* For IE 6/7 (trigger hasLayout) */
+.cf {
+  zoom: 1; }
+
+aside.right {
+  float: right; }

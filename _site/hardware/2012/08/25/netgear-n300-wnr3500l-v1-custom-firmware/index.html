@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Netgear N300 WNR3500L v1 custom firmware</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Netgear N300 WNR3500L v1 custom firmware <small>hardware</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>For years I have had a Netgear N300 router which has served me well, but it has been lacking several features, one of which is local DNS entries.</p>
+
+<p>After a recent firmware update it had become somewhat unstable, dropping the internet connection, thus requireing a manual restart at times.</p>
+
+<p>I therefore decided that I wanted to change to a custom firmware, and the choice landed on the tomato firmware. This post will try to recount the journey of upgrading my router.</p>
+<!--more-->
+<p>Another reason for this post is that I could not find any coherent account on how to do firmware upgrades of my &#8220;open-source&#8221; N300 router. All the resources were scattered and the one step by step guide I found did not explain everything.</p>
+
+<h2 id='choosing_a_firmware'>Choosing a firmware</h2>
+
+<p>There are several router firmwares out there, but not all are prepared to run on the WNR3500l. I found a list on myopenrouter that lists the currently &#8220;supported&#8221; <a href='http://www.myopenrouter.com/download/list?sort=date&amp;cat=44'>firmwares</a>.</p>
+
+<p>Given that the only firmwares that seemed to be regualarly update are <a href='http://www.dd-wrt.com/'>DD-WRT</a> and <a href='http://www.polarcloud.com/tomato'>tomato</a>. Reading a bit about the two I found that people seems to praise how simple, yet powerfull, tomato is, and I found the DD-WRT documentation to be somewhat confusing.</p>
+
+<h2 id='one_foot_in_front_of_the_other'>One foot in front of the other</h2>
+
+<p>This is the steps I went through to change the firmware of my Netgear N300 WNR3500lv1 router.</p>
+
+<ol>
+<li>
+<p>Save your router configuration, and note down any port forwarding you have setup. (The backup file is in a binary format, so you cannot read the values from that.)</p>
+</li>
+
+<li>
+<p>Since this is guide starts with a stock router running the original firmware we need to start with the DD-WRT firmware and update from that. Download <a href='http://www.myopenrouter.com/download/18896/NETGEAR-WNR3500L-DD-WRT-Firmware-Special-File-for-Initial-Flashing/'>Special DD-WRT Firmware for initial flashing</a></p>
+</li>
+
+<li>
+<p>Go to Router Upgrade and upgrade to the DD-WRT firmware</p>
+
+<ul>
+<li>Wait for the upgrade to finish</li>
+
+<li>Wait just a bit more make sure the upgrade has finished</li>
+</ul>
+</li>
+
+<li>
+<p>Power off the router. Then use a pen to push the <em>restore factory setting</em> button. While keeping it pressed down, power on the router, and keep pressing the restore button for 30 seconds.</p>
+</li>
+
+<li>
+<p>This should make your router boot properly and you should now be back on the interwebs.</p>
+</li>
+
+<li>
+<p>Download the firmware you want to upgrade to, I choose the <a href='http://www.myopenrouter.com/download/list?cat=50'>tomato firmware</a>.</p>
+
+<ul>
+<li>I had to rename the firmware file from <code>.trx</code> to <code>.bin</code> which is the DD-WRT update extension.</li>
+</ul>
+</li>
+
+<li>
+<p>Go to <a href='http://192.168.1.1/'>http://192.168.1.1/</a> and find administration -&gt; Firmware upgrade. Upgrade to your desired firmware</p>
+
+<ul>
+<li>As a quick sidenote, dd-wrt actually looked nice, but I had choosen to give tomato a spin.</li>
+</ul>
+</li>
+
+<li>
+<p>Wait for the upgrade to funish, it should end up with a continue button. Clicking it will propt you with a password popup for &#8220;DD-WRT&#8221;, ignore this.</p>
+</li>
+
+<li>
+<p>Power off the router. Then use a pen to push the <em>restore factory setting</em> button. While keeping it pressed down, power on the router, and keep pressing the restore button for 30 seconds.</p>
+</li>
+
+<li>
+<p>Now you should be able to login to your router, except toastman (the guy who packages the tomato firmware) decided that turning off the dhcp server was an awsome idea. So just enable it under basic -&gt; network</p>
+</li>
+
+<li>
+<p>To ensure everything is dandy please go to <a href='http://192.168.1.1/admin-config.asp'>http://192.168.1.1/admin-config.asp</a> and choose <em>Erase all data in NVRAM memory (thorough)</em> under the <em>Restore Default Configuration</em> section.</p>
+</li>
+
+<li>
+<p>Enjoy your newly flashed router, and happy configuration :D</p>
+</li>
+</ol>
+
+<h2 id='troubleshooting'>Troubleshooting:</h2>
+
+<p>How to see the version of my n300 router? Scroll down in the menu to the knowledge base link, this link contains the router version, mine was <a href='http://support.netgear.com/product/WNR3500Lv'>http://support.netgear.com/product/WNR3500Lv1</a>, so a version 1 WNR3500l router.</p>
+
+<h2 id='future_improvements'>Future improvements..</h2>
+
+<p>The short ammount of time I spent in dd-wrt was actually not that bad, depending on the stability of the tomato firmware I might jump back to DD-WRT. I found it more visually pleasing than tomato and especially the stock firmware.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/code/2012/07/08/js-app-frameworks" title="JS app frameworks">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/code/2012/11/01/treasures-on-rails" title="Treasures on rails">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>25 August 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#router-ref">router <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#firmware-ref">firmware <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

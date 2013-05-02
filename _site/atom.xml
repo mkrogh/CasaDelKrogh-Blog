@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>CasaDelKrogh</title>
+ <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
+ <link href="http://casadelkrogh.dk"/>
+ <updated>2013-05-02T21:57:19+02:00</updated>
+ <id>http://casadelkrogh.dk</id>
+ <author>
+   <name>Markus Krogh</name>
+   <email>markus@casadelkrogh.dk</email>
+ </author>
+
+ 
+ <entry>
+   <title>Colors... in vim</title>
+   <link href="http://casadelkrogh.dk/2013/05/02/colors-in-vim"/>
+   <updated>2013-05-02T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/2013/05/02/colors-in-vim</id>
+   <content type="html">&lt;p&gt;Today at work I sat down to create a small automatic pull-deploy shell script. I fired up vim on a development server and nearly had my eyes torn out. The default theme for vim is bad, well at least I do not like the way that you cannot see comments (dark blue on a black background does not really work).&lt;/p&gt;
+
+&lt;p&gt;At home my &lt;code&gt;.vimrc&lt;/code&gt; sets up my colorscheme, but I could not remember which I tend to use. I tried to seach online for some proper screenshots of the differnt themes in vim, but could not find any good comparison/gallery.&lt;/p&gt;
+
+&lt;p&gt;That is why I decided to make a bunch of screenshots of vim themes sporting different code snippets.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Diving for Dahab</title>
+   <link href="http://casadelkrogh.dk/2013/02/27/diving-for-dahab"/>
+   <updated>2013-02-27T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/2013/02/27/diving-for-dahab</id>
+   <content type="html">&lt;p&gt;A mate and I are planning a trip to Dahab (Egypt) in late March.&lt;/p&gt;
+
+&lt;p&gt;We stumbled upon an offer from kilroy travels where you could get 7 days in Dahab, including a PADI Open Water certification for about &lt;a href='https://www.google.dk/search?q=3700+dkk+in+usd'&gt;3700 dkk&lt;/a&gt;. This was a nice offer, and all we had to do was book the flight. Well at least so we thought.&lt;/p&gt;
+
+&lt;p&gt;After we bought the tickets from Copenhagen to Sharm El Sheikh, we recieved an offer from kilroy for diving in Sharm El Sheikh, not Dahab, and it was suddenly &lt;a href='https://www.google.dk/search?q=4600+dkk+in+usd'&gt;4600 dkk&lt;/a&gt; rather than the aforementioned 3700 dkk.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;When we recieved this &amp;#8220;offer&amp;#8221; we were a bit perplexed. When we looked at &lt;a href='http://www.kilroy.dk/'&gt;kilroy.dk&lt;/a&gt; the offer on Diving in Dahab was gone. This made us a bit uneasy and we wrote to the travelagent that had sent us the offer. It turned out that the Dive center in Dahab with wich they had an agreement was undergoing rennovations, and the travel agent then had assumed that we then rather would like to dive in Sharm El Sheikh.&lt;/p&gt;
+
+&lt;p&gt;This was not what we had anticipated.. We had already booked the flight ourselves, and planned the time off for the holiday, so we decided to take a look at booking diving and hotel in Dahab ourselves.&lt;/p&gt;
+
+&lt;p&gt;We looked at different hotels in Dahab using &lt;a href='http://www.tripadvisor.com'&gt;tripadvisor&lt;/a&gt; and &lt;a href='http://www.booking.com'&gt;booking.com&lt;/a&gt;. And quickly boiled it down to three hotels: the &lt;a href='http://starofdahab.com/'&gt;Star of Dahab&lt;/a&gt;, the &lt;a href='http://www.dahabdivers.com/start.htm'&gt;Dahab Divers&lt;/a&gt;, and as backup the &lt;a href='http://www.mirage.com.eg/'&gt;Mirage village&lt;/a&gt;. All were available, and it was even possible to get two single rooms (I snore quite a lot).&lt;/p&gt;
+
+&lt;p&gt;We ended up choosing Star of Dahab, as it seemed nice and cozy, and near most of the dive centers. Or at least we reserved two rooms there, but they might be subject to change (dahab divers looks so nice).&lt;/p&gt;
+
+&lt;p&gt;In order to cover the diving we wrote to three diving centers: &lt;a href='http://www.bigbluedahab.com/'&gt;Big Blue Dahab&lt;/a&gt;, &lt;a href='http://www.h2odiversdahab.com/'&gt;H2O divers&lt;/a&gt; and &lt;a href='http://www.poseidondivers.com/'&gt;Poseidon Divers&lt;/a&gt;. Again these dive centers were chosen based on reviews on tripadvisor and comments on booking.com.&lt;/p&gt;
+
+&lt;p&gt;All of the three dive centers replied within 12 hours which was awesome! All were super nice, and all actually answered our enquries, and added additional information. Currently we have not decided on which dive center we are going to use. But I am leaning towards Big Blue Dahab or H2O.&lt;/p&gt;
+
+&lt;p&gt;As of now it seems like we are approaching 3600 dkk for staying at Dahab. However this is with seperate bedrooms and two extra days included in the price. Thats pretty good for using a couple of afternoons, in short if you do not buy a packaged trip, you should probably check out if it makes sense to book it all yourself.&lt;/p&gt;
+
+&lt;p&gt;I will probably be posting a couple of posts soon on what we end up choosing, and how the trip goes.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Treasures on rails</title>
+   <link href="http://casadelkrogh.dk/code/2012/11/01/treasures-on-rails"/>
+   <updated>2012-11-01T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2012/11/01/treasures-on-rails</id>
+   <content type="html">&lt;p&gt;In my spare time I am the chairman of a netparty society called &lt;a href='http://www.nanolaug.dk'&gt;Nanolaug&lt;/a&gt;. Twice a year we organize a Netparty for about 80 people. Normally we have 2-3 combos and every now and then a fun-combo.&lt;/p&gt;
+
+&lt;p&gt;For a recent party I decided to host a fun-combo consisting of a digital &lt;a href='https://treasure.nanolaug.dk'&gt;treasure hunt&lt;/a&gt;.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;The idea came after participating in &lt;a href='http://thecamp.dk' title='Danish only'&gt;The Camp&lt;/a&gt; 2012, where ptrf hosted a digital treasurehunt. The goal was to collect the most gold (md5 sums) by solving differnt puzzles, most having something to do with computer science. To find the puzzles you had to look for clues hidden on different webpages. The treasure hunt from the camp was inspired by the &lt;a href='http://treasure.pwnies.dk'&gt;the pwnies&lt;/a&gt; site (it was actually a clone of it).&lt;/p&gt;
+
+&lt;p&gt;As mentioned I decided to host a treasure hunt, but I chose to make it a bit simpler. Mostly because people participating in a netparty are not that proficient in crackmes, decrypting, and general programming language obscurity.&lt;/p&gt;
+
+&lt;h2 id='the_case'&gt;The case&lt;/h2&gt;
+
+&lt;p&gt;A simple digital treasure hunt consists of gold and maps. I chose to represent gold and maps as a sha1 sum in hex, to differentiate between the two I chose to reperesent them as:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GOLD-7b07fa2a6abcb72f56543e5fc9f4946ea15cf5bc-END&lt;/code&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;MAP-945fa9bc3027d7025e3de4a72fcfe7077bfbfaf9-END&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Maps are used to find different puzzles, and locate more gold. They consist of a title, some text and of cause a sha1sum(key). Some maps are hidden within the pages and the resources (css, js, etc).&lt;/p&gt;
+
+&lt;p&gt;Gold is finite and can be registered in a &amp;#8220;bank account&amp;#8221;, or rater it can be claimed. The more gold you have claimed the higher your score will be on the central score board.&lt;/p&gt;
+
+&lt;p&gt;To spice it up a bit I added the possiblity to create a series of questions. Each correct answer is rewarded with a pice of gold and a new question (if there are anymore). Answers to questions are implemented as regular expresseions, which allows you to accept multiple answers as correct.&lt;/p&gt;
+
+&lt;h2 id='manage_it'&gt;Manage it&lt;/h2&gt;
+
+&lt;p&gt;In order to manage it all I created a simple CRUD interface protected by omniauth. As something new I decided to make a mailer that sends me (the admin) a mail when someone without access tries to log into the manager interface. This way I did not have to make an explicit signup procedure, see: &lt;a href='https://gist.github.com/mkrogh/3995995'&gt;https://gist.github.com/mkrogh/3995995&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='the_end'&gt;The end&lt;/h2&gt;
+
+&lt;p&gt;There probably was an end to this post but I ended up beeing to drunk to write it, or I ran out of power on the laptop.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Netgear N300 WNR3500L v1 custom firmware</title>
+   <link href="http://casadelkrogh.dk/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware"/>
+   <updated>2012-08-25T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware</id>
+   <content type="html">&lt;p&gt;For years I have had a Netgear N300 router which has served me well, but it has been lacking several features, one of which is local DNS entries.&lt;/p&gt;
+
+&lt;p&gt;After a recent firmware update it had become somewhat unstable, dropping the internet connection, thus requireing a manual restart at times.&lt;/p&gt;
+
+&lt;p&gt;I therefore decided that I wanted to change to a custom firmware, and the choice landed on the tomato firmware. This post will try to recount the journey of upgrading my router.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;Another reason for this post is that I could not find any coherent account on how to do firmware upgrades of my &amp;#8220;open-source&amp;#8221; N300 router. All the resources were scattered and the one step by step guide I found did not explain everything.&lt;/p&gt;
+
+&lt;h2 id='choosing_a_firmware'&gt;Choosing a firmware&lt;/h2&gt;
+
+&lt;p&gt;There are several router firmwares out there, but not all are prepared to run on the WNR3500l. I found a list on myopenrouter that lists the currently &amp;#8220;supported&amp;#8221; &lt;a href='http://www.myopenrouter.com/download/list?sort=date&amp;amp;cat=44'&gt;firmwares&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Given that the only firmwares that seemed to be regualarly update are &lt;a href='http://www.dd-wrt.com/'&gt;DD-WRT&lt;/a&gt; and &lt;a href='http://www.polarcloud.com/tomato'&gt;tomato&lt;/a&gt;. Reading a bit about the two I found that people seems to praise how simple, yet powerfull, tomato is, and I found the DD-WRT documentation to be somewhat confusing.&lt;/p&gt;
+
+&lt;h2 id='one_foot_in_front_of_the_other'&gt;One foot in front of the other&lt;/h2&gt;
+
+&lt;p&gt;This is the steps I went through to change the firmware of my Netgear N300 WNR3500lv1 router.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Save your router configuration, and note down any port forwarding you have setup. (The backup file is in a binary format, so you cannot read the values from that.)&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Since this is guide starts with a stock router running the original firmware we need to start with the DD-WRT firmware and update from that. Download &lt;a href='http://www.myopenrouter.com/download/18896/NETGEAR-WNR3500L-DD-WRT-Firmware-Special-File-for-Initial-Flashing/'&gt;Special DD-WRT Firmware for initial flashing&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Go to Router Upgrade and upgrade to the DD-WRT firmware&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Wait for the upgrade to finish&lt;/li&gt;
+
+&lt;li&gt;Wait just a bit more make sure the upgrade has finished&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Power off the router. Then use a pen to push the &lt;em&gt;restore factory setting&lt;/em&gt; button. While keeping it pressed down, power on the router, and keep pressing the restore button for 30 seconds.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;This should make your router boot properly and you should now be back on the interwebs.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Download the firmware you want to upgrade to, I choose the &lt;a href='http://www.myopenrouter.com/download/list?cat=50'&gt;tomato firmware&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I had to rename the firmware file from &lt;code&gt;.trx&lt;/code&gt; to &lt;code&gt;.bin&lt;/code&gt; which is the DD-WRT update extension.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Go to &lt;a href='http://192.168.1.1/'&gt;http://192.168.1.1/&lt;/a&gt; and find administration -&amp;gt; Firmware upgrade. Upgrade to your desired firmware&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;As a quick sidenote, dd-wrt actually looked nice, but I had choosen to give tomato a spin.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Wait for the upgrade to funish, it should end up with a continue button. Clicking it will propt you with a password popup for &amp;#8220;DD-WRT&amp;#8221;, ignore this.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Power off the router. Then use a pen to push the &lt;em&gt;restore factory setting&lt;/em&gt; button. While keeping it pressed down, power on the router, and keep pressing the restore button for 30 seconds.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Now you should be able to login to your router, except toastman (the guy who packages the tomato firmware) decided that turning off the dhcp server was an awsome idea. So just enable it under basic -&amp;gt; network&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;To ensure everything is dandy please go to &lt;a href='http://192.168.1.1/admin-config.asp'&gt;http://192.168.1.1/admin-config.asp&lt;/a&gt; and choose &lt;em&gt;Erase all data in NVRAM memory (thorough)&lt;/em&gt; under the &lt;em&gt;Restore Default Configuration&lt;/em&gt; section.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Enjoy your newly flashed router, and happy configuration :D&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id='troubleshooting'&gt;Troubleshooting:&lt;/h2&gt;
+
+&lt;p&gt;How to see the version of my n300 router? Scroll down in the menu to the knowledge base link, this link contains the router version, mine was &lt;a href='http://support.netgear.com/product/WNR3500Lv'&gt;http://support.netgear.com/product/WNR3500Lv1&lt;/a&gt;, so a version 1 WNR3500l router.&lt;/p&gt;
+
+&lt;h2 id='future_improvements'&gt;Future improvements..&lt;/h2&gt;
+
+&lt;p&gt;The short ammount of time I spent in dd-wrt was actually not that bad, depending on the stability of the tomato firmware I might jump back to DD-WRT. I found it more visually pleasing than tomato and especially the stock firmware.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>JS app frameworks</title>
+   <link href="http://casadelkrogh.dk/code/2012/07/08/js-app-frameworks"/>
+   <updated>2012-07-08T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2012/07/08/js-app-frameworks</id>
+   <content type="html">&lt;p&gt;In order to brush off my JS skills a bit I want to build a small HTML5 app, for mobile and desktop use. As not to start from scratch I poked around in the toolbox for frameworks to use.&lt;/p&gt;
+
+&lt;p&gt;I take a 10.000 km overview of &lt;a href='http://emberjs.com/'&gt;ember.js&lt;/a&gt;, &lt;a href='http://backbonejs.org/'&gt;backbone.js&lt;/a&gt;, and &lt;a href='http://spinejs.com/'&gt;spine.js&lt;/a&gt; for the core app development, and try to decide which testing framework to use.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id='testing'&gt;Testing&lt;/h2&gt;
+
+&lt;p&gt;The first thing I took a look at after chiseling out the idea was which testing framework to use. The reason for that is that my normal approach to coding often end up a bit unwieldy, and for this App I wanted to do a bit of TDD/BDD (Test driven development/Behavior driven development).&lt;/p&gt;
+
+&lt;p&gt;I have used &lt;a href='http://docs.jquery.com/QUnit'&gt;QUint&lt;/a&gt;, the jQuery unit testing framework before, and it is a nice unit testing framework. When I write ruby code I have grown fond of &lt;a href='http://rspec.info/'&gt;Rspec&lt;/a&gt; which is a BDD style testing framework. Therefore I have had an eye at the &lt;a href='http://pivotal.github.com/jasmine/'&gt;Jasmine&lt;/a&gt; testing framework for some time.&lt;/p&gt;
+
+&lt;p&gt;These are the only two testing frameworks I have chosen to look at, I am sure there are a lot of other brilliant frameworks, but these two fit my needs.&lt;/p&gt;
+
+&lt;h3 id='qunit'&gt;QUnit&lt;/h3&gt;
+
+&lt;p&gt;A simple, well documented, unit testing framework used to keep the jQuery code working. Instead of showing off some tests here it is way easier to point to the &lt;a href='http://docs.jquery.com/QUnit#Using_QUnit'&gt;official documentation&lt;/a&gt;, which as stated is more than enough to get started.&lt;/p&gt;
+
+&lt;p&gt;Tests run in a dedicated HTML page that outputs a nice overview of the test results.&lt;/p&gt;
+
+&lt;h3 id='jasmine'&gt;Jasmine&lt;/h3&gt;
+
+&lt;p&gt;As mentioned Jasmine has a lot of similarity to Rspec, it allows you to describe and test features as a set of test cases. Again the documentation of this testing framework is ace, allowing me to just point at it and be done with it &lt;a href='http://pivotal.github.com/jasmine/'&gt;jasmine example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The most irritating thing about jasmine is that it was not very straight forward where the distributable could be downloaded, but then again I could just have read the entire introduction. The download link is at the way bottom, and includes a nice template for getting up and running.&lt;/p&gt;
+
+&lt;p&gt;Just like QUnit the tests can be run from a dedicated HTML page, which is nice e.g. for testing in multiple browsers.&lt;/p&gt;
+
+&lt;h3 id='choosing_a_testing_framework'&gt;Choosing a testing framework&lt;/h3&gt;
+
+&lt;p&gt;I have ended up choosing Jasmine as it resembles Rspec. Only time will tell if it is a good choice or if I end up backtracking.&lt;/p&gt;
+
+&lt;h2 id='javascript_framework'&gt;JavaScript framework&lt;/h2&gt;
+
+&lt;p&gt;After choosing a testing framework I set out to find a suitable JS framework. I have mostly rolled my own MVC up until now, but I am a great fan of building on top of other peoples work, as it often means you can focus on the functionality rather than the nuts and bolts/stitching of the App.&lt;/p&gt;
+
+&lt;p&gt;So I feel like it is time to to bring in the cavalry, but when you are somewhat used to looking under the hood you get a bit picky. I have played around with Backbone.js before and liked many of the things it enables you to do, and the freedom you get. I have also had my eye on ember.js for some time, and the vision of spine.js has had me intrigued.&lt;/p&gt;
+
+&lt;p&gt;There are other frameworks out there, e.g. &lt;a href='http://angularjs.org/'&gt;angular.js&lt;/a&gt; by some Googler&amp;#8217;s, but I have chosen to look at these three frameworks because they fit my idea of how a JS framework should be.&lt;/p&gt;
+
+&lt;h3 id='backbonejs'&gt;Backbone.js&lt;/h3&gt;
+
+&lt;p&gt;Backbone.js is a bare bone lightweight MVC framework developed as a part of the DocumentCloud project. It clocks in at 5.6kb minified which is impressive, it does however require Undersocore.js which adds 4kb, json2 (1kb), and for DOM manipulation jQuery (32kb) or Zepto (8.4kb). I will probably end up including jQuery anyway, so excluding that payload the Backbone.js setup clocks in at about 11kb, which is very impressive.&lt;/p&gt;
+
+&lt;p&gt;Backbone.js provides base methods for creating Models, Collections, Controllers, Views and more. It leaves it up to you how to connect the dots, but it also gives you a lot of documentation and a healthy community to get you up and running.&lt;/p&gt;
+
+&lt;h3 id='emberjs'&gt;Ember.js&lt;/h3&gt;
+
+&lt;p&gt;Ember.js was created by Tom Dale and Yehuda Katz as a reboot of SproutCore done from the ground up with focus on removing developer frustrations. On a slight side note Katz is one of the core Rails guys, who did a lot of work on the Rails 3.&lt;/p&gt;
+
+&lt;p&gt;With this pedigree it should prove to be an interesting framework, and on the face of it, it is. Ember.js comes with auto-updating views, meaning that when your models are updated all the relevant views will be re-rendered. This is a cool feature, it does however force you to use handlebars, the Ember.js template language, which is fine. Handlebars is a mustache based template language designed to be potent and leverage template caching.&lt;/p&gt;
+
+&lt;p&gt;All in all Ember.js is sporting some nice features. The big drawback is the documentation, which is either out of date or simply missing, and often out of sync with the current implementation.&lt;/p&gt;
+
+&lt;h3 id='spinejs'&gt;Spine.js&lt;/h3&gt;
+
+&lt;p&gt;As far as I remember Spine.js was created as a Backbone.js done right. It sports a lot of philosophy and pattern ideas. One being that the interface must be non-blocking, which is bold and brave, but nice to see.&lt;/p&gt;
+
+&lt;p&gt;Spine.js projects are encouraged to follow a Rails like layout, and comes with a set of node.js tools that makes project creation easy. It encourages developing using coffeescript, which is somewhat awesome, but has its limitations.&lt;/p&gt;
+
+&lt;p&gt;Spine.js also have fairly good documentation along with some screen casts. The hem development server seems nice, allowing you to make proper integration testing right from your dev machine, without having to setup a server.&lt;/p&gt;
+
+&lt;h3 id='choosing_a_js_framework'&gt;Choosing a JS framework&lt;/h3&gt;
+
+&lt;p&gt;I chose ember.js because I like Handlebars, and some of the ideas behind the framework. However after fiddling around, trying to do even simple tasks such as setting up a new model I became increasingly frustrated with the inconsistency of the documentation.&lt;/p&gt;
+
+&lt;p&gt;The front page sports a quick sweet siren song example, but no other pinpointers. The documentation page does not show how to use the &lt;code&gt;DS.Model&lt;/code&gt; (datasource), and the API contains absolutely nothing of value to beginners.&lt;/p&gt;
+
+&lt;p&gt;The boilerplate start you can download contains no scaffolding what so ever, not even a simple Hello person app. If it just contained a simple app with a model, controller and a view you would probably be able to get going fairly quickly.&lt;/p&gt;
+
+&lt;p&gt;This lack of a best practice guideline makes me a sad panda, and it means I will probably make the first prototype using Backbone.js. I am however adamant that I will return to ember.js at some point, perhaps redo the app in ember.js at a later time.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Creating a ruby project</title>
+   <link href="http://casadelkrogh.dk/code/2012/04/20/creating-a-ruby-project"/>
+   <updated>2012-04-20T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2012/04/20/creating-a-ruby-project</id>
+   <content type="html">&lt;p&gt;Setting up a new project is not necessarily something one does every day. The process always include some hoops and loops, along with spying on the previous projects one has created. Well at least thats how it is for me, at work however we keep some information on project initialization in a wiki. But as a single person a wiki feels like overkill, and it is often a lot less likely to be found by and help other people.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;I have started a few ruby projects so far, and I have become a great fan of &lt;a href='http://gembundler.com/'&gt;bundler&lt;/a&gt; mostly due to the rails development I have been doing. With bundler, dependency management becomes a breeze, just as it should be. Starting a new project using bundler means running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bundle init&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates a nice &lt;code&gt;Gemfile&lt;/code&gt; in your project ready to add your external gems, but more much more than this it allows you to use &lt;code&gt;Bundler.require(:default)&lt;/code&gt;. With that awesome bit of code your local &lt;code&gt;lib/&lt;/code&gt; dir will be required. This means you can concentrate on writing awesome code, instead of fighting with linking it together.&lt;/p&gt;
+
+&lt;p&gt;In short a typical project main file, preferably called &lt;code&gt;{project-name}.rb&lt;/code&gt;, would look like this, where &lt;code&gt;{project-name}&lt;/code&gt; is the name of your project:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require &amp;quot;rubygems&amp;quot;
+require &amp;quot;bundler/setup&amp;quot;
+
+Bundler.require(:default)
+require &amp;quot;{project-name}&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To make this main file work you will need to create the folder &lt;code&gt;lib/&lt;/code&gt; and add another &lt;code&gt;{project-name}.rb&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h2 id='go_ahead_and_test_it'&gt;Go ahead and test it&lt;/h2&gt;
+
+&lt;p&gt;Really, you should make some test cases. Some people like TDD red-green testing, others like to write test cases when the functionality is present. Any which way you like to test is fine by me, personally I always end up mixing red-green testing and follow up testing. The most important thing is to actually add tests!&lt;/p&gt;
+
+&lt;p&gt;I have grown fond of &lt;a href='http://rspec.info/'&gt;Rspec&lt;/a&gt; lately, and find its DSL awesome. Therefore we shall look at how to add a some Rspec test cases to a new project. Start by adding &lt;code&gt;gem &amp;quot;rspec&amp;quot;&lt;/code&gt; to the &lt;code&gt;Gemfile&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;#8230; To be continued (sorry, forgot I started writing this post, I might return to it later).&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Backup, backup, backup</title>
+   <link href="http://casadelkrogh.dk/tech/2012/03/24/backup-backup-backup"/>
+   <updated>2012-03-24T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/tech/2012/03/24/backup-backup-backup</id>
+   <content type="html">&lt;p&gt;Backup is something you always wish you had, when you have had a system failure. Sometimes you have a backup, but no way to restore it quickly. If done right backup can be a godsend, but backups are not just for system failures.&lt;/p&gt;
+
+&lt;p&gt;During some spring cleaning when I moved to a new &lt;abbr title='Virtual Private Server'&gt;VPS&lt;/abbr&gt; recently I ended up needing my backup as I had not gotten round to move everything. But my backup/archive turned out not to be that recent. This however gave me an excuse to play around with the &lt;a href='https://sm.beginrescueend.com/'&gt;SM Framework&lt;/a&gt;, a shell scripting abstraction devised by &lt;a href='https://twitter.com/#!/wayneeseguin'&gt;Wayne E. Seguin&lt;/a&gt; and &lt;a href='https://twitter.com/#!/mpapis'&gt;Michal Papis&lt;/a&gt;.&lt;/p&gt;
+&lt;!--more--&gt;&lt;aside class='right span2 well'&gt;I have a VPS at &lt;a href='http://www.hosteurope.de/'&gt;Host Europe&lt;/a&gt;, which btw. is an awesome German based hosting firm. They provide a service where you can upgrade your VPS for free, and when you upgrade from an older series to a newer series you get 7 days as a transfer period. During these 7 days you have access to two VPSs, your current and your future VPS. You are in charge of moving everything to the new VPS yourself. This is great if you want to change something in your production setup.&lt;/aside&gt;
+&lt;h2 id='but_why'&gt;But why?&lt;/h2&gt;
+
+&lt;p&gt;The reason for giving the SM Framework a go was because I personally find sh scripting a pain to read and write. SM provides a tonne of abstractions that make it easier to follow what the script is doing.&lt;/p&gt;
+
+&lt;p&gt;Initially I had some problems getting the SM Framework up and running, this was mainly due to the lack of updated documentation, or rather; The framework was undergoing a name change, from bdsm to SM Framework, and the site did not really reflect the changes, and a lot of the pages were missing. Luckily Michal Papis was at hand on the #beginrescueend irc channel on freenode and patiently answered my questions and helped me get SM up and running.&lt;/p&gt;
+
+&lt;p&gt;Michal Papis had actually made a bdsm extension called &lt;a href='https://github.com/mpapis/sm_backup'&gt;sm_backup&lt;/a&gt; that covered a lot of standard backup stuff, such as shorthand functions for using mysqldump, rsync data and file rotation. I was however not able to get it to work on the newer version of the SM framework (0.10.2). Papis did offer to look into fixing the extension, but said he did not actively use it.&lt;/p&gt;
+
+&lt;p&gt;Since my needs were quite basic there were no reason to try and rush the extension update, and I therefore went about and dabbled with creating my own set of functions whilst looking closely, and trying to learn from the functions in sm_backup.&lt;/p&gt;
+
+&lt;h2 id='documentation'&gt;Documentation&lt;/h2&gt;
+
+&lt;p&gt;As mentioned the documentation at the time of writing is a bit sparse, but one of the things I can recommend is to install the &lt;code&gt;apidoc&lt;/code&gt; extension.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sm ext install apidoc&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the apidoc installed you can now run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sm apidoc paths create&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which will output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# path(s) module api is loaded with the line &amp;#39;api/paths&amp;#39; in shell/includes.
+
+# Now we will create a path
+path create /tmp/paths/remove
+
+# Now let&amp;#39;s checkout the path and it&amp;#39;s contents,
+
+ls -l /tmp/paths/
+total 4
+drwxr-xr-x 2 markus markus 4096 2012-03-24 19:37 remove
+
+# Cleanup after ourselves
+path remove /tmp/paths&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;sm apidoc&lt;/code&gt; is the little &lt;a href='http://en.wikipedia.org/wiki/The_Hitchhiker&amp;apos;s_Guide_to_the_Galaxy'&gt;HHGTTG&lt;/a&gt; of the SM framework, although it does still contain some &lt;em&gt;Add an example&lt;/em&gt; type of entries.&lt;/p&gt;
+
+&lt;h2 id='the_power_of_sm'&gt;The power of SM&lt;/h2&gt;
+
+&lt;p&gt;Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:&lt;/p&gt;
+
+&lt;p&gt;Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.&lt;/p&gt;
+
+&lt;h3 id='backing_up_mysql'&gt;Backing up mysql&lt;/h3&gt;
+
+&lt;p&gt;The simple answer is just use &lt;code&gt;mysqldump&lt;/code&gt; and be done with it, but wrapping it up in a function can make it much simpler to work with it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# usage:
+#   dump_mysql [db_name] [mysql_opts] [backup_file]
+# db_name defaults to $NAME
+# db_params defaults to &amp;#39;-ubackup&amp;#39;
+# backup_file defaults to &amp;#39;$db_name&amp;#39;_db-
+function dump_mysql() {
+  local db_name=${1:-$NAME}
+  local mysql_opts=${2:--ubackup}
+  local backup_file=${3:-$db_name\_db-}
+  local file=&amp;quot;$backup_file$(today).sql.gz&amp;quot;
+  
+  log step &amp;quot;Dumping database to $file&amp;quot;
+  mysqldump $mysql_opts $db_name | gzip -c &amp;gt; $file
+  if file exists $file
+  then
+    log step success
+  else
+    log step fail
+  fi
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function adds defaults that I find useful, e.g. figure out the backup file name based on input, but still allow you to define it if necessary.&lt;/p&gt;
+
+&lt;p&gt;The log function is fantastic, and combined with log step it makes it easy to generate sane console output that change based on whether or not a function succeeds.&lt;/p&gt;
+
+&lt;h3 id='the_rest'&gt;The rest&lt;/h3&gt;
+
+&lt;p&gt;Now this post is heading in the direction of being overpopulated with code examples, so to keep it a bit more tidy I will just add my backup.sh file at the &lt;a href='#files'&gt;bottom of this post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id='putting_it_together'&gt;Putting it together&lt;/h2&gt;
+
+&lt;p&gt;The final concrete backup script ends up looking like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env sm
+
+includes &amp;quot;api/filesystem&amp;quot;
+includes &amp;quot;api/paths&amp;quot;
+
+. ./functions/backup.sh
+
+backup_dir &amp;quot;db_backup&amp;quot;
+dump_mysql &amp;quot;nice_db&amp;quot;
+rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id='just_add_cron'&gt;Just add CRON&lt;/h3&gt;
+
+&lt;p&gt;All that is left is to add this script to CRON on the server I wish to backup. And of cause add another script that uses rsync to retrieve the backups.&lt;/p&gt;
+
+&lt;p&gt;To use the SM framework from CRON you will have to set your CRON path, first find out what your current path contains:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo $PATH&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then add this string to your CRON file, &lt;code&gt;crontab -e&lt;/code&gt; as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PATH=THAT_INSANELY_LONG_PATH&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='not_using_bash'&gt;Not using bash&lt;/h2&gt;
+
+&lt;p&gt;Another challenge I had was that just the day before I decided to use the SM framework I had changed my shell to &lt;a href='http://www.zsh.org/'&gt;zsh&lt;/a&gt;. The default SM installer sets up a lot of stuff for you, such as adding SM to &lt;code&gt;/etc/profile.d/&lt;/code&gt; which bash includes in its environment setup. A newly installed zsh however does not, as not to impose any preferences onto you. So after countless questions back and forth with a very patient Michal Papis I got it working.&lt;/p&gt;
+
+&lt;p&gt;I ended up just sourcing SM in my &lt;code&gt;~/.zshrc&lt;/code&gt; file, this is perhaps not the ideal place, but it works for now:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#load sm
+. /etc/profile.d/sm.sh&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='ahh_now_safe_no_longer_sorry'&gt;Ahh now safe, no longer sorry&lt;/h2&gt;
+
+&lt;p&gt;All in all, using the SM framework has probably taken longer than to just crank out a standard shell script, but the framework definitely has some potential. And if you embrace it fully and create your own extension etc. then the re-usability will be awesome.&lt;/p&gt;
+
+&lt;p&gt;But now my files are safe again, my database is being backuped and all that remains would be to run a restore firedrill, but given the simplicity of my setup that wont be necessary, I can live with being offline for a day.&lt;/p&gt;
+
+&lt;h2 id='files'&gt;Files&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='/files/backup.sh'&gt;backup.sh&lt;/a&gt; - functions to use in a backup script.&lt;/li&gt;
+&lt;/ul&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>A theme, a dream and some bumps</title>
+   <link href="http://casadelkrogh.dk/tech/2012/03/17/a-theme-a-dream-and-some-bumps"/>
+   <updated>2012-03-17T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/tech/2012/03/17/a-theme-a-dream-and-some-bumps</id>
+   <content type="html">&lt;p&gt;So after a days work or so the theme is coming along, as mentioned before the theme is based on &lt;a href='http://twitter.github.com/bootstrap/'&gt;Twitter Bootstrap&lt;/a&gt;. The background image still needs some work, but my GIMP skills seems to have rusted a bit.&lt;/p&gt;
+
+&lt;p&gt;However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named &lt;em&gt;adaptive design&lt;/em&gt; rather than &lt;em&gt;responsive design&lt;/em&gt;?)&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;I have also added some sweet sweet Haml and Sass support. The Sass support was possible to implement via a Jekyll Converter, Haml however ended up as a &lt;code&gt;rake haml&lt;/code&gt; task. The reason behind the rake task is the way Jekyll handles the &lt;code&gt;_&lt;/code&gt; folders, it does not process these folders, and it makes most sense to place my haml files in the theme folder.&lt;/p&gt;
+
+&lt;p&gt;The Sass converter is mostly based on a gist I found https://gist.github.com/960150. To enable Sass partials I had to specify my full theme path, however I am quite sure it is possible to derive it from the &lt;code&gt;_config.yml&lt;/code&gt; or the Jekyll configuration. Also the Sass files have to start with a &lt;em&gt;YAML Front Matter&lt;/em&gt; block in order to be processed automagically.&lt;/p&gt;
+
+&lt;p&gt;Other than than I have made a couple of small liquid filters, a read-more filter that triggers on &lt;code&gt;&amp;lt;!--more--&amp;gt;&lt;/code&gt; and a simple &lt;code&gt;or&lt;/code&gt; filter, which could be seen as an attempt to make a simple &lt;em&gt;default to a piece of text&lt;/em&gt; if &lt;code&gt;nil&lt;/code&gt; or empty.&lt;/p&gt;
+&lt;p&gt;&lt;span class='label label-info'&gt;Update&lt;/span&gt; Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Jekyll seems usable</title>
+   <link href="http://casadelkrogh.dk/2012/03/11/jekyll-seems-usable"/>
+   <updated>2012-03-11T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/2012/03/11/jekyll-seems-usable</id>
+   <content type="html">&lt;p&gt;It would seem like the jekyll parsing engine might be a nice way to publish blog posts&amp;#8230; By using jekyll and maybe github things will be easier than ever.&lt;/p&gt;
+
+&lt;p&gt;The current state of available designs is a bit underwhelming but that is somewhat to be expected. I think I will be expanding the default twitter bootstrap theme, since it is the best starting point for me, might make sense to use html5 boilerplate instead only time will tell.&lt;/p&gt;
+
+&lt;p&gt;But all in all I think I am going to enjoy using jekyll.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id='why_use_jekyll'&gt;Why use Jekyll?&lt;/h2&gt;
+
+&lt;p&gt;The main reason for using jekyll for this blog is quite simply the joy of new technology, the exact same reason why I started the blog. I enjoy new technology, and I love to learn new things, so having dabbled with rails for some time I thought I wanted to revive my CasaDelKrogh blog.&lt;/p&gt;
+
+&lt;p&gt;Last time (2008ish) it sort of died in setting up the blog, at the time I was trying to use Drupal, then Wordpress. Both worked fine, but I am not really into maintaining yet another piece of software, and at the time I had allready started to turn my back on php.&lt;/p&gt;
+
+&lt;p&gt;The idea behind Jekyll is appealing, no actual dynamic content on the actual server, just a bunch of pre-compiled html files. A blog does, in my opinion, not need to be dynamic, this is why people use hosted solutions such as Wordpress, blogger or Tumblr. It is all about making it easier for you as a blogger to write content, and for that I believe Jekyll will be quite sufficient for me.&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>

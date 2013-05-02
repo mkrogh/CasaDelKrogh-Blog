@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>JS app frameworks</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>JS app frameworks <small>code</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>In order to brush off my JS skills a bit I want to build a small HTML5 app, for mobile and desktop use. As not to start from scratch I poked around in the toolbox for frameworks to use.</p>
+
+<p>I take a 10.000 km overview of <a href='http://emberjs.com/'>ember.js</a>, <a href='http://backbonejs.org/'>backbone.js</a>, and <a href='http://spinejs.com/'>spine.js</a> for the core app development, and try to decide which testing framework to use.</p>
+<!--more-->
+<h2 id='testing'>Testing</h2>
+
+<p>The first thing I took a look at after chiseling out the idea was which testing framework to use. The reason for that is that my normal approach to coding often end up a bit unwieldy, and for this App I wanted to do a bit of TDD/BDD (Test driven development/Behavior driven development).</p>
+
+<p>I have used <a href='http://docs.jquery.com/QUnit'>QUint</a>, the jQuery unit testing framework before, and it is a nice unit testing framework. When I write ruby code I have grown fond of <a href='http://rspec.info/'>Rspec</a> which is a BDD style testing framework. Therefore I have had an eye at the <a href='http://pivotal.github.com/jasmine/'>Jasmine</a> testing framework for some time.</p>
+
+<p>These are the only two testing frameworks I have chosen to look at, I am sure there are a lot of other brilliant frameworks, but these two fit my needs.</p>
+
+<h3 id='qunit'>QUnit</h3>
+
+<p>A simple, well documented, unit testing framework used to keep the jQuery code working. Instead of showing off some tests here it is way easier to point to the <a href='http://docs.jquery.com/QUnit#Using_QUnit'>official documentation</a>, which as stated is more than enough to get started.</p>
+
+<p>Tests run in a dedicated HTML page that outputs a nice overview of the test results.</p>
+
+<h3 id='jasmine'>Jasmine</h3>
+
+<p>As mentioned Jasmine has a lot of similarity to Rspec, it allows you to describe and test features as a set of test cases. Again the documentation of this testing framework is ace, allowing me to just point at it and be done with it <a href='http://pivotal.github.com/jasmine/'>jasmine example</a>.</p>
+
+<p>The most irritating thing about jasmine is that it was not very straight forward where the distributable could be downloaded, but then again I could just have read the entire introduction. The download link is at the way bottom, and includes a nice template for getting up and running.</p>
+
+<p>Just like QUnit the tests can be run from a dedicated HTML page, which is nice e.g. for testing in multiple browsers.</p>
+
+<h3 id='choosing_a_testing_framework'>Choosing a testing framework</h3>
+
+<p>I have ended up choosing Jasmine as it resembles Rspec. Only time will tell if it is a good choice or if I end up backtracking.</p>
+
+<h2 id='javascript_framework'>JavaScript framework</h2>
+
+<p>After choosing a testing framework I set out to find a suitable JS framework. I have mostly rolled my own MVC up until now, but I am a great fan of building on top of other peoples work, as it often means you can focus on the functionality rather than the nuts and bolts/stitching of the App.</p>
+
+<p>So I feel like it is time to to bring in the cavalry, but when you are somewhat used to looking under the hood you get a bit picky. I have played around with Backbone.js before and liked many of the things it enables you to do, and the freedom you get. I have also had my eye on ember.js for some time, and the vision of spine.js has had me intrigued.</p>
+
+<p>There are other frameworks out there, e.g. <a href='http://angularjs.org/'>angular.js</a> by some Googler&#8217;s, but I have chosen to look at these three frameworks because they fit my idea of how a JS framework should be.</p>
+
+<h3 id='backbonejs'>Backbone.js</h3>
+
+<p>Backbone.js is a bare bone lightweight MVC framework developed as a part of the DocumentCloud project. It clocks in at 5.6kb minified which is impressive, it does however require Undersocore.js which adds 4kb, json2 (1kb), and for DOM manipulation jQuery (32kb) or Zepto (8.4kb). I will probably end up including jQuery anyway, so excluding that payload the Backbone.js setup clocks in at about 11kb, which is very impressive.</p>
+
+<p>Backbone.js provides base methods for creating Models, Collections, Controllers, Views and more. It leaves it up to you how to connect the dots, but it also gives you a lot of documentation and a healthy community to get you up and running.</p>
+
+<h3 id='emberjs'>Ember.js</h3>
+
+<p>Ember.js was created by Tom Dale and Yehuda Katz as a reboot of SproutCore done from the ground up with focus on removing developer frustrations. On a slight side note Katz is one of the core Rails guys, who did a lot of work on the Rails 3.</p>
+
+<p>With this pedigree it should prove to be an interesting framework, and on the face of it, it is. Ember.js comes with auto-updating views, meaning that when your models are updated all the relevant views will be re-rendered. This is a cool feature, it does however force you to use handlebars, the Ember.js template language, which is fine. Handlebars is a mustache based template language designed to be potent and leverage template caching.</p>
+
+<p>All in all Ember.js is sporting some nice features. The big drawback is the documentation, which is either out of date or simply missing, and often out of sync with the current implementation.</p>
+
+<h3 id='spinejs'>Spine.js</h3>
+
+<p>As far as I remember Spine.js was created as a Backbone.js done right. It sports a lot of philosophy and pattern ideas. One being that the interface must be non-blocking, which is bold and brave, but nice to see.</p>
+
+<p>Spine.js projects are encouraged to follow a Rails like layout, and comes with a set of node.js tools that makes project creation easy. It encourages developing using coffeescript, which is somewhat awesome, but has its limitations.</p>
+
+<p>Spine.js also have fairly good documentation along with some screen casts. The hem development server seems nice, allowing you to make proper integration testing right from your dev machine, without having to setup a server.</p>
+
+<h3 id='choosing_a_js_framework'>Choosing a JS framework</h3>
+
+<p>I chose ember.js because I like Handlebars, and some of the ideas behind the framework. However after fiddling around, trying to do even simple tasks such as setting up a new model I became increasingly frustrated with the inconsistency of the documentation.</p>
+
+<p>The front page sports a quick sweet siren song example, but no other pinpointers. The documentation page does not show how to use the <code>DS.Model</code> (datasource), and the API contains absolutely nothing of value to beginners.</p>
+
+<p>The boilerplate start you can download contains no scaffolding what so ever, not even a simple Hello person app. If it just contained a simple app with a model, controller and a view you would probably be able to get going fairly quickly.</p>
+
+<p>This lack of a best practice guideline makes me a sad panda, and it means I will probably make the first prototype using Backbone.js. I am however adamant that I will return to ember.js at some point, perhaps redo the app in ember.js at a later time.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/code/2012/04/20/creating-a-ruby-project" title="Creating a ruby project">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware" title="Netgear N300 WNR3500L v1 custom firmware">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>08 July 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JS-ref">JS <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#development-ref">development <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#testing-ref">testing <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jasmine-ref">jasmine <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#ember.js-ref">ember.js <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#backbone.js-ref">backbone.js <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#spine.js-ref">spine.js <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

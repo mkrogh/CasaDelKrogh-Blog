@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Creating a ruby project</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Creating a ruby project <small>code</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>Setting up a new project is not necessarily something one does every day. The process always include some hoops and loops, along with spying on the previous projects one has created. Well at least thats how it is for me, at work however we keep some information on project initialization in a wiki. But as a single person a wiki feels like overkill, and it is often a lot less likely to be found by and help other people.</p>
+<!--more-->
+<p>I have started a few ruby projects so far, and I have become a great fan of <a href='http://gembundler.com/'>bundler</a> mostly due to the rails development I have been doing. With bundler, dependency management becomes a breeze, just as it should be. Starting a new project using bundler means running:</p>
+
+<pre><code>bundle init</code></pre>
+
+<p>This creates a nice <code>Gemfile</code> in your project ready to add your external gems, but more much more than this it allows you to use <code>Bundler.require(:default)</code>. With that awesome bit of code your local <code>lib/</code> dir will be required. This means you can concentrate on writing awesome code, instead of fighting with linking it together.</p>
+
+<p>In short a typical project main file, preferably called <code>{project-name}.rb</code>, would look like this, where <code>{project-name}</code> is the name of your project:</p>
+
+<pre><code>require &quot;rubygems&quot;
+require &quot;bundler/setup&quot;
+
+Bundler.require(:default)
+require &quot;{project-name}&quot;</code></pre>
+
+<p>To make this main file work you will need to create the folder <code>lib/</code> and add another <code>{project-name}.rb</code> file.</p>
+
+<h2 id='go_ahead_and_test_it'>Go ahead and test it</h2>
+
+<p>Really, you should make some test cases. Some people like TDD red-green testing, others like to write test cases when the functionality is present. Any which way you like to test is fine by me, personally I always end up mixing red-green testing and follow up testing. The most important thing is to actually add tests!</p>
+
+<p>I have grown fond of <a href='http://rspec.info/'>Rspec</a> lately, and find its DSL awesome. Therefore we shall look at how to add a some Rspec test cases to a new project. Start by adding <code>gem &quot;rspec&quot;</code> to the <code>Gemfile</code>.</p>
+
+<p>&#8230; To be continued (sorry, forgot I started writing this post, I might return to it later).</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/tech/2012/03/24/backup-backup-backup" title="Backup, backup, backup">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/code/2012/07/08/js-app-frameworks" title="JS app frameworks">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>20 April 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#bundler-ref">bundler <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rspec-ref">rspec <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

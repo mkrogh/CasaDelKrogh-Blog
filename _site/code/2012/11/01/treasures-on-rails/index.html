@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Treasures on rails</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Treasures on rails <small>code</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>In my spare time I am the chairman of a netparty society called <a href='http://www.nanolaug.dk'>Nanolaug</a>. Twice a year we organize a Netparty for about 80 people. Normally we have 2-3 combos and every now and then a fun-combo.</p>
+
+<p>For a recent party I decided to host a fun-combo consisting of a digital <a href='https://treasure.nanolaug.dk'>treasure hunt</a>.</p>
+<!--more-->
+<p>The idea came after participating in <a href='http://thecamp.dk' title='Danish only'>The Camp</a> 2012, where ptrf hosted a digital treasurehunt. The goal was to collect the most gold (md5 sums) by solving differnt puzzles, most having something to do with computer science. To find the puzzles you had to look for clues hidden on different webpages. The treasure hunt from the camp was inspired by the <a href='http://treasure.pwnies.dk'>the pwnies</a> site (it was actually a clone of it).</p>
+
+<p>As mentioned I decided to host a treasure hunt, but I chose to make it a bit simpler. Mostly because people participating in a netparty are not that proficient in crackmes, decrypting, and general programming language obscurity.</p>
+
+<h2 id='the_case'>The case</h2>
+
+<p>A simple digital treasure hunt consists of gold and maps. I chose to represent gold and maps as a sha1 sum in hex, to differentiate between the two I chose to reperesent them as:</p>
+
+<ul>
+<li><code>GOLD-7b07fa2a6abcb72f56543e5fc9f4946ea15cf5bc-END</code></li>
+
+<li><code>MAP-945fa9bc3027d7025e3de4a72fcfe7077bfbfaf9-END</code></li>
+</ul>
+
+<p>Maps are used to find different puzzles, and locate more gold. They consist of a title, some text and of cause a sha1sum(key). Some maps are hidden within the pages and the resources (css, js, etc).</p>
+
+<p>Gold is finite and can be registered in a &#8220;bank account&#8221;, or rater it can be claimed. The more gold you have claimed the higher your score will be on the central score board.</p>
+
+<p>To spice it up a bit I added the possiblity to create a series of questions. Each correct answer is rewarded with a pice of gold and a new question (if there are anymore). Answers to questions are implemented as regular expresseions, which allows you to accept multiple answers as correct.</p>
+
+<h2 id='manage_it'>Manage it</h2>
+
+<p>In order to manage it all I created a simple CRUD interface protected by omniauth. As something new I decided to make a mailer that sends me (the admin) a mail when someone without access tries to log into the manager interface. This way I did not have to make an explicit signup procedure, see: <a href='https://gist.github.com/mkrogh/3995995'>https://gist.github.com/mkrogh/3995995</a></p>
+
+<h2 id='the_end'>The end</h2>
+
+<p>There probably was an end to this post but I ended up beeing to drunk to write it, or I ran out of power on the laptop.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware" title="Netgear N300 WNR3500L v1 custom firmware">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/02/27/diving-for-dahab" title="Diving for Dahab">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>01 November 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#rails-ref">rails <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#ruby-ref">ruby <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#fun-ref">fun <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+

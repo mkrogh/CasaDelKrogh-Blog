@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>CasaDelKrogh</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>CasaDelKrogh <small>Home of Markus Krogh</small></h1> 
+</div>
+
+<div class="row">
+  <div class="span12">
+    <dl class='posts'>
+  
+    <dt><span class='date-note'>02 May 2013</span> <a href='/2013/05/02/colors-in-vim'>Colors... in vim</a></dt>
+    <dd><p>Today at work I sat down to create a small automatic pull-deploy shell script. I fired up vim on a development server and nearly had my eyes torn out. The default theme for vim is bad, well at least I do not like the way that you cannot see comments (dark blue on a black background does not really work).</p>
+
+<p>At home my <code>.vimrc</code> sets up my colorscheme, but I could not remember which I tend to use. I tried to seach online for some proper screenshots of the differnt themes in vim, but could not find any good comparison/gallery.</p>
+
+<p>That is why I decided to make a bunch of screenshots of vim themes sporting different code snippets.</p>
+<p><a href='/2013/05/02/colors-in-vim'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>27 Feb 2013</span> <a href='/2013/02/27/diving-for-dahab'>Diving for Dahab</a></dt>
+    <dd><p>A mate and I are planning a trip to Dahab (Egypt) in late March.</p>
+
+<p>We stumbled upon an offer from kilroy travels where you could get 7 days in Dahab, including a PADI Open Water certification for about <a href='https://www.google.dk/search?q=3700+dkk+in+usd'>3700 dkk</a>. This was a nice offer, and all we had to do was book the flight. Well at least so we thought.</p>
+
+<p>After we bought the tickets from Copenhagen to Sharm El Sheikh, we recieved an offer from kilroy for diving in Sharm El Sheikh, not Dahab, and it was suddenly <a href='https://www.google.dk/search?q=4600+dkk+in+usd'>4600 dkk</a> rather than the aforementioned 3700 dkk.</p>
+<p><a href='/2013/02/27/diving-for-dahab'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>01 Nov 2012</span> <a href='/code/2012/11/01/treasures-on-rails'>Treasures on rails</a></dt>
+    <dd><p>In my spare time I am the chairman of a netparty society called <a href='http://www.nanolaug.dk'>Nanolaug</a>. Twice a year we organize a Netparty for about 80 people. Normally we have 2-3 combos and every now and then a fun-combo.</p>
+
+<p>For a recent party I decided to host a fun-combo consisting of a digital <a href='https://treasure.nanolaug.dk'>treasure hunt</a>.</p>
+<p><a href='/code/2012/11/01/treasures-on-rails'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>25 Aug 2012</span> <a href='/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware'>Netgear N300 WNR3500L v1 custom firmware</a></dt>
+    <dd><p>For years I have had a Netgear N300 router which has served me well, but it has been lacking several features, one of which is local DNS entries.</p>
+
+<p>After a recent firmware update it had become somewhat unstable, dropping the internet connection, thus requireing a manual restart at times.</p>
+
+<p>I therefore decided that I wanted to change to a custom firmware, and the choice landed on the tomato firmware. This post will try to recount the journey of upgrading my router.</p>
+<p><a href='/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>08 Jul 2012</span> <a href='/code/2012/07/08/js-app-frameworks'>JS app frameworks</a></dt>
+    <dd><p>In order to brush off my JS skills a bit I want to build a small HTML5 app, for mobile and desktop use. As not to start from scratch I poked around in the toolbox for frameworks to use.</p>
+
+<p>I take a 10.000 km overview of <a href='http://emberjs.com/'>ember.js</a>, <a href='http://backbonejs.org/'>backbone.js</a>, and <a href='http://spinejs.com/'>spine.js</a> for the core app development, and try to decide which testing framework to use.</p>
+<p><a href='/code/2012/07/08/js-app-frameworks'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>20 Apr 2012</span> <a href='/code/2012/04/20/creating-a-ruby-project'>Creating a ruby project</a></dt>
+    <dd><p>Setting up a new project is not necessarily something one does every day. The process always include some hoops and loops, along with spying on the previous projects one has created. Well at least thats how it is for me, at work however we keep some information on project initialization in a wiki. But as a single person a wiki feels like overkill, and it is often a lot less likely to be found by and help other people.</p>
+<p><a href='/code/2012/04/20/creating-a-ruby-project'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>24 Mar 2012</span> <a href='/tech/2012/03/24/backup-backup-backup'>Backup, backup, backup</a></dt>
+    <dd><p>Backup is something you always wish you had, when you have had a system failure. Sometimes you have a backup, but no way to restore it quickly. If done right backup can be a godsend, but backups are not just for system failures.</p>
+
+<p>During some spring cleaning when I moved to a new <abbr title='Virtual Private Server'>VPS</abbr> recently I ended up needing my backup as I had not gotten round to move everything. But my backup/archive turned out not to be that recent. This however gave me an excuse to play around with the <a href='https://sm.beginrescueend.com/'>SM Framework</a>, a shell scripting abstraction devised by <a href='https://twitter.com/#!/wayneeseguin'>Wayne E. Seguin</a> and <a href='https://twitter.com/#!/mpapis'>Michal Papis</a>.</p>
+<p><a href='/tech/2012/03/24/backup-backup-backup'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>17 Mar 2012</span> <a href='/tech/2012/03/17/a-theme-a-dream-and-some-bumps'>A theme, a dream and some bumps</a></dt>
+    <dd><p>So after a days work or so the theme is coming along, as mentioned before the theme is based on <a href='http://twitter.github.com/bootstrap/'>Twitter Bootstrap</a>. The background image still needs some work, but my GIMP skills seems to have rusted a bit.</p>
+
+<p>However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named <em>adaptive design</em> rather than <em>responsive design</em>?)</p>
+<p><a href='/tech/2012/03/17/a-theme-a-dream-and-some-bumps'>Read more</a></p></dd>
+  
+    <dt><span class='date-note'>11 Mar 2012</span> <a href='/2012/03/11/jekyll-seems-usable'>Jekyll seems usable</a></dt>
+    <dd><p>It would seem like the jekyll parsing engine might be a nice way to publish blog posts&#8230; By using jekyll and maybe github things will be easier than ever.</p>
+
+<p>The current state of available designs is a bit underwhelming but that is somewhat to be expected. I think I will be expanding the default twitter bootstrap theme, since it is the best starting point for me, might make sense to use html5 boilerplate instead only time will tell.</p>
+
+<p>But all in all I think I am going to enjoy using jekyll.</p>
+<p><a href='/2012/03/11/jekyll-seems-usable'>Read more</a></p></dd>
+  
+</dl>
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+
