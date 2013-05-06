@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2013-05-02T21:57:19+02:00</updated>
+ <updated>2013-05-06T21:18:43+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -23,7 +23,28 @@
 
 &lt;p&gt;That is why I decided to make a bunch of screenshots of vim themes sporting different code snippets.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;p&gt;The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.&lt;/p&gt;</content>
+&lt;p&gt;The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.&lt;/p&gt;
+&lt;div class='slider'&gt;
+&lt;ul class='inner'&gt;
+&lt;li class='item'&gt;&lt;img alt='blue-sh-vim.png' src='/images/vim-themes/sh/blue-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='darkblue-sh-vim.png' src='/images/vim-themes/sh/darkblue-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='default-sh-vim.png' src='/images/vim-themes/sh/default-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='delek-sh-vim.png' src='/images/vim-themes/sh/delek-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='desert-sh-vim.png' src='/images/vim-themes/sh/desert-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='elflord-sh-vim.png' src='/images/vim-themes/sh/elflord-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='evening-sh-vim.png' src='/images/vim-themes/sh/evening-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='koehler-sh-vim.png' src='/images/vim-themes/sh/koehler-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='morning-sh-vim.png' src='/images/vim-themes/sh/morning-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='murphy-sh-vim.png' src='/images/vim-themes/sh/murphy-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='pablo-sh-vim.png' src='/images/vim-themes/sh/pablo-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='peachpuff-sh-vim.png' src='/images/vim-themes/sh/peachpuff-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='ron-sh-vim.png' src='/images/vim-themes/sh/ron-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='shine-sh-vim.png' src='/images/vim-themes/sh/shine-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='slate-sh-vim.png' src='/images/vim-themes/sh/slate-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='torte-sh-vim.png' src='/images/vim-themes/sh/torte-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='zellner-sh-vim.png' src='/images/vim-themes/sh/zellner-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;</content>
  </entry>
  
  <entry>

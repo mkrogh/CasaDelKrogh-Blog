@@ -20,3 +20,5 @@ That is why I decided to make a bunch of screenshots of vim themes sporting diff
 The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file.
 It was totally different to look at, so I opned a ruby file, and a CSS file.
 All varied to some degree so I decided to create a bunch of extra screenshots.
+
+{% slider vim-themes/sh %}

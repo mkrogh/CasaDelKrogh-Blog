@@ -1,0 +1,46 @@
+.slider
+  width: 100%
+  overflow: hidden
+  text-align: center
+
+.slider > .inner
+  /* Looking at you safari*/
+  -webkit-transition: margin 0.5s ease-out
+  transition: margin 0.5s ease-out
+  margin: 0
+  padding: 0
+  &> .item
+    float: left
+    list-style: none
+
+/* === Pure styling === */
+
+.item > img 
+  border-radius: 8px
+  box-shadow: 0 8px 6px -6px #333
+
+
+.slider input.control
+  display: none
+
+.slider label.control 
+  /* structure */
+  display: inline-block
+  width: 12px
+  height: 12px
+  margin: 4px
+  position: relative
+  top: -45px
+  /* Styling*/
+  cursor: pointer
+  background-color: #ccc
+  border: 2px solid #efefef
+  border-radius: 50%
+  box-shadow: 0 0 5px rgba(0,0,0,.6)
+  /*Looking at you safari*/
+  -webkit-transition: background 0.5s
+  transition: background 0.5s
+
+.slider .control:checked + label.control 
+  background-color: #333
+
