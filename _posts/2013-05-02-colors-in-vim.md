@@ -21,4 +21,18 @@ The reason to do screenshots of different languages as well as the themes were t
 It was totally different to look at, so I opned a ruby file, and a CSS file.
 All varied to some degree so I decided to create a bunch of extra screenshots.
 
+### Shell
+
 {% slider vim-themes/sh %}
+
+### Ruby
+
+{% slider vim-themes/ruby %}
+
+### Javascript
+
+{% slider vim-themes/js %}
+
+### CSS
+
+{% slider vim-themes/css %}

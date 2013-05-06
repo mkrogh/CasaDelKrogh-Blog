@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2013-05-06T21:18:43+02:00</updated>
+ <updated>2013-05-06T21:45:46+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -24,6 +24,8 @@
 &lt;p&gt;That is why I decided to make a bunch of screenshots of vim themes sporting different code snippets.&lt;/p&gt;
 &lt;!--more--&gt;
 &lt;p&gt;The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.&lt;/p&gt;
+
+&lt;h3 id='shell'&gt;Shell&lt;/h3&gt;
 &lt;div class='slider'&gt;
 &lt;ul class='inner'&gt;
 &lt;li class='item'&gt;&lt;img alt='blue-sh-vim.png' src='/images/vim-themes/sh/blue-sh-vim.png' /&gt;&lt;/li&gt;
@@ -43,6 +45,72 @@
 &lt;li class='item'&gt;&lt;img alt='slate-sh-vim.png' src='/images/vim-themes/sh/slate-sh-vim.png' /&gt;&lt;/li&gt;
 &lt;li class='item'&gt;&lt;img alt='torte-sh-vim.png' src='/images/vim-themes/sh/torte-sh-vim.png' /&gt;&lt;/li&gt;
 &lt;li class='item'&gt;&lt;img alt='zellner-sh-vim.png' src='/images/vim-themes/sh/zellner-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h3 id='ruby'&gt;Ruby&lt;/h3&gt;
+&lt;div class='slider'&gt;
+&lt;ul class='inner'&gt;
+&lt;li class='item'&gt;&lt;img alt='blue-ruby-vim.png' src='/images/vim-themes/ruby/blue-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='darkblue-ruby-vim.png' src='/images/vim-themes/ruby/darkblue-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='default-ruby-vim.png' src='/images/vim-themes/ruby/default-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='delek-ruby-vim.png' src='/images/vim-themes/ruby/delek-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='desert-ruby-vim.png' src='/images/vim-themes/ruby/desert-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='elflord-ruby-vim.png' src='/images/vim-themes/ruby/elflord-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='evening-ruby-vim.png' src='/images/vim-themes/ruby/evening-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='koehler-ruby-vim.png' src='/images/vim-themes/ruby/koehler-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='morning-ruby-vim.png' src='/images/vim-themes/ruby/morning-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='murphy-ruby-vim.png' src='/images/vim-themes/ruby/murphy-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='pablo-ruby-vim.png' src='/images/vim-themes/ruby/pablo-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='peachpuff-ruby-vim.png' src='/images/vim-themes/ruby/peachpuff-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='ron-ruby-vim.png' src='/images/vim-themes/ruby/ron-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='shine-ruby-vim.png' src='/images/vim-themes/ruby/shine-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='slate-ruby-vim.png' src='/images/vim-themes/ruby/slate-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='torte-ruby-vim.png' src='/images/vim-themes/ruby/torte-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='zellner-ruby-vim.png' src='/images/vim-themes/ruby/zellner-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h3 id='javascript'&gt;Javascript&lt;/h3&gt;
+&lt;div class='slider'&gt;
+&lt;ul class='inner'&gt;
+&lt;li class='item'&gt;&lt;img alt='blue-js-vim.png' src='/images/vim-themes/js/blue-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='darkblue-js-vim.png' src='/images/vim-themes/js/darkblue-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='default-js-vim.png' src='/images/vim-themes/js/default-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='delek-js-vim.png' src='/images/vim-themes/js/delek-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='desert-vim.png' src='/images/vim-themes/js/desert-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='elflord-js-vim.png' src='/images/vim-themes/js/elflord-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='evening-vim.png' src='/images/vim-themes/js/evening-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='koehler-js-vim.png' src='/images/vim-themes/js/koehler-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='morning-js-vim.png' src='/images/vim-themes/js/morning-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='murphy-js-vim.png' src='/images/vim-themes/js/murphy-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='pablo-js-vim.png' src='/images/vim-themes/js/pablo-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='peachpuff-js-vim.png' src='/images/vim-themes/js/peachpuff-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='ron-js-vim.png' src='/images/vim-themes/js/ron-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='shine-js-vim.png' src='/images/vim-themes/js/shine-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='slate-js-vim.png' src='/images/vim-themes/js/slate-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='torte-js-vim.png' src='/images/vim-themes/js/torte-js-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='zellner-js-vim.png' src='/images/vim-themes/js/zellner-js-vim.png' /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h3 id='css'&gt;CSS&lt;/h3&gt;
+&lt;div class='slider'&gt;
+&lt;ul class='inner'&gt;
+&lt;li class='item'&gt;&lt;img alt='blue-css-vim.png' src='/images/vim-themes/css/blue-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='darkblue-css-vim.png' src='/images/vim-themes/css/darkblue-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='default-css-vim.png' src='/images/vim-themes/css/default-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='delek-css-vim.png' src='/images/vim-themes/css/delek-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='desert-css-vim.png' src='/images/vim-themes/css/desert-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='elflord-css-vim.png' src='/images/vim-themes/css/elflord-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='evening-css-vim.png' src='/images/vim-themes/css/evening-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='koehler-css-vim.png' src='/images/vim-themes/css/koehler-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='morning-css-vim.png' src='/images/vim-themes/css/morning-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='murphy-css-vim.png' src='/images/vim-themes/css/murphy-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='pablo-css-vim.png' src='/images/vim-themes/css/pablo-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='peachpuff-css-vim.png' src='/images/vim-themes/css/peachpuff-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='ron-css-vim.png' src='/images/vim-themes/css/ron-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='shine-css-vim.png' src='/images/vim-themes/css/shine-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='slate-css-vim.png' src='/images/vim-themes/css/slate-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='torte-css-vim.png' src='/images/vim-themes/css/torte-css-vim.png' /&gt;&lt;/li&gt;
+&lt;li class='item'&gt;&lt;img alt='zellner-css-vim.png' src='/images/vim-themes/css/zellner-css-vim.png' /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;</content>
  </entry>

@@ -161,6 +161,8 @@ aside.right {
   .slider > .inner > .item {
     float: left;
     list-style: none; }
+    .slider > .inner > .item > img {
+      max-width: 100%; }
 
 /* === Pure styling === */
 .item > img {
