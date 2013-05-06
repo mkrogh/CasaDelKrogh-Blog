@@ -19,7 +19,7 @@ App.Feed = Em.ArrayController.create
     $.get('/twitter/feed/')
       .success (tweets) ->
         tweets = $.parseJSON(tweets) if typeof tweets == "string"
-        tweets = tweets.map (tweet) ->
+        tweets = tweets.results.map (tweet) ->
           App.Tweet.create tweet
         self.set("content", tweets)
       .error (msg) ->
