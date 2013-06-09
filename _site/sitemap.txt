@@ -9,6 +9,7 @@ http://casadelkrogh.dk/archive.html
 http://casadelkrogh.dk/assets/themes/CasaDelKrogh/css/style.css
 http://casadelkrogh.dk/index.html
 
+http://casadelkrogh.dk/code/2013/06/09/tracking-time
 http://casadelkrogh.dk/2013/05/02/colors-in-vim
 http://casadelkrogh.dk/2013/02/27/diving-for-dahab
 http://casadelkrogh.dk/code/2012/11/01/treasures-on-rails

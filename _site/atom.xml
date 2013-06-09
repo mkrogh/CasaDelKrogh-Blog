@@ -4,13 +4,119 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2013-06-09T16:41:48+02:00</updated>
+ <updated>2013-06-09T19:34:36+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
    <email>markus@casadelkrogh.dk</email>
  </author>
 
+ 
+ <entry>
+   <title>Tracking time</title>
+   <link href="http://casadelkrogh.dk/code/2013/06/09/tracking-time"/>
+   <updated>2013-06-09T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2013/06/09/tracking-time</id>
+   <content type="html">&lt;p&gt;In response to recent rule changes at work, and my desire to take a crack at using requirejs for something usefull, I have created a simple punch-clock javascript app that can help me track time spent.&lt;/p&gt;
+
+&lt;p&gt;There are a lot of apps out there to track time, and a lot of them are quite nice, but &amp;#8220;not invented here&amp;#8221; has not been coined in vain. Due to the relative low complexity of the problem I decided to DIY it and created &lt;a href='http://punch-clock.boundless.dk'&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id='motivation'&gt;Motivation&lt;/h2&gt;
+
+&lt;p&gt;Recently at work we have been instructed to register our over and under time. Previously we have had a &amp;#8220;rule&amp;#8221; that it was up to ourselves to keep track of our time, as long as we did not exceed two work days. It has worked fine and generally been pleasant, but as AAU have begun to centralize all IT resources, a set of ground rules have been laid out.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately that means I now have to report my over/under time. One of the things I am notoriously bad at is time calculations, but then I can &amp;#8220;create an app for that&amp;#8221;&amp;#8482;&lt;/p&gt;
+
+&lt;h2 id='enter_punchclock'&gt;Enter punch-clock&lt;/h2&gt;
+&lt;img alt='punch_clock.png' class='right' src='/images/punch-clock/punch_clock.png' /&gt;
+&lt;p&gt;Punch clock is a simple check-in, check-out app that calculates the time spent. When a check-in is created it will keep the duration up to date as time passes. Finally when checking out it will display start and stop time, and the duration.&lt;/p&gt;
+
+&lt;p&gt;At the moment it stores check-in/outs in the browsers local storage. This means you can check-in, close the page/browser and return later to check-out/see progress.&lt;/p&gt;
+
+&lt;p&gt;That is all the app supports by now, I know quite simple, that is what is nice about it.&lt;/p&gt;
+
+&lt;h2 id='approach'&gt;Approach&lt;/h2&gt;
+
+&lt;p&gt;I decided to use &lt;a href='http://requirejs.org/'&gt;require.js&lt;/a&gt; to allow me to modularize my code, then I added &lt;a href='http://pivotal.github.io/jasmine/'&gt;jasmine&lt;/a&gt; for testing, and decided on using &lt;a href='http://momentjs.com/'&gt;moment.js&lt;/a&gt; for time manipulation.&lt;/p&gt;
+
+&lt;p&gt;The source files are split up into somewhat simple modules. I have created models, services, presenters, views and more. This gives a natural belonging of each module and makes it easier to approach.&lt;/p&gt;
+
+&lt;p&gt;Punch-clock is structured as a Model-View-NotReallyAnyControllersButSomeServicesAndObservers. This means that the views handles both changing the DOM and DOM interactions. Views listens/observes/subscribes to service and model events and updates the DOM accordingly.&lt;/p&gt;
+
+&lt;p&gt;Each time a new check-in is added the service emits an event, which the different views respond to buy updating. This makes the views very flexible, and encourages splitting up views into small modules that only handle one thing. I have the following views:&lt;/p&gt;
+&lt;dl&gt;
+  &lt;dt&gt;Check-in&lt;/dt&gt;
+  &lt;dd&gt;Handles check-in/out buttons.&lt;/dd&gt;
+  &lt;dt&gt;Status&lt;/dt&gt;
+  &lt;dd&gt;Updates the main textual status.&lt;/dd&gt;
+  &lt;dt&gt;Cleanup&lt;/dt&gt;
+  &lt;dd&gt;Handles cleanup button and count.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Even the local storage backed is created by wrapping the simple service and listening on changes on both the service and the individual model objects. When a change occurs it simply serializes the entire simple service to JSON and stores it.&lt;/p&gt;
+
+&lt;h2 id='testing'&gt;Testing&lt;/h2&gt;
+
+&lt;p&gt;At the time I started writing code for punch-clock I was reading &lt;a href='http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882'&gt;clean code&lt;/a&gt; by Uncle Bob. But I must admit that my models are a hideous blend of data-structures and real objects. This however lead me to take a hard look at my code and pushed me to try to structure my code to make it testable.&lt;/p&gt;
+
+&lt;p&gt;Normally when I write code most of my view code tends not to be testable, in this little app I have tried to remedy that. So far all my views has tests, and adding new tests are quite simple. One might simply disregard this as punch-clock being a rather simple app, which is true, but surprisingly DOM interactions can be made quite testable, with a little work.&lt;/p&gt;
+
+&lt;p&gt;In general the views can take a DOM-node which they will use instead of the page DOM. This means that in tests you can create a simple DOM structure and check it for changes the view should have performed. Furthermore you do not have to worry about cleaning up the page DOM after a test has run.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var $test, service;
+var view;
+beforeEach(function(){
+  $test = DomCreator(&amp;quot;div h2.punch-clock&amp;quot;);
+  service = TimeSpanService.create();
+  view = StatusView.create(service, $test); 
+});&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above code is an example of how the DOM can be &amp;#8220;mocked&amp;#8221; you can then check it for changes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;it(&amp;quot;updates status when adding time spans&amp;quot;, function(){
+  expect($test.textContent).toEqual(&amp;quot;&amp;quot;);
+  service.addNew();
+  expect($test.textContent).toContain(&amp;quot;Check-in at&amp;quot;);
+});&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally using jasmine you can mock out time dependencies, which allows you to test timeout functions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;it(&amp;quot;should update accordingly&amp;quot;, function(){
+  service.addNew();
+  var before = $test.textContent;
+
+  //Move start 3min back in time :D
+  service.first().start().subtract(3, &amp;quot;minutes&amp;quot;);
+
+  jasmine.Clock.tick(30001);
+  expect($test.textContent).not.toEqual(before);
+});&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yep I am aware of that nasty change the time hack that does not obey the &lt;a href='http://en.wikipedia.org/wiki/Law_of_Demeter'&gt;Law of Demeter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id='the_future'&gt;The future&lt;/h2&gt;
+
+&lt;p&gt;Right now punch-clock is quite basic. It supports my basic needs, but there are some immediate functions I would like to add:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;History - the ability to see previous check-ins.&lt;/li&gt;
+
+&lt;li&gt;Check-in url paramter - allow you to bookmark a auto check-in so you can add it to your startup pages on your work machine.&lt;/li&gt;
+
+&lt;li&gt;Edit - edit check-ins&lt;/li&gt;
+
+&lt;li&gt;Categories - or tags e.g. work, training etc.&lt;/li&gt;
+
+&lt;li&gt;Delete - delete individual check-ins&lt;/li&gt;
+
+&lt;li&gt;Save to web-service - e.g. simple backend, gists, google drive.&lt;/li&gt;
+
+&lt;li&gt;Check-in on multiple devices using a unique indentifier.. email?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is probably a lot of other things that makes sense to add, or not to add.&lt;/p&gt;
+
+&lt;p&gt;The source can be found at: &lt;a href='https://github.com/mkrogh/punch-clock'&gt;github&lt;/a&gt;, and the app is running at &lt;a href='http://punch-clock.boundless.dk/'&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Colors... in vim</title>

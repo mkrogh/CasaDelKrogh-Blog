@@ -20,6 +20,41 @@ module Images
       output += "</ul>\n</div>\n"
     end
   end
+
+  class ImageTag < Liquid::Tag
+    def initialize(tag_name, image, tokens)
+      super
+      @image = File.join("images", image.strip);
+      @classes = [];
+    end
+
+    def css_classes
+      if not @classes.empty?
+        "class=\"#{@classes.join(" ")}\" "
+      end
+    end
+
+    def render(context)
+      "<img src=\"/#{@image}\" #{css_classes}alt=\"#{File.basename(@image)}\" />"
+    end
+  end
+
+  class RightImageTag < ImageTag
+    def initialize(tag_name, image, tokens)
+      super
+      @classes.push("right")
+    end
+  end
+
+  class CenterImageTag < ImageTag
+    def initialize(tag_name, image, tokens)
+      super
+      @classes.push("center")
+    end
+  end
 end # Gallery
 
 Liquid::Template.register_tag("slider", Images::SliderTag)
+Liquid::Template.register_tag("image", Images::ImageTag)
+Liquid::Template.register_tag("image_right", Images::RightImageTag)
+Liquid::Template.register_tag("image_center", Images::CenterImageTag)

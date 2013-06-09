@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Tracking time</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/slider.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='autor-bio cf row'>
+          <div class='span7'>
+            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <div class='span5' id='twitter-feed'>
+            <script type='text/x-handlebars'>
+              
+              <ul class='tweet-feed'>
+                {{#each App.Feed}}
+                <li>
+                  <blockquote>{{text}}</blockquote>
+                </li>
+                {{/each}}
+                {{#unless App.Feed.content}}
+                <li class='placeholder'>Fetching tweets...</li>
+                {{/unless}}
+              </ul>
+              
+            </script>
+          </div>
+        </div>
+        
+<div class="page-header">
+  <h1>Tracking time <small>code</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>In response to recent rule changes at work, and my desire to take a crack at using requirejs for something usefull, I have created a simple punch-clock javascript app that can help me track time spent.</p>
+
+<p>There are a lot of apps out there to track time, and a lot of them are quite nice, but &#8220;not invented here&#8221; has not been coined in vain. Due to the relative low complexity of the problem I decided to DIY it and created <a href='http://punch-clock.boundless.dk'>punch-clock</a>.</p>
+<!--more-->
+<h2 id='motivation'>Motivation</h2>
+
+<p>Recently at work we have been instructed to register our over and under time. Previously we have had a &#8220;rule&#8221; that it was up to ourselves to keep track of our time, as long as we did not exceed two work days. It has worked fine and generally been pleasant, but as AAU have begun to centralize all IT resources, a set of ground rules have been laid out.</p>
+
+<p>Unfortunately that means I now have to report my over/under time. One of the things I am notoriously bad at is time calculations, but then I can &#8220;create an app for that&#8221;&#8482;</p>
+
+<h2 id='enter_punchclock'>Enter punch-clock</h2>
+<img alt='punch_clock.png' class='right' src='/images/punch-clock/punch_clock.png' />
+<p>Punch clock is a simple check-in, check-out app that calculates the time spent. When a check-in is created it will keep the duration up to date as time passes. Finally when checking out it will display start and stop time, and the duration.</p>
+
+<p>At the moment it stores check-in/outs in the browsers local storage. This means you can check-in, close the page/browser and return later to check-out/see progress.</p>
+
+<p>That is all the app supports by now, I know quite simple, that is what is nice about it.</p>
+
+<h2 id='approach'>Approach</h2>
+
+<p>I decided to use <a href='http://requirejs.org/'>require.js</a> to allow me to modularize my code, then I added <a href='http://pivotal.github.io/jasmine/'>jasmine</a> for testing, and decided on using <a href='http://momentjs.com/'>moment.js</a> for time manipulation.</p>
+
+<p>The source files are split up into somewhat simple modules. I have created models, services, presenters, views and more. This gives a natural belonging of each module and makes it easier to approach.</p>
+
+<p>Punch-clock is structured as a Model-View-NotReallyAnyControllersButSomeServicesAndObservers. This means that the views handles both changing the DOM and DOM interactions. Views listens/observes/subscribes to service and model events and updates the DOM accordingly.</p>
+
+<p>Each time a new check-in is added the service emits an event, which the different views respond to buy updating. This makes the views very flexible, and encourages splitting up views into small modules that only handle one thing. I have the following views:</p>
+<dl>
+  <dt>Check-in</dt>
+  <dd>Handles check-in/out buttons.</dd>
+  <dt>Status</dt>
+  <dd>Updates the main textual status.</dd>
+  <dt>Cleanup</dt>
+  <dd>Handles cleanup button and count.</dd>
+</dl>
+<p>Even the local storage backed is created by wrapping the simple service and listening on changes on both the service and the individual model objects. When a change occurs it simply serializes the entire simple service to JSON and stores it.</p>
+
+<h2 id='testing'>Testing</h2>
+
+<p>At the time I started writing code for punch-clock I was reading <a href='http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882'>clean code</a> by Uncle Bob. But I must admit that my models are a hideous blend of data-structures and real objects. This however lead me to take a hard look at my code and pushed me to try to structure my code to make it testable.</p>
+
+<p>Normally when I write code most of my view code tends not to be testable, in this little app I have tried to remedy that. So far all my views has tests, and adding new tests are quite simple. One might simply disregard this as punch-clock being a rather simple app, which is true, but surprisingly DOM interactions can be made quite testable, with a little work.</p>
+
+<p>In general the views can take a DOM-node which they will use instead of the page DOM. This means that in tests you can create a simple DOM structure and check it for changes the view should have performed. Furthermore you do not have to worry about cleaning up the page DOM after a test has run.</p>
+
+<pre><code>var $test, service;
+var view;
+beforeEach(function(){
+  $test = DomCreator(&quot;div h2.punch-clock&quot;);
+  service = TimeSpanService.create();
+  view = StatusView.create(service, $test); 
+});</code></pre>
+
+<p>The above code is an example of how the DOM can be &#8220;mocked&#8221; you can then check it for changes:</p>
+
+<pre><code>it(&quot;updates status when adding time spans&quot;, function(){
+  expect($test.textContent).toEqual(&quot;&quot;);
+  service.addNew();
+  expect($test.textContent).toContain(&quot;Check-in at&quot;);
+});</code></pre>
+
+<p>Finally using jasmine you can mock out time dependencies, which allows you to test timeout functions.</p>
+
+<pre><code>it(&quot;should update accordingly&quot;, function(){
+  service.addNew();
+  var before = $test.textContent;
+
+  //Move start 3min back in time :D
+  service.first().start().subtract(3, &quot;minutes&quot;);
+
+  jasmine.Clock.tick(30001);
+  expect($test.textContent).not.toEqual(before);
+});</code></pre>
+
+<p>Yep I am aware of that nasty change the time hack that does not obey the <a href='http://en.wikipedia.org/wiki/Law_of_Demeter'>Law of Demeter</a>.</p>
+
+<h2 id='the_future'>The future</h2>
+
+<p>Right now punch-clock is quite basic. It supports my basic needs, but there are some immediate functions I would like to add:</p>
+
+<ol>
+<li>History - the ability to see previous check-ins.</li>
+
+<li>Check-in url paramter - allow you to bookmark a auto check-in so you can add it to your startup pages on your work machine.</li>
+
+<li>Edit - edit check-ins</li>
+
+<li>Categories - or tags e.g. work, training etc.</li>
+
+<li>Delete - delete individual check-ins</li>
+
+<li>Save to web-service - e.g. simple backend, gists, google drive.</li>
+
+<li>Check-in on multiple devices using a unique indentifier.. email?</li>
+</ol>
+
+<p>There is probably a lot of other things that makes sense to add, or not to add.</p>
+
+<p>The source can be found at: <a href='https://github.com/mkrogh/punch-clock'>github</a>, and the app is running at <a href='http://punch-clock.boundless.dk/'>punch-clock</a>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/05/02/colors-in-vim" title="Colors... in vim">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>09 June 2013</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#JS-ref">JS <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#punch-clock-ref">punch-clock <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#coding-ref">coding <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#require.js-ref">require.js <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    
+  </body>
+</html>
+
