@@ -4,8 +4,8 @@ set :repository,  "git://github.com/mkrogh/CasaDelKrogh-Blog.git"
 set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-role :web, "momus.boundless.dk"                          # Your HTTP server, Apache/etc
-role :app, "momus.boundless.dk"                          # This may be the same as your `Web` server
+role :web, "bia.boundless.dk"                          # Your HTTP server, Apache/etc
+role :app, "bia.boundless.dk"                          # This may be the same as your `Web` server
 
 set :deploy_to, "/var/www/#{application}"
 set :use_sudo, false
@@ -33,6 +33,9 @@ task :set_permissions do
   run "chmod -R g+w #{deploy_to}"
 end
 
-
+task :symlink_images do
+  run "ln -nfs #{release_path}/images #{release_path}/_site/images"
+end
 after 'deploy', 'set_permissions'
+after 'deploy', 'symlink_images'
 after 'deploy:setup', 'set_permissions'
