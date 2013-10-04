@@ -4,3 +4,6 @@ Just run:
 
 rake post title="Hello World"
 
+Server:
+
+jekyll --server

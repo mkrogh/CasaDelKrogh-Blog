@@ -54,7 +54,10 @@ module Images
   end
 end # Gallery
 
+##USAGE: 
+# {% slider vim-themes/sh %}
 Liquid::Template.register_tag("slider", Images::SliderTag)
+
 Liquid::Template.register_tag("image", Images::ImageTag)
 Liquid::Template.register_tag("image_right", Images::RightImageTag)
 Liquid::Template.register_tag("image_center", Images::CenterImageTag)
