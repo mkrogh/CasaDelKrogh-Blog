@@ -174,6 +174,12 @@ img.center {
 aside.right {
   float: right; }
 
+.nav.pull-right .feed-link {
+  padding: 4px 10px; }
+
+.feed-icon {
+  width: 32px; }
+
 .slider {
   width: 100%;
   overflow: hidden;
