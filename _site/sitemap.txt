@@ -4,7 +4,6 @@ http://casadelkrogh.dk/atom.xml
 http://casadelkrogh.dk/sitemap.txt
 http://casadelkrogh.dk/tags.html
 http://casadelkrogh.dk/categories.html
-http://casadelkrogh.dk/'
 http://casadelkrogh.dk/archive.html
 http://casadelkrogh.dk/assets/themes/CasaDelKrogh/css/style.css
 http://casadelkrogh.dk/index.html

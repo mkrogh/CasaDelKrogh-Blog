@@ -11,12 +11,6 @@
 
     <!-- Fav and touch icons -->
     <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
-    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
-    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
-    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
-    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
-    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
-    <script src='/assets/themes/CasaDelKrogh/js/slider.js' type='text/javascript'></script>
     <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -74,8 +68,6 @@
     
   
     
-  
-    
     	
     	<li><a href="/archive.html">Archive</a></li>
     	
@@ -94,28 +86,34 @@
         </div>
       </div>
       <div class='content'>
-        <div class='autor-bio cf row'>
+        <div class='author-bio cf row'>
           <div class='span7'>
-            <img src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <img class='author-img' src='/assets/themes/CasaDelKrogh/imgs/author.png' alt='author' />
             <p>My name is Markus Krogh and I am a software developer at <a href="http://www.aau.dk/" title="Aalborg University">AAU</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
 </p>
           </div>
-          <div class='span5' id='twitter-feed'>
-            <script type='text/x-handlebars'>
-              
-              <ul class='tweet-feed'>
-                {{#each App.Feed}}
-                <li>
-                  <blockquote>{{text}}</blockquote>
-                </li>
-                {{/each}}
-                {{#unless App.Feed.content}}
-                <li class='placeholder'>Fetching tweets...</li>
-                {{/unless}}
-              </ul>
-              
-            </script>
-          </div>
+          <ul class='span5 social-bar'>
+            <li class="social-icon">
+              <a href="https://plus.google.com/118226884430642597371/posts" title="Google Plus">
+                <img src='/assets/themes/CasaDelKrogh/imgs/social/gplus_64.png' alt='Google Plus'/>
+                </a>
+            </li>
+            <li class="social-icon">
+              <a href="http://www.linkedin.com/in/markuskrogh" title="LinkedIn">
+                <img src='/assets/themes/CasaDelKrogh/imgs/social/linkedin_64.png' alt='LinkedIn'/>
+                </a>
+            </li>
+            <li class="social-icon">
+              <a href="https://github.com/mkrogh" title="Github">
+                <img src='/assets/themes/CasaDelKrogh/imgs/social/github_64.png' alt='Github'/>
+                </a>
+            </li>
+            <li class="social-icon">
+              <a href="https://twitter.com/MarkusKrogh" title="Twitter">
+                <img src='/assets/themes/CasaDelKrogh/imgs/social/twitter_64.png' alt='Twitter'/>
+                </a>
+            </li>
+          </ul>
         </div>
         
 <div class="page-header">
@@ -213,7 +211,12 @@
       </footer>
     </div>
     <!-- /container -->
-    
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/underscore-min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/ember-0.9.5.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/twitter-feed.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/slider.js' type='text/javascript'></script>
   </body>
 </html>
 

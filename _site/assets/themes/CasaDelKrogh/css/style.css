@@ -58,7 +58,7 @@ img.center {
   border-radius: 6px 6px 0 0; }
 
 /* Author bio =============================== */
-.autor-bio {
+.author-bio {
   background: #9ea7b5;
   margin: -20px 0 0 -20px;
   padding: 15px 20px 0;
@@ -67,10 +67,10 @@ img.center {
   -o-border-radius: 6px 6px 0 0;
   border-radius: 6px 6px 0 0;
   width: 100%; }
-  .autor-bio .span7 {
+  .author-bio .span7 {
     margin: 0; }
 
-.autor-bio img {
+.author-img {
   height: 60px;
   padding: 3px;
   background: white;
@@ -106,6 +106,16 @@ img.center {
     border-radius: 2px; }
   .tweet-feed blockquote {
     margin: 0; }
+
+/* Social */
+.social-bar {
+  list-style: none; }
+
+.social-bar li {
+  float: right; }
+
+.social-icon img {
+  width: 52px; }
 
 /* tag_box ======================================================== */
 .tag_box {
