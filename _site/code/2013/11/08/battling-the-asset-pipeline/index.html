@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>Categories</title>
+    <title>Battling the asset pipeline</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -62,7 +62,7 @@
   
     
     	
-    	<li class="active"><a href="/categories.html" class="active">Categories</a></li>
+    	<li><a href="/categories.html">Categories</a></li>
     	
     
   
@@ -123,147 +123,72 @@
         </div>
         
 <div class="page-header">
-  <h1>Categories <small></small></h1> 
+  <h1>Battling the asset pipeline <small>code</small></h1>
 </div>
 
 <div class="row">
-  <div class="span12">
-    
+  <div class="span8">
+    <p>About half a year ago I had to update a rails 3.1 application to 3.2. With the upgrade my <a href='http://sass-lang.com/'>Sass</a> and <a href='http://coffeescript.org/'>CoffeScript</a> auto-compilation ended up being botched.</p>
 
-<ul class="tag_box inline">
+<p>This prompted me to change to the asset pipeline, which in itself proved to be a bit like <a href='http://imgur.com/t0XHtgJ'>yak shaving</a>, fixing one thing only to have a new bug appear.</p>
+<!--more-->
+<p>One of my primary resources for enabling the asset pipeline was Ryan Bats excellent rails cast about <a href='http://asciicasts.com/episodes/282-upgrading-to-rails-3-1'>upgrading to 3.1</a>. It helps you get a basic asset pipeline setup.</p>
+
+<p>The standard asset pipeline configuration in rails only covers <code>application.js</code> and <code>application.css</code>, and I needed to add a couple of extra files. One way to do this is to add them to the <code>config.assets.precompile</code> array.</p>
+
+<pre><code>[&#39;main.css&#39;, &#39;editor.js&#39;, &quot;indgang.js&quot;].each do |asset|
+  config.assets.precompile &lt;&lt; asset
+end</code></pre>
+
+<p>The problem is that in development mode the asset pipeline is turned off, and Rails serves the assets directly. This means you will not discover the error until deploying to production, where Rails throws a nasty &#8220;asset not pre-compiled&#8221; exception.</p>
+
+<h2 id='images_and_sass'>Images and Sass</h2>
+
+<p>Another small problem I faced was that images included from Sass was not showing up. This was fixed by moving the images to <code>app/assets/images</code> and using the <code>image-url</code> Sass helper.</p>
+
+<pre><code>.some-class
+  image-url(&#39;bord-top.gif&#39;)</code></pre>
+
+<p>It will refer to the correct image path for images placed in <code>app/assets/images</code>.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/Other/2013/10/04/coffee" title="Coffee">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
   
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>08 November 2013</span></div>
+
   
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
 
 
   
      
-    	<li><a href="/categories.html#tech-ref">
-    		tech <span>2</span>
-    	</a></li>
+    	<li><a href="/tags.html#rails-ref">rails <span>2</span></a></li>
      
-    	<li><a href="/categories.html#code-ref">
-    		code <span>5</span>
-    	</a></li>
-     
-    	<li><a href="/categories.html#hardware-ref">
-    		hardware <span>1</span>
-    	</a></li>
-     
-    	<li><a href="/categories.html#Other-ref">
-    		Other <span>1</span>
-    	</a></li>
-    
-  
-
-
-</ul>
-
-
- 
-  <h2 id="tech-ref">tech</h2>
-  <ul>
-      
-    
-
-
-  
-    
-    	
-    	<li><a href="/tech/2012/03/24/backup-backup-backup">Backup, backup, backup</a></li>
-    	
-    
-  
-    
-    	
-    	<li><a href="/tech/2012/03/17/a-theme-a-dream-and-some-bumps">A theme, a dream and some bumps</a></li>
-    	
+    	<li><a href="/tags.html#asset pipeline-ref">asset pipeline <span>1</span></a></li>
     
   
 
 
 
-  </ul>
- 
-  <h2 id="code-ref">code</h2>
-  <ul>
-      
+    </ul>
     
-
-
-  
-    
-    	
-    	<li><a href="/code/2013/11/08/battling-the-asset-pipeline">Battling the asset pipeline</a></li>
-    	
-    
-  
-    
-    	
-    	<li><a href="/code/2013/06/09/tracking-time">Tracking time</a></li>
-    	
-    
-  
-    
-    	
-    	<li><a href="/code/2012/11/01/treasures-on-rails">Treasures on rails</a></li>
-    	
-    
-  
-    
-    	
-    	<li><a href="/code/2012/07/08/js-app-frameworks">JS app frameworks</a></li>
-    	
-    
-  
-    
-    	
-    	<li><a href="/code/2012/04/20/creating-a-ruby-project">Creating a ruby project</a></li>
-    	
-    
-  
-
-
-
-  </ul>
- 
-  <h2 id="hardware-ref">hardware</h2>
-  <ul>
-      
-    
-
-
-  
-    
-    	
-    	<li><a href="/hardware/2012/08/25/netgear-n300-wnr3500l-v1-custom-firmware">Netgear N300 WNR3500L v1 custom firmware</a></li>
-    	
-    
-  
-
-
-
-  </ul>
- 
-  <h2 id="Other-ref">Other</h2>
-  <ul>
-      
-    
-
-
-  
-    
-    	
-    	<li><a href="/Other/2013/10/04/coffee">Coffee</a></li>
-    	
-    
-  
-
-
-
-  </ul>
-
-
-
   </div>
 </div>
 
