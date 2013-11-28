@@ -8,6 +8,7 @@ http://casadelkrogh.dk/archive.html
 http://casadelkrogh.dk/assets/themes/CasaDelKrogh/css/style.css
 http://casadelkrogh.dk/index.html
 
+http://casadelkrogh.dk/2013/11/28/cas-proxy-tickets
 http://casadelkrogh.dk/code/2013/11/08/battling-the-asset-pipeline
 http://casadelkrogh.dk/Other/2013/10/04/coffee
 http://casadelkrogh.dk/code/2013/06/09/tracking-time
