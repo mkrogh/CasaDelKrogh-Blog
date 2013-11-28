@@ -13,8 +13,7 @@ We were looking into how we could split a traditional front-end, backend, REST s
 
 <!--more-->
 
-CAS Proxy Tickets
-=================
+Well time for the post:
 
 The CAS protocol supports issuing proxy tickets. A proxy ticket is a ticket that allows a CAS protected web application(web-app1) to communicate with another CAS protected web application(web-app2) on behalf of a CAS user.
 

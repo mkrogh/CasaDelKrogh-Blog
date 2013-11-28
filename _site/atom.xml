@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2013-11-28T23:16:49+01:00</updated>
+ <updated>2013-11-28T23:20:44+01:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -21,7 +21,7 @@
 
 &lt;p&gt;Back in the summer of 2012 I was looking into how we could provide proxy authentication for our &lt;a href='http://www.jasig.org/cas'&gt;CAS3&lt;/a&gt; installation at work. We were looking into how we could split a traditional front-end, backend, REST service into three separate applications, and still have the backend provide data to the REST service as if it was the user that talked directly to the data source.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;h1 id='cas_proxy_tickets'&gt;CAS Proxy Tickets&lt;/h1&gt;
+&lt;p&gt;Well time for the post:&lt;/p&gt;
 
 &lt;p&gt;The CAS protocol supports issuing proxy tickets. A proxy ticket is a ticket that allows a CAS protected web application(web-app1) to communicate with another CAS protected web application(web-app2) on behalf of a CAS user.&lt;/p&gt;
 
