@@ -4,8 +4,8 @@ set :repository,  "git://github.com/mkrogh/CasaDelKrogh-Blog.git"
 set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-role :web, "bia.boundless.dk"                          # Your HTTP server, Apache/etc
-role :app, "bia.boundless.dk"                          # This may be the same as your `Web` server
+role :web, "nyx.boundless.dk"                          # Your HTTP server, Apache/etc
+role :app, "nyx.boundless.dk"                          # This may be the same as your `Web` server
 
 set :deploy_to, "/var/www/#{application}"
 set :use_sudo, false
