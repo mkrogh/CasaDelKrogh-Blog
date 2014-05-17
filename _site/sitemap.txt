@@ -1,12 +1,12 @@
 
-http://casadelkrogh.dk/sitemap.txt
-http://casadelkrogh.dk/index.html
-http://casadelkrogh.dk/archive.html
-http://casadelkrogh.dk/assets/themes/CasaDelKrogh/css/style.css
-http://casadelkrogh.dk/atom.xml
-http://casadelkrogh.dk/tags.html
 http://casadelkrogh.dk/categories.html
 http://casadelkrogh.dk/pages.html
+http://casadelkrogh.dk/atom.xml
+http://casadelkrogh.dk/tags.html
+http://casadelkrogh.dk/index.html
+http://casadelkrogh.dk/assets/themes/CasaDelKrogh/css/style.css
+http://casadelkrogh.dk/archive.html
+http://casadelkrogh.dk/sitemap.txt
 
 http://casadelkrogh.dk/2013/11/28/cas-proxy-tickets
 http://casadelkrogh.dk/code/2013/11/08/battling-the-asset-pipeline
