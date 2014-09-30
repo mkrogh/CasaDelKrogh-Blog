@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2014-05-17T12:41:10+02:00</updated>
+ <updated>2014-09-30T16:30:04+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -13,13 +13,103 @@
 
  
  <entry>
+   <title>Embedding simpleSAMLphp using nginx</title>
+   <link href="http://casadelkrogh.dk/code/2014/09/30/embedding-simplesamlphp-using-nginx"/>
+   <updated>2014-09-30T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2014/09/30/embedding-simplesamlphp-using-nginx</id>
+   <content type="html">&lt;p&gt;I recently had to embed &lt;a href=&#39;https://simplesamlphp.org/&#39;&gt;simpleSAMLphp&lt;/a&gt; into another application, in order to provide SAML2 federate login. Well embed might be the wrong term, perhaps mount describes it better.&lt;/p&gt;
+
+&lt;p&gt;As my web server of choice these days is nginx I wanted to use it rather than apache. This posed a couple of problems, so I decided to document my endeavour, mostly because I have been through this process once before and it turns out my memory is not really that good.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;The exact premise in this case is an integration of federate login for &lt;a href=&#39;http://vanillaforums.org/&#39;&gt;vanilla forums&lt;/a&gt;, I will try to make a follow up post on how I achieved the integration when I’m done. My environment in this case is a &lt;a href=&#39;https://www.vagrantup.com/&#39;&gt;vagrant box&lt;/a&gt; running ubuntu 14.04.&lt;/p&gt;
+
+&lt;h2 id=&#39;installation&#39;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;Install nginx and php5.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install nginx php5-fpm&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Download simpleSAMLphp from https://simplesamlphp.org/download and extract it where you want it.&lt;/p&gt;
+
+&lt;h3 id=&#39;configuration&#39;&gt;Configuration&lt;/h3&gt;
+
+&lt;p&gt;Start by configuring the simpleSAMLphp by following the &lt;a href=&#39;https://simplesamlphp.org/docs/stable/simplesamlphp-install&#39;&gt;Installation&lt;/a&gt; and &lt;a href=&#39;https://simplesamlphp.org/docs/stable/simplesamlphp-sp&#39;&gt;SP guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next up is configuration of the nginx server directive. To get it out of the way here is a condensed version of the server configuration.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+  listen 8080 default_server;
+  listen [::]:8080 default_server ipv6only=on;
+  server_name localhost;
+
+  root /home/vagrant/vanilla;
+  index index.php index.html index.htm;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location  /simplesaml {
+    alias /home/vagrant/simplesaml/www/;
+    location ~ \.php(/|$) {
+      fastcgi_split_path_info ^(.+?\.php)(/.+)$;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
+      fastcgi_index index.php;
+      include fastcgi_params;
+    }
+  }
+
+  location ~ \.php(/|$) {
+    #… same as above
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So multiple things are rather important here, lets look at it line by line.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; location /simplesaml {&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can choose any location you want, but if you change it you must tell simplesaml this in &lt;code&gt;config/config.php&lt;/code&gt;, look for the &lt;code&gt;baseurlpath&lt;/code&gt; entry.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; alias /home/vagrant/simplesaml/www/;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alias allows you to change where nginx will serve the requests from, it will handle the &amp;#8220;removal&amp;#8221; of &lt;code&gt;/simplesaml&lt;/code&gt; from the request url.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  location ~ \.php(/|$) {&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A regex location to handle php request (all urls containing .php/ or .php). This is needed because alias would otherwise not be carried on into the default php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; fastcgi_split_path_info ^(.+?\.php)(/.+)$;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This one is quite &lt;strong&gt;important&lt;/strong&gt; to make simpleSAMLphp work correctly. The default ubuntu/debian nginx php configuration will use a greedy regex that will make for some entertaining bugs that make metadata exchange unusable.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; fastcgi_param PATH_INFO $fastcgi_path_info;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another addition that is not part of the default nginx configuration example. In short set the server environment variable &lt;code&gt;PATH_INFO&lt;/code&gt; to the extracted path info.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; fastcgi_pass unix:/var/run/php5-fpm.sock;
+ fastcgi_index index.php;
+ include fastcgi_params; &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Delegate the request to fpm via fastcgi.&lt;/p&gt;
+
+&lt;p&gt;With all this done you should now have a simpleSAMLphp instance running &amp;#8220;inside&amp;#8221; your site. For testing I can recommend the default Feide OpenIdP, it will serve you well until you are ready for integration with your desired IdPs.&lt;/p&gt;
+
+&lt;h2 id=&#39;the_missing_bits&#39;&gt;The missing bits&lt;/h2&gt;
+
+&lt;p&gt;I have not yet looked into if this setup is configured correctly in terms of security, and access rights. So beware of this, after all you are doing authentication :)&lt;/p&gt;
+
+&lt;p&gt;If you have any questions hit me up on twitter, I might or might not be abele to help.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
    <title>CAS Proxy Tickets</title>
    <link href="http://casadelkrogh.dk/2013/11/28/cas-proxy-tickets"/>
    <updated>2013-11-28T00:00:00+01:00</updated>
    <id>hhttp://casadelkrogh.dk/2013/11/28/cas-proxy-tickets</id>
    <content type="html">&lt;p&gt;This is post that by now is over a year old, but I haven&amp;#8217;t gotten round to post it.&lt;/p&gt;
 
-&lt;p&gt;Back in the summer of 2012 I was looking into how we could provide proxy authentication for our &lt;a href='http://www.jasig.org/cas'&gt;CAS3&lt;/a&gt; installation at work. We were looking into how we could split a traditional front-end, backend, REST service into three separate applications, and still have the backend provide data to the REST service as if it was the user that talked directly to the data source.&lt;/p&gt;
+&lt;p&gt;Back in the summer of 2012 I was looking into how we could provide proxy authentication for our &lt;a href=&#39;http://www.jasig.org/cas&#39;&gt;CAS3&lt;/a&gt; installation at work. We were looking into how we could split a traditional front-end, backend, REST service into three separate applications, and still have the backend provide data to the REST service as if it was the user that talked directly to the data source.&lt;/p&gt;
 &lt;!--more--&gt;
 &lt;p&gt;Well time for the post:&lt;/p&gt;
 
@@ -30,10 +120,10 @@
 &lt;p&gt;Another example of app to app communication where a user can allow one app to act as himself is OAuth. This exempt taken from the OAuth 2.0 rfc draft explains the purpos a bit better:&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf. - &lt;a href='http://tools.ietf.org/html/draft-ietf-oauth-v2-31'&gt;http://tools.ietf.org/html/draft-ietf-oauth-v2-31&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf. - &lt;a href=&#39;http://tools.ietf.org/html/draft-ietf-oauth-v2-31&#39;&gt;http://tools.ietf.org/html/draft-ietf-oauth-v2-31&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id='when_to_use_cas_proxy_tickets'&gt;When to use CAS proxy tickets&lt;/h2&gt;
+&lt;h2 id=&#39;when_to_use_cas_proxy_tickets&#39;&gt;When to use CAS proxy tickets&lt;/h2&gt;
 
 &lt;p&gt;This section will serve as an example of a situation where CAS proxy tickets makes sense. We will look at a scenario where one CAS protected application needs to access another CAS protected service.&lt;/p&gt;
 
@@ -61,14 +151,14 @@
 
 &lt;p&gt;This setup should probably also have a view part that shows the buildings on a map, but it is irrelevant for this walkthrough.&lt;/p&gt;
 
-&lt;h3 id='communication_flow'&gt;Communication flow&lt;/h3&gt;
+&lt;h3 id=&#39;communication_flow&#39;&gt;Communication flow&lt;/h3&gt;
 
 &lt;p&gt;The edit-app is protected by CAS, and requires users to login through CAS, and have the role of editor before accessing the app. Handling roles and mapping user names to roles can be injected as a filter, see the resource protection article.&lt;/p&gt;
 
-&lt;p&gt;When the user chooses to save a building the edit-app will try to persist the result using e.g. the &lt;a href='https://jersey.java.net/nonav/documentation/latest/user-guide.html#d4e534'&gt;Jersey client&lt;/a&gt;. This is where CAS proxy tickets come into play:&lt;/p&gt;
+&lt;p&gt;When the user chooses to save a building the edit-app will try to persist the result using e.g. the &lt;a href=&#39;https://jersey.java.net/nonav/documentation/latest/user-guide.html#d4e534&#39;&gt;Jersey client&lt;/a&gt;. This is where CAS proxy tickets come into play:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;The edit-app asks for a proxy granting ticket, see the step by step guide for doing it by hand: &lt;a href='https://wiki.jasig.org/display/CAS/Proxy+CAS+Walkthrough'&gt;CAS Proxy walkthroug&lt;/a&gt; - Please note: In order to get a proxy granting ticket the proxyCallbackUrl must be a https resource, and the check cannot be disabled&lt;/li&gt;
+&lt;li&gt;The edit-app asks for a proxy granting ticket, see the step by step guide for doing it by hand: &lt;a href=&#39;https://wiki.jasig.org/display/CAS/Proxy+CAS+Walkthrough&#39;&gt;CAS Proxy walkthroug&lt;/a&gt; - Please note: In order to get a proxy granting ticket the proxyCallbackUrl must be a https resource, and the check cannot be disabled&lt;/li&gt;
 
 &lt;li&gt;The CAS server then makes a callback to the proxyCallbackUrl (normally on the edit-app) with a proxy ticket.&lt;/li&gt;
 
@@ -85,7 +175,7 @@
 
 &lt;p&gt;You do however have to configure the building-service to process proxy tickets, and configure the edit-app service to have a https fronting proxy callback url. That is what the next couple of sections are concerned with.&lt;/p&gt;
 
-&lt;h2 id='requirements'&gt;Requirements&lt;/h2&gt;
+&lt;h2 id=&#39;requirements&#39;&gt;Requirements&lt;/h2&gt;
 
 &lt;p&gt;To get proxy tickets setup for takeoff you have to meet the following requirements.&lt;/p&gt;
 
@@ -99,7 +189,7 @@
 &lt;li&gt;The building-service CAS validation filter must be configured to allow the editor-app to proxy requests (or allow all apps to proxy).&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id='cas_server_configuration'&gt;CAS server configuration&lt;/h3&gt;
+&lt;h3 id=&#39;cas_server_configuration&#39;&gt;CAS server configuration&lt;/h3&gt;
 
 &lt;p&gt;As mentioned the CAS server needs to support proxy tickets, the immediate way to support it is to enable the &lt;code&gt;HttpBasedServiceCredentialsToPrincipalResolver&lt;/code&gt; and &lt;code&gt;HttpBasedServiceCredentialsAuthenticationHandler&lt;/code&gt; in the &lt;code&gt;/WEB-INF/deployerConfigContext.xml&lt;/code&gt;. The following snippet shows how it should be wired in (comments omitted):&lt;/p&gt;
 
@@ -121,7 +211,7 @@
 
 &lt;p&gt;This might not be the only way to configure the CAS server to support proxy tickets, but from a bit of searching it is only way I have found.&lt;/p&gt;
 
-&lt;h2 id='example'&gt;Example&lt;/h2&gt;
+&lt;h2 id=&#39;example&#39;&gt;Example&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#8217;s get down to business. This part will go into gory details on how to configure two simple Java web resources, where one of them can access the other using proxy tickets.&lt;/p&gt;
 
@@ -205,7 +295,7 @@
   &amp;lt;url-pattern&amp;gt;/edit/*&amp;lt;/url-pattern&amp;gt;
 &amp;lt;/filter-mapping&amp;gt;&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;One of the things to note is the ordering of the filters, some of the explanation is from the &lt;a href='https://wiki.jasig.org/display/CASC/Configuring+the+Jasig+CAS+Client+for+Java+in+the+web.xml'&gt;CAS in web.xml article&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;One of the things to note is the ordering of the filters, some of the explanation is from the &lt;a href=&#39;https://wiki.jasig.org/display/CASC/Configuring+the+Jasig+CAS+Client+for+Java+in+the+web.xml&#39;&gt;CAS in web.xml article&lt;/a&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;CAS Validation Filter&lt;/code&gt; - Handles both proxy validation and regular validation. Normally you might see this as the second filter.&lt;/li&gt;
@@ -229,7 +319,7 @@
 
 &lt;p&gt;Now we should be able to get a proxy granting ticket \o/, let&amp;#8217;s see if it works.&lt;/p&gt;
 
-&lt;h3 id='obtaining_proxy_tickets'&gt;Obtaining proxy tickets&lt;/h3&gt;
+&lt;h3 id=&#39;obtaining_proxy_tickets&#39;&gt;Obtaining proxy tickets&lt;/h3&gt;
 
 &lt;p&gt;In Java you can use the CAS Assertion (user principal wrapper object) to obtain proxy tickets, so let&amp;#8217;s add the following to our &lt;code&gt;doGet&lt;/code&gt;:&lt;/p&gt;
 
@@ -241,7 +331,7 @@ model.put(&amp;quot;proxy_ticket&amp;quot;, proxyTicket);&lt;/code&gt;&lt;/pre&g
 
 &lt;p&gt;If we deploy this project we should see some tickets e.g. &lt;code&gt;ST-5-WGciSIlId5IRKvJoWdsD-cas&lt;/code&gt;. As a note CAS3 does not seem to indicate a difference between service tickets and proxy tickets, older versions used to prefix proxy tickets with &lt;code&gt;PT&lt;/code&gt; and service tickets with &lt;code&gt;ST&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id='creating_the_buildingservice'&gt;Creating the building-service&lt;/h3&gt;
+&lt;h3 id=&#39;creating_the_buildingservice&#39;&gt;Creating the building-service&lt;/h3&gt;
 
 &lt;p&gt;Start a new servlet project and name it building-service. Then create a servlet that has a doPost method and map it to &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;
 
@@ -330,7 +420,7 @@ throws ServletException, IOException {
 
 &lt;p&gt;Congratulations you are now able to use proxy tickets, awesome? Yes indeed&amp;#8230;&lt;/p&gt;
 
-&lt;h2 id='other_thoughts'&gt;Other thoughts&lt;/h2&gt;
+&lt;h2 id=&#39;other_thoughts&#39;&gt;Other thoughts&lt;/h2&gt;
 
 &lt;p&gt;Going over the example again I can&amp;#8217;t help but think that it might be possible to use another service as the proxy callback. This would make it possible to have a central proxy ticket resource that based on a proxy ticket IOU could return the proxy ticket returned from the CAS server. However this would not work with the current CAS Java filters, as they rely on finding the proxy ticket within the same application.&lt;/p&gt;
 
@@ -343,12 +433,12 @@ throws ServletException, IOException {
 &lt;p&gt;Other relevant resources on CAS and proxy authentication:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The CAS protocol &lt;a href='http://www.jasig.org/cas/protocol'&gt;http://www.jasig.org/cas/protocol&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The CAS protocol &lt;a href=&#39;http://www.jasig.org/cas/protocol&#39;&gt;http://www.jasig.org/cas/protocol&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id='download_example'&gt;Download example&lt;/h2&gt;
+&lt;h2 id=&#39;download_example&#39;&gt;Download example&lt;/h2&gt;
 
-&lt;p&gt;The example apps created in this article can be downloaded as: &lt;a href='/files/CAS_Proxy_Tickets-example.zip'&gt;CAS_Proxy_Tickets-example.zip&lt;/a&gt;&lt;/p&gt;</content>
+&lt;p&gt;The example apps created in this article can be downloaded as: &lt;a href=&#39;/files/CAS_Proxy_Tickets-example.zip&#39;&gt;CAS_Proxy_Tickets-example.zip&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -356,11 +446,11 @@ throws ServletException, IOException {
    <link href="http://casadelkrogh.dk/code/2013/11/08/battling-the-asset-pipeline"/>
    <updated>2013-11-08T00:00:00+01:00</updated>
    <id>hhttp://casadelkrogh.dk/code/2013/11/08/battling-the-asset-pipeline</id>
-   <content type="html">&lt;p&gt;About half a year ago I had to update a rails 3.1 application to 3.2. With the upgrade my &lt;a href='http://sass-lang.com/'&gt;Sass&lt;/a&gt; and &lt;a href='http://coffeescript.org/'&gt;CoffeScript&lt;/a&gt; auto-compilation ended up being botched.&lt;/p&gt;
+   <content type="html">&lt;p&gt;About half a year ago I had to update a rails 3.1 application to 3.2. With the upgrade my &lt;a href=&#39;http://sass-lang.com/&#39;&gt;Sass&lt;/a&gt; and &lt;a href=&#39;http://coffeescript.org/&#39;&gt;CoffeScript&lt;/a&gt; auto-compilation ended up being botched.&lt;/p&gt;
 
-&lt;p&gt;This prompted me to change to the asset pipeline, which in itself proved to be a bit like &lt;a href='http://imgur.com/t0XHtgJ'&gt;yak shaving&lt;/a&gt;, fixing one thing only to have a new bug appear.&lt;/p&gt;
+&lt;p&gt;This prompted me to change to the asset pipeline, which in itself proved to be a bit like &lt;a href=&#39;http://imgur.com/t0XHtgJ&#39;&gt;yak shaving&lt;/a&gt;, fixing one thing only to have a new bug appear.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;p&gt;One of my primary resources for enabling the asset pipeline was Ryan Bats excellent rails cast about &lt;a href='http://asciicasts.com/episodes/282-upgrading-to-rails-3-1'&gt;upgrading to 3.1&lt;/a&gt;. It helps you get a basic asset pipeline setup.&lt;/p&gt;
+&lt;p&gt;One of my primary resources for enabling the asset pipeline was Ryan Bats excellent rails cast about &lt;a href=&#39;http://asciicasts.com/episodes/282-upgrading-to-rails-3-1&#39;&gt;upgrading to 3.1&lt;/a&gt;. It helps you get a basic asset pipeline setup.&lt;/p&gt;
 
 &lt;p&gt;The standard asset pipeline configuration in rails only covers &lt;code&gt;application.js&lt;/code&gt; and &lt;code&gt;application.css&lt;/code&gt;, and I needed to add a couple of extra files. One way to do this is to add them to the &lt;code&gt;config.assets.precompile&lt;/code&gt; array.&lt;/p&gt;
 
@@ -370,7 +460,7 @@ end&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The problem is that in development mode the asset pipeline is turned off, and Rails serves the assets directly. This means you will not discover the error until deploying to production, where Rails throws a nasty &amp;#8220;asset not pre-compiled&amp;#8221; exception.&lt;/p&gt;
 
-&lt;h2 id='images_and_sass'&gt;Images and Sass&lt;/h2&gt;
+&lt;h2 id=&#39;images_and_sass&#39;&gt;Images and Sass&lt;/h2&gt;
 
 &lt;p&gt;Another small problem I faced was that images included from Sass was not showing up. This was fixed by moving the images to &lt;code&gt;app/assets/images&lt;/code&gt; and using the &lt;code&gt;image-url&lt;/code&gt; Sass helper.&lt;/p&gt;
 
@@ -385,10 +475,10 @@ end&lt;/code&gt;&lt;/pre&gt;
    <link href="http://casadelkrogh.dk/Other/2013/10/04/coffee"/>
    <updated>2013-10-04T00:00:00+02:00</updated>
    <id>hhttp://casadelkrogh.dk/Other/2013/10/04/coffee</id>
-   <content type="html">&lt;p&gt;Yesterday my new coffee grinder arrived. It is a &lt;a href='http://www.imerco.dk/Default.aspx?id=6171&amp;amp;ProductID=100329983'&gt;Bodum Bistro&lt;/a&gt; electric grinder that uses a conical burr grinder. For quite some time I have considered buying a coffee grinder.&lt;/p&gt;
+   <content type="html">&lt;p&gt;Yesterday my new coffee grinder arrived. It is a &lt;a href=&#39;http://www.imerco.dk/Default.aspx?id=6171&amp;amp;ProductID=100329983&#39;&gt;Bodum Bistro&lt;/a&gt; electric grinder that uses a conical burr grinder. For quite some time I have considered buying a coffee grinder.&lt;/p&gt;
 
-&lt;p&gt;It all started when I bought my &lt;a href='http://www.amazon.co.uk/Aerobie-AeroPress-80R08-Coffee-Maker/dp/B000GXZ2GS/'&gt;Aero Press&lt;/a&gt;. A couple of my friends had been praising it, and when I discovered that it was as cheap as it is I was sold.&lt;/p&gt;
-&lt;!--more--&gt;&lt;img alt='coffee.jpg' class='right' src='/images/coffee/coffee.jpg' /&gt;
+&lt;p&gt;It all started when I bought my &lt;a href=&#39;http://www.amazon.co.uk/Aerobie-AeroPress-80R08-Coffee-Maker/dp/B000GXZ2GS/&#39;&gt;Aero Press&lt;/a&gt;. A couple of my friends had been praising it, and when I discovered that it was as cheap as it is I was sold.&lt;/p&gt;
+&lt;!--more--&gt;&lt;img alt=&#39;coffee.jpg&#39; class=&#39;right&#39; src=&#39;/images/coffee/coffee.jpg&#39; /&gt;
 &lt;p&gt;That was what got me started on my coffee adventure. Because I do not drink coffee by the bucket I started buying different brands of luxury coffee. It was nice and all was dandy, as time went by I began to think about grinding the coffee myself to keep it fresh.&lt;/p&gt;
 
 &lt;p&gt;A couple of half hearted searches on amazon and a trip to city center yielded nothing really interesting. Then one night I was over at a friends apartment and he offered me a cup of freshly ground coffee; who would not want that?&lt;/p&gt;
@@ -400,10 +490,10 @@ end&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;As an added bonus to this waiting game, the French press was dead on arrival as the glass was cracked.&lt;/p&gt;
 
 &lt;p&gt;But here I am writing a quick post whilst drinking a cup of coffee made on my aero press from my freshly ground coffee. Mmmmm.&lt;/p&gt;
-&lt;div class='slider'&gt;
-&lt;ul class='inner'&gt;
-&lt;li class='item'&gt;&lt;img alt='Bodum_Bistro.jpg' src='/images/coffee/Bodum_Bistro.jpg' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='coffee.jpg' src='/images/coffee/coffee.jpg' /&gt;&lt;/li&gt;
+&lt;div class=&#39;slider&#39;&gt;
+&lt;ul class=&#39;inner&#39;&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;Bodum_Bistro.jpg&#39; src=&#39;/images/coffee/Bodum_Bistro.jpg&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;coffee.jpg&#39; src=&#39;/images/coffee/coffee.jpg&#39; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;</content>
  </entry>
@@ -415,25 +505,25 @@ end&lt;/code&gt;&lt;/pre&gt;
    <id>hhttp://casadelkrogh.dk/code/2013/06/09/tracking-time</id>
    <content type="html">&lt;p&gt;In response to recent rule changes at work, and my desire to take a crack at using requirejs for something usefull, I have created a simple punch-clock javascript app that can help me track time spent.&lt;/p&gt;
 
-&lt;p&gt;There are a lot of apps out there to track time, and a lot of them are quite nice, but &amp;#8220;not invented here&amp;#8221; has not been coined in vain. Due to the relative low complexity of the problem I decided to DIY it and created &lt;a href='http://punch-clock.boundless.dk'&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are a lot of apps out there to track time, and a lot of them are quite nice, but &amp;#8220;not invented here&amp;#8221; has not been coined in vain. Due to the relative low complexity of the problem I decided to DIY it and created &lt;a href=&#39;http://punch-clock.boundless.dk&#39;&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;h2 id='motivation'&gt;Motivation&lt;/h2&gt;
+&lt;h2 id=&#39;motivation&#39;&gt;Motivation&lt;/h2&gt;
 
 &lt;p&gt;Recently at work we have been instructed to register our over and under time. Previously we have had a &amp;#8220;rule&amp;#8221; that it was up to ourselves to keep track of our time, as long as we did not exceed two work days. It has worked fine and generally been pleasant, but as AAU have begun to centralize all IT resources, a set of ground rules have been laid out.&lt;/p&gt;
 
 &lt;p&gt;Unfortunately that means I now have to report my over/under time. One of the things I am notoriously bad at is time calculations, but then I can &amp;#8220;create an app for that&amp;#8221;&amp;#8482;&lt;/p&gt;
 
-&lt;h2 id='enter_punchclock'&gt;Enter punch-clock&lt;/h2&gt;
-&lt;img alt='punch_clock.png' class='right' src='/images/punch-clock/punch_clock.png' /&gt;
+&lt;h2 id=&#39;enter_punchclock&#39;&gt;Enter punch-clock&lt;/h2&gt;
+&lt;img alt=&#39;punch_clock.png&#39; class=&#39;right&#39; src=&#39;/images/punch-clock/punch_clock.png&#39; /&gt;
 &lt;p&gt;Punch clock is a simple check-in, check-out app that calculates the time spent. When a check-in is created it will keep the duration up to date as time passes. Finally when checking out it will display start and stop time, and the duration.&lt;/p&gt;
 
 &lt;p&gt;At the moment it stores check-in/outs in the browsers local storage. This means you can check-in, close the page/browser and return later to check-out/see progress.&lt;/p&gt;
 
 &lt;p&gt;That is all the app supports by now, I know quite simple, that is what is nice about it.&lt;/p&gt;
 
-&lt;h2 id='approach'&gt;Approach&lt;/h2&gt;
+&lt;h2 id=&#39;approach&#39;&gt;Approach&lt;/h2&gt;
 
-&lt;p&gt;I decided to use &lt;a href='http://requirejs.org/'&gt;require.js&lt;/a&gt; to allow me to modularize my code, then I added &lt;a href='http://pivotal.github.io/jasmine/'&gt;jasmine&lt;/a&gt; for testing, and decided on using &lt;a href='http://momentjs.com/'&gt;moment.js&lt;/a&gt; for time manipulation.&lt;/p&gt;
+&lt;p&gt;I decided to use &lt;a href=&#39;http://requirejs.org/&#39;&gt;require.js&lt;/a&gt; to allow me to modularize my code, then I added &lt;a href=&#39;http://pivotal.github.io/jasmine/&#39;&gt;jasmine&lt;/a&gt; for testing, and decided on using &lt;a href=&#39;http://momentjs.com/&#39;&gt;moment.js&lt;/a&gt; for time manipulation.&lt;/p&gt;
 
 &lt;p&gt;The source files are split up into somewhat simple modules. I have created models, services, presenters, views and more. This gives a natural belonging of each module and makes it easier to approach.&lt;/p&gt;
 
@@ -450,9 +540,9 @@ end&lt;/code&gt;&lt;/pre&gt;
 &lt;/dl&gt;
 &lt;p&gt;Even the local storage backed is created by wrapping the simple service and listening on changes on both the service and the individual model objects. When a change occurs it simply serializes the entire simple service to JSON and stores it.&lt;/p&gt;
 
-&lt;h2 id='testing'&gt;Testing&lt;/h2&gt;
+&lt;h2 id=&#39;testing&#39;&gt;Testing&lt;/h2&gt;
 
-&lt;p&gt;At the time I started writing code for punch-clock I was reading &lt;a href='http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882'&gt;clean code&lt;/a&gt; by Uncle Bob. But I must admit that my models are a hideous blend of data-structures and real objects. This however lead me to take a hard look at my code and pushed me to try to structure my code to make it testable.&lt;/p&gt;
+&lt;p&gt;At the time I started writing code for punch-clock I was reading &lt;a href=&#39;http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882&#39;&gt;clean code&lt;/a&gt; by Uncle Bob. But I must admit that my models are a hideous blend of data-structures and real objects. This however lead me to take a hard look at my code and pushed me to try to structure my code to make it testable.&lt;/p&gt;
 
 &lt;p&gt;Normally when I write code most of my view code tends not to be testable, in this little app I have tried to remedy that. So far all my views has tests, and adding new tests are quite simple. One might simply disregard this as punch-clock being a rather simple app, which is true, but surprisingly DOM interactions can be made quite testable, with a little work.&lt;/p&gt;
 
@@ -487,9 +577,9 @@ beforeEach(function(){
   expect($test.textContent).not.toEqual(before);
 });&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Yep I am aware of that nasty change the time hack that does not obey the &lt;a href='http://en.wikipedia.org/wiki/Law_of_Demeter'&gt;Law of Demeter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Yep I am aware of that nasty change the time hack that does not obey the &lt;a href=&#39;http://en.wikipedia.org/wiki/Law_of_Demeter&#39;&gt;Law of Demeter&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id='the_future'&gt;The future&lt;/h2&gt;
+&lt;h2 id=&#39;the_future&#39;&gt;The future&lt;/h2&gt;
 
 &lt;p&gt;Right now punch-clock is quite basic. It supports my basic needs, but there are some immediate functions I would like to add:&lt;/p&gt;
 
@@ -511,7 +601,7 @@ beforeEach(function(){
 
 &lt;p&gt;There is probably a lot of other things that makes sense to add, or not to add.&lt;/p&gt;
 
-&lt;p&gt;The source can be found at: &lt;a href='https://github.com/mkrogh/punch-clock'&gt;github&lt;/a&gt;, and the app is running at &lt;a href='http://punch-clock.boundless.dk/'&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;</content>
+&lt;p&gt;The source can be found at: &lt;a href=&#39;https://github.com/mkrogh/punch-clock&#39;&gt;github&lt;/a&gt;, and the app is running at &lt;a href=&#39;http://punch-clock.boundless.dk/&#39;&gt;punch-clock&lt;/a&gt;.&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -527,92 +617,92 @@ beforeEach(function(){
 &lt;!--more--&gt;
 &lt;p&gt;The reason to do screenshots of different languages as well as the themes were that as I made the first batch of bash screenshots I opened a JavaScript file. It was totally different to look at, so I opned a ruby file, and a CSS file. All varied to some degree so I decided to create a bunch of extra screenshots.&lt;/p&gt;
 
-&lt;h3 id='shell'&gt;Shell&lt;/h3&gt;
-&lt;div class='slider'&gt;
-&lt;ul class='inner'&gt;
-&lt;li class='item'&gt;&lt;img alt='blue-sh-vim.png' src='/images/vim-themes/sh/blue-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='darkblue-sh-vim.png' src='/images/vim-themes/sh/darkblue-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='default-sh-vim.png' src='/images/vim-themes/sh/default-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='delek-sh-vim.png' src='/images/vim-themes/sh/delek-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='desert-sh-vim.png' src='/images/vim-themes/sh/desert-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='elflord-sh-vim.png' src='/images/vim-themes/sh/elflord-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='evening-sh-vim.png' src='/images/vim-themes/sh/evening-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='koehler-sh-vim.png' src='/images/vim-themes/sh/koehler-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='morning-sh-vim.png' src='/images/vim-themes/sh/morning-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='murphy-sh-vim.png' src='/images/vim-themes/sh/murphy-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='pablo-sh-vim.png' src='/images/vim-themes/sh/pablo-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='peachpuff-sh-vim.png' src='/images/vim-themes/sh/peachpuff-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='ron-sh-vim.png' src='/images/vim-themes/sh/ron-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='shine-sh-vim.png' src='/images/vim-themes/sh/shine-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='slate-sh-vim.png' src='/images/vim-themes/sh/slate-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='torte-sh-vim.png' src='/images/vim-themes/sh/torte-sh-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='zellner-sh-vim.png' src='/images/vim-themes/sh/zellner-sh-vim.png' /&gt;&lt;/li&gt;
+&lt;h3 id=&#39;shell&#39;&gt;Shell&lt;/h3&gt;
+&lt;div class=&#39;slider&#39;&gt;
+&lt;ul class=&#39;inner&#39;&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;blue-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/blue-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;darkblue-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/darkblue-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;default-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/default-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;delek-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/delek-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;desert-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/desert-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;elflord-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/elflord-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;evening-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/evening-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;koehler-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/koehler-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;morning-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/morning-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;murphy-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/murphy-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;pablo-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/pablo-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;peachpuff-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/peachpuff-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;ron-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/ron-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;shine-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/shine-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;slate-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/slate-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;torte-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/torte-sh-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;zellner-sh-vim.png&#39; src=&#39;/images/vim-themes/sh/zellner-sh-vim.png&#39; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;h3 id='ruby'&gt;Ruby&lt;/h3&gt;
-&lt;div class='slider'&gt;
-&lt;ul class='inner'&gt;
-&lt;li class='item'&gt;&lt;img alt='blue-ruby-vim.png' src='/images/vim-themes/ruby/blue-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='darkblue-ruby-vim.png' src='/images/vim-themes/ruby/darkblue-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='default-ruby-vim.png' src='/images/vim-themes/ruby/default-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='delek-ruby-vim.png' src='/images/vim-themes/ruby/delek-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='desert-ruby-vim.png' src='/images/vim-themes/ruby/desert-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='elflord-ruby-vim.png' src='/images/vim-themes/ruby/elflord-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='evening-ruby-vim.png' src='/images/vim-themes/ruby/evening-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='koehler-ruby-vim.png' src='/images/vim-themes/ruby/koehler-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='morning-ruby-vim.png' src='/images/vim-themes/ruby/morning-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='murphy-ruby-vim.png' src='/images/vim-themes/ruby/murphy-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='pablo-ruby-vim.png' src='/images/vim-themes/ruby/pablo-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='peachpuff-ruby-vim.png' src='/images/vim-themes/ruby/peachpuff-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='ron-ruby-vim.png' src='/images/vim-themes/ruby/ron-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='shine-ruby-vim.png' src='/images/vim-themes/ruby/shine-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='slate-ruby-vim.png' src='/images/vim-themes/ruby/slate-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='torte-ruby-vim.png' src='/images/vim-themes/ruby/torte-ruby-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='zellner-ruby-vim.png' src='/images/vim-themes/ruby/zellner-ruby-vim.png' /&gt;&lt;/li&gt;
+&lt;h3 id=&#39;ruby&#39;&gt;Ruby&lt;/h3&gt;
+&lt;div class=&#39;slider&#39;&gt;
+&lt;ul class=&#39;inner&#39;&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;blue-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/blue-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;darkblue-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/darkblue-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;default-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/default-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;delek-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/delek-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;desert-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/desert-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;elflord-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/elflord-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;evening-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/evening-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;koehler-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/koehler-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;morning-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/morning-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;murphy-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/murphy-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;pablo-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/pablo-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;peachpuff-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/peachpuff-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;ron-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/ron-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;shine-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/shine-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;slate-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/slate-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;torte-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/torte-ruby-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;zellner-ruby-vim.png&#39; src=&#39;/images/vim-themes/ruby/zellner-ruby-vim.png&#39; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;h3 id='javascript'&gt;Javascript&lt;/h3&gt;
-&lt;div class='slider'&gt;
-&lt;ul class='inner'&gt;
-&lt;li class='item'&gt;&lt;img alt='blue-js-vim.png' src='/images/vim-themes/js/blue-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='darkblue-js-vim.png' src='/images/vim-themes/js/darkblue-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='default-js-vim.png' src='/images/vim-themes/js/default-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='delek-js-vim.png' src='/images/vim-themes/js/delek-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='desert-vim.png' src='/images/vim-themes/js/desert-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='elflord-js-vim.png' src='/images/vim-themes/js/elflord-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='evening-vim.png' src='/images/vim-themes/js/evening-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='koehler-js-vim.png' src='/images/vim-themes/js/koehler-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='morning-js-vim.png' src='/images/vim-themes/js/morning-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='murphy-js-vim.png' src='/images/vim-themes/js/murphy-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='pablo-js-vim.png' src='/images/vim-themes/js/pablo-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='peachpuff-js-vim.png' src='/images/vim-themes/js/peachpuff-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='ron-js-vim.png' src='/images/vim-themes/js/ron-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='shine-js-vim.png' src='/images/vim-themes/js/shine-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='slate-js-vim.png' src='/images/vim-themes/js/slate-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='torte-js-vim.png' src='/images/vim-themes/js/torte-js-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='zellner-js-vim.png' src='/images/vim-themes/js/zellner-js-vim.png' /&gt;&lt;/li&gt;
+&lt;h3 id=&#39;javascript&#39;&gt;Javascript&lt;/h3&gt;
+&lt;div class=&#39;slider&#39;&gt;
+&lt;ul class=&#39;inner&#39;&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;blue-js-vim.png&#39; src=&#39;/images/vim-themes/js/blue-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;darkblue-js-vim.png&#39; src=&#39;/images/vim-themes/js/darkblue-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;default-js-vim.png&#39; src=&#39;/images/vim-themes/js/default-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;delek-js-vim.png&#39; src=&#39;/images/vim-themes/js/delek-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;desert-vim.png&#39; src=&#39;/images/vim-themes/js/desert-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;elflord-js-vim.png&#39; src=&#39;/images/vim-themes/js/elflord-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;evening-vim.png&#39; src=&#39;/images/vim-themes/js/evening-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;koehler-js-vim.png&#39; src=&#39;/images/vim-themes/js/koehler-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;morning-js-vim.png&#39; src=&#39;/images/vim-themes/js/morning-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;murphy-js-vim.png&#39; src=&#39;/images/vim-themes/js/murphy-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;pablo-js-vim.png&#39; src=&#39;/images/vim-themes/js/pablo-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;peachpuff-js-vim.png&#39; src=&#39;/images/vim-themes/js/peachpuff-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;ron-js-vim.png&#39; src=&#39;/images/vim-themes/js/ron-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;shine-js-vim.png&#39; src=&#39;/images/vim-themes/js/shine-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;slate-js-vim.png&#39; src=&#39;/images/vim-themes/js/slate-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;torte-js-vim.png&#39; src=&#39;/images/vim-themes/js/torte-js-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;zellner-js-vim.png&#39; src=&#39;/images/vim-themes/js/zellner-js-vim.png&#39; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;h3 id='css'&gt;CSS&lt;/h3&gt;
-&lt;div class='slider'&gt;
-&lt;ul class='inner'&gt;
-&lt;li class='item'&gt;&lt;img alt='blue-css-vim.png' src='/images/vim-themes/css/blue-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='darkblue-css-vim.png' src='/images/vim-themes/css/darkblue-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='default-css-vim.png' src='/images/vim-themes/css/default-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='delek-css-vim.png' src='/images/vim-themes/css/delek-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='desert-css-vim.png' src='/images/vim-themes/css/desert-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='elflord-css-vim.png' src='/images/vim-themes/css/elflord-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='evening-css-vim.png' src='/images/vim-themes/css/evening-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='koehler-css-vim.png' src='/images/vim-themes/css/koehler-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='morning-css-vim.png' src='/images/vim-themes/css/morning-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='murphy-css-vim.png' src='/images/vim-themes/css/murphy-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='pablo-css-vim.png' src='/images/vim-themes/css/pablo-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='peachpuff-css-vim.png' src='/images/vim-themes/css/peachpuff-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='ron-css-vim.png' src='/images/vim-themes/css/ron-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='shine-css-vim.png' src='/images/vim-themes/css/shine-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='slate-css-vim.png' src='/images/vim-themes/css/slate-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='torte-css-vim.png' src='/images/vim-themes/css/torte-css-vim.png' /&gt;&lt;/li&gt;
-&lt;li class='item'&gt;&lt;img alt='zellner-css-vim.png' src='/images/vim-themes/css/zellner-css-vim.png' /&gt;&lt;/li&gt;
+&lt;h3 id=&#39;css&#39;&gt;CSS&lt;/h3&gt;
+&lt;div class=&#39;slider&#39;&gt;
+&lt;ul class=&#39;inner&#39;&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;blue-css-vim.png&#39; src=&#39;/images/vim-themes/css/blue-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;darkblue-css-vim.png&#39; src=&#39;/images/vim-themes/css/darkblue-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;default-css-vim.png&#39; src=&#39;/images/vim-themes/css/default-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;delek-css-vim.png&#39; src=&#39;/images/vim-themes/css/delek-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;desert-css-vim.png&#39; src=&#39;/images/vim-themes/css/desert-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;elflord-css-vim.png&#39; src=&#39;/images/vim-themes/css/elflord-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;evening-css-vim.png&#39; src=&#39;/images/vim-themes/css/evening-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;koehler-css-vim.png&#39; src=&#39;/images/vim-themes/css/koehler-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;morning-css-vim.png&#39; src=&#39;/images/vim-themes/css/morning-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;murphy-css-vim.png&#39; src=&#39;/images/vim-themes/css/murphy-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;pablo-css-vim.png&#39; src=&#39;/images/vim-themes/css/pablo-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;peachpuff-css-vim.png&#39; src=&#39;/images/vim-themes/css/peachpuff-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;ron-css-vim.png&#39; src=&#39;/images/vim-themes/css/ron-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;shine-css-vim.png&#39; src=&#39;/images/vim-themes/css/shine-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;slate-css-vim.png&#39; src=&#39;/images/vim-themes/css/slate-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;torte-css-vim.png&#39; src=&#39;/images/vim-themes/css/torte-css-vim.png&#39; /&gt;&lt;/li&gt;
+&lt;li class=&#39;item&#39;&gt;&lt;img alt=&#39;zellner-css-vim.png&#39; src=&#39;/images/vim-themes/css/zellner-css-vim.png&#39; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;</content>
  </entry>
@@ -624,19 +714,19 @@ beforeEach(function(){
    <id>hhttp://casadelkrogh.dk/2013/02/27/diving-for-dahab</id>
    <content type="html">&lt;p&gt;A mate and I are planning a trip to Dahab (Egypt) in late March.&lt;/p&gt;
 
-&lt;p&gt;We stumbled upon an offer from kilroy travels where you could get 7 days in Dahab, including a PADI Open Water certification for about &lt;a href='https://www.google.dk/search?q=3700+dkk+in+usd'&gt;3700 dkk&lt;/a&gt;. This was a nice offer, and all we had to do was book the flight. Well at least so we thought.&lt;/p&gt;
+&lt;p&gt;We stumbled upon an offer from kilroy travels where you could get 7 days in Dahab, including a PADI Open Water certification for about &lt;a href=&#39;https://www.google.dk/search?q=3700+dkk+in+usd&#39;&gt;3700 dkk&lt;/a&gt;. This was a nice offer, and all we had to do was book the flight. Well at least so we thought.&lt;/p&gt;
 
-&lt;p&gt;After we bought the tickets from Copenhagen to Sharm El Sheikh, we recieved an offer from kilroy for diving in Sharm El Sheikh, not Dahab, and it was suddenly &lt;a href='https://www.google.dk/search?q=4600+dkk+in+usd'&gt;4600 dkk&lt;/a&gt; rather than the aforementioned 3700 dkk.&lt;/p&gt;
+&lt;p&gt;After we bought the tickets from Copenhagen to Sharm El Sheikh, we recieved an offer from kilroy for diving in Sharm El Sheikh, not Dahab, and it was suddenly &lt;a href=&#39;https://www.google.dk/search?q=4600+dkk+in+usd&#39;&gt;4600 dkk&lt;/a&gt; rather than the aforementioned 3700 dkk.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;p&gt;When we recieved this &amp;#8220;offer&amp;#8221; we were a bit perplexed. When we looked at &lt;a href='http://www.kilroy.dk/'&gt;kilroy.dk&lt;/a&gt; the offer on Diving in Dahab was gone. This made us a bit uneasy and we wrote to the travelagent that had sent us the offer. It turned out that the Dive center in Dahab with wich they had an agreement was undergoing rennovations, and the travel agent then had assumed that we then rather would like to dive in Sharm El Sheikh.&lt;/p&gt;
+&lt;p&gt;When we recieved this &amp;#8220;offer&amp;#8221; we were a bit perplexed. When we looked at &lt;a href=&#39;http://www.kilroy.dk/&#39;&gt;kilroy.dk&lt;/a&gt; the offer on Diving in Dahab was gone. This made us a bit uneasy and we wrote to the travelagent that had sent us the offer. It turned out that the Dive center in Dahab with wich they had an agreement was undergoing rennovations, and the travel agent then had assumed that we then rather would like to dive in Sharm El Sheikh.&lt;/p&gt;
 
 &lt;p&gt;This was not what we had anticipated.. We had already booked the flight ourselves, and planned the time off for the holiday, so we decided to take a look at booking diving and hotel in Dahab ourselves.&lt;/p&gt;
 
-&lt;p&gt;We looked at different hotels in Dahab using &lt;a href='http://www.tripadvisor.com'&gt;tripadvisor&lt;/a&gt; and &lt;a href='http://www.booking.com'&gt;booking.com&lt;/a&gt;. And quickly boiled it down to three hotels: the &lt;a href='http://starofdahab.com/'&gt;Star of Dahab&lt;/a&gt;, the &lt;a href='http://www.dahabdivers.com/start.htm'&gt;Dahab Divers&lt;/a&gt;, and as backup the &lt;a href='http://www.mirage.com.eg/'&gt;Mirage village&lt;/a&gt;. All were available, and it was even possible to get two single rooms (I snore quite a lot).&lt;/p&gt;
+&lt;p&gt;We looked at different hotels in Dahab using &lt;a href=&#39;http://www.tripadvisor.com&#39;&gt;tripadvisor&lt;/a&gt; and &lt;a href=&#39;http://www.booking.com&#39;&gt;booking.com&lt;/a&gt;. And quickly boiled it down to three hotels: the &lt;a href=&#39;http://starofdahab.com/&#39;&gt;Star of Dahab&lt;/a&gt;, the &lt;a href=&#39;http://www.dahabdivers.com/start.htm&#39;&gt;Dahab Divers&lt;/a&gt;, and as backup the &lt;a href=&#39;http://www.mirage.com.eg/&#39;&gt;Mirage village&lt;/a&gt;. All were available, and it was even possible to get two single rooms (I snore quite a lot).&lt;/p&gt;
 
 &lt;p&gt;We ended up choosing Star of Dahab, as it seemed nice and cozy, and near most of the dive centers. Or at least we reserved two rooms there, but they might be subject to change (dahab divers looks so nice).&lt;/p&gt;
 
-&lt;p&gt;In order to cover the diving we wrote to three diving centers: &lt;a href='http://www.bigbluedahab.com/'&gt;Big Blue Dahab&lt;/a&gt;, &lt;a href='http://www.h2odiversdahab.com/'&gt;H2O divers&lt;/a&gt; and &lt;a href='http://www.poseidondivers.com/'&gt;Poseidon Divers&lt;/a&gt;. Again these dive centers were chosen based on reviews on tripadvisor and comments on booking.com.&lt;/p&gt;
+&lt;p&gt;In order to cover the diving we wrote to three diving centers: &lt;a href=&#39;http://www.bigbluedahab.com/&#39;&gt;Big Blue Dahab&lt;/a&gt;, &lt;a href=&#39;http://www.h2odiversdahab.com/&#39;&gt;H2O divers&lt;/a&gt; and &lt;a href=&#39;http://www.poseidondivers.com/&#39;&gt;Poseidon Divers&lt;/a&gt;. Again these dive centers were chosen based on reviews on tripadvisor and comments on booking.com.&lt;/p&gt;
 
 &lt;p&gt;All of the three dive centers replied within 12 hours which was awesome! All were super nice, and all actually answered our enquries, and added additional information. Currently we have not decided on which dive center we are going to use. But I am leaning towards Big Blue Dahab or H2O.&lt;/p&gt;
 
@@ -650,15 +740,15 @@ beforeEach(function(){
    <link href="http://casadelkrogh.dk/code/2012/11/01/treasures-on-rails"/>
    <updated>2012-11-01T00:00:00+01:00</updated>
    <id>hhttp://casadelkrogh.dk/code/2012/11/01/treasures-on-rails</id>
-   <content type="html">&lt;p&gt;In my spare time I am the chairman of a netparty society called &lt;a href='http://www.nanolaug.dk'&gt;Nanolaug&lt;/a&gt;. Twice a year we organize a Netparty for about 80 people. Normally we have 2-3 combos and every now and then a fun-combo.&lt;/p&gt;
+   <content type="html">&lt;p&gt;In my spare time I am the chairman of a netparty society called &lt;a href=&#39;http://www.nanolaug.dk&#39;&gt;Nanolaug&lt;/a&gt;. Twice a year we organize a Netparty for about 80 people. Normally we have 2-3 combos and every now and then a fun-combo.&lt;/p&gt;
 
-&lt;p&gt;For a recent party I decided to host a fun-combo consisting of a digital &lt;a href='https://treasure.nanolaug.dk'&gt;treasure hunt&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For a recent party I decided to host a fun-combo consisting of a digital &lt;a href=&#39;https://treasure.nanolaug.dk&#39;&gt;treasure hunt&lt;/a&gt;.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;p&gt;The idea came after participating in &lt;a href='http://thecamp.dk' title='Danish only'&gt;The Camp&lt;/a&gt; 2012, where ptrf hosted a digital treasurehunt. The goal was to collect the most gold (md5 sums) by solving differnt puzzles, most having something to do with computer science. To find the puzzles you had to look for clues hidden on different webpages. The treasure hunt from the camp was inspired by the &lt;a href='http://treasure.pwnies.dk'&gt;the pwnies&lt;/a&gt; site (it was actually a clone of it).&lt;/p&gt;
+&lt;p&gt;The idea came after participating in &lt;a href=&#39;http://thecamp.dk&#39; title=&#39;Danish only&#39;&gt;The Camp&lt;/a&gt; 2012, where ptrf hosted a digital treasurehunt. The goal was to collect the most gold (md5 sums) by solving differnt puzzles, most having something to do with computer science. To find the puzzles you had to look for clues hidden on different webpages. The treasure hunt from the camp was inspired by the &lt;a href=&#39;http://treasure.pwnies.dk&#39;&gt;the pwnies&lt;/a&gt; site (it was actually a clone of it).&lt;/p&gt;
 
 &lt;p&gt;As mentioned I decided to host a treasure hunt, but I chose to make it a bit simpler. Mostly because people participating in a netparty are not that proficient in crackmes, decrypting, and general programming language obscurity.&lt;/p&gt;
 
-&lt;h2 id='the_case'&gt;The case&lt;/h2&gt;
+&lt;h2 id=&#39;the_case&#39;&gt;The case&lt;/h2&gt;
 
 &lt;p&gt;A simple digital treasure hunt consists of gold and maps. I chose to represent gold and maps as a sha1 sum in hex, to differentiate between the two I chose to reperesent them as:&lt;/p&gt;
 
@@ -674,11 +764,11 @@ beforeEach(function(){
 
 &lt;p&gt;To spice it up a bit I added the possiblity to create a series of questions. Each correct answer is rewarded with a pice of gold and a new question (if there are anymore). Answers to questions are implemented as regular expresseions, which allows you to accept multiple answers as correct.&lt;/p&gt;
 
-&lt;h2 id='manage_it'&gt;Manage it&lt;/h2&gt;
+&lt;h2 id=&#39;manage_it&#39;&gt;Manage it&lt;/h2&gt;
 
-&lt;p&gt;In order to manage it all I created a simple CRUD interface protected by omniauth. As something new I decided to make a mailer that sends me (the admin) a mail when someone without access tries to log into the manager interface. This way I did not have to make an explicit signup procedure, see: &lt;a href='https://gist.github.com/mkrogh/3995995'&gt;https://gist.github.com/mkrogh/3995995&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In order to manage it all I created a simple CRUD interface protected by omniauth. As something new I decided to make a mailer that sends me (the admin) a mail when someone without access tries to log into the manager interface. This way I did not have to make an explicit signup procedure, see: &lt;a href=&#39;https://gist.github.com/mkrogh/3995995&#39;&gt;https://gist.github.com/mkrogh/3995995&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id='the_end'&gt;The end&lt;/h2&gt;
+&lt;h2 id=&#39;the_end&#39;&gt;The end&lt;/h2&gt;
 
 &lt;p&gt;There probably was an end to this post but I ended up beeing to drunk to write it, or I ran out of power on the laptop.&lt;/p&gt;</content>
  </entry>
@@ -696,13 +786,13 @@ beforeEach(function(){
 &lt;!--more--&gt;
 &lt;p&gt;Another reason for this post is that I could not find any coherent account on how to do firmware upgrades of my &amp;#8220;open-source&amp;#8221; N300 router. All the resources were scattered and the one step by step guide I found did not explain everything.&lt;/p&gt;
 
-&lt;h2 id='choosing_a_firmware'&gt;Choosing a firmware&lt;/h2&gt;
+&lt;h2 id=&#39;choosing_a_firmware&#39;&gt;Choosing a firmware&lt;/h2&gt;
 
-&lt;p&gt;There are several router firmwares out there, but not all are prepared to run on the WNR3500l. I found a list on myopenrouter that lists the currently &amp;#8220;supported&amp;#8221; &lt;a href='http://www.myopenrouter.com/download/list?sort=date&amp;amp;cat=44'&gt;firmwares&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are several router firmwares out there, but not all are prepared to run on the WNR3500l. I found a list on myopenrouter that lists the currently &amp;#8220;supported&amp;#8221; &lt;a href=&#39;http://www.myopenrouter.com/download/list?sort=date&amp;amp;cat=44&#39;&gt;firmwares&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Given that the only firmwares that seemed to be regualarly update are &lt;a href='http://www.dd-wrt.com/'&gt;DD-WRT&lt;/a&gt; and &lt;a href='http://www.polarcloud.com/tomato'&gt;tomato&lt;/a&gt;. Reading a bit about the two I found that people seems to praise how simple, yet powerfull, tomato is, and I found the DD-WRT documentation to be somewhat confusing.&lt;/p&gt;
+&lt;p&gt;Given that the only firmwares that seemed to be regualarly update are &lt;a href=&#39;http://www.dd-wrt.com/&#39;&gt;DD-WRT&lt;/a&gt; and &lt;a href=&#39;http://www.polarcloud.com/tomato&#39;&gt;tomato&lt;/a&gt;. Reading a bit about the two I found that people seems to praise how simple, yet powerfull, tomato is, and I found the DD-WRT documentation to be somewhat confusing.&lt;/p&gt;
 
-&lt;h2 id='one_foot_in_front_of_the_other'&gt;One foot in front of the other&lt;/h2&gt;
+&lt;h2 id=&#39;one_foot_in_front_of_the_other&#39;&gt;One foot in front of the other&lt;/h2&gt;
 
 &lt;p&gt;This is the steps I went through to change the firmware of my Netgear N300 WNR3500lv1 router.&lt;/p&gt;
 
@@ -712,7 +802,7 @@ beforeEach(function(){
 &lt;/li&gt;
 
 &lt;li&gt;
-&lt;p&gt;Since this is guide starts with a stock router running the original firmware we need to start with the DD-WRT firmware and update from that. Download &lt;a href='http://www.myopenrouter.com/download/18896/NETGEAR-WNR3500L-DD-WRT-Firmware-Special-File-for-Initial-Flashing/'&gt;Special DD-WRT Firmware for initial flashing&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Since this is guide starts with a stock router running the original firmware we need to start with the DD-WRT firmware and update from that. Download &lt;a href=&#39;http://www.myopenrouter.com/download/18896/NETGEAR-WNR3500L-DD-WRT-Firmware-Special-File-for-Initial-Flashing/&#39;&gt;Special DD-WRT Firmware for initial flashing&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 
 &lt;li&gt;
@@ -734,7 +824,7 @@ beforeEach(function(){
 &lt;/li&gt;
 
 &lt;li&gt;
-&lt;p&gt;Download the firmware you want to upgrade to, I choose the &lt;a href='http://www.myopenrouter.com/download/list?cat=50'&gt;tomato firmware&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Download the firmware you want to upgrade to, I choose the &lt;a href=&#39;http://www.myopenrouter.com/download/list?cat=50&#39;&gt;tomato firmware&lt;/a&gt;.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;I had to rename the firmware file from &lt;code&gt;.trx&lt;/code&gt; to &lt;code&gt;.bin&lt;/code&gt; which is the DD-WRT update extension.&lt;/li&gt;
@@ -742,7 +832,7 @@ beforeEach(function(){
 &lt;/li&gt;
 
 &lt;li&gt;
-&lt;p&gt;Go to &lt;a href='http://192.168.1.1/'&gt;http://192.168.1.1/&lt;/a&gt; and find administration -&amp;gt; Firmware upgrade. Upgrade to your desired firmware&lt;/p&gt;
+&lt;p&gt;Go to &lt;a href=&#39;http://192.168.1.1/&#39;&gt;http://192.168.1.1/&lt;/a&gt; and find administration -&amp;gt; Firmware upgrade. Upgrade to your desired firmware&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;As a quick sidenote, dd-wrt actually looked nice, but I had choosen to give tomato a spin.&lt;/li&gt;
@@ -762,7 +852,7 @@ beforeEach(function(){
 &lt;/li&gt;
 
 &lt;li&gt;
-&lt;p&gt;To ensure everything is dandy please go to &lt;a href='http://192.168.1.1/admin-config.asp'&gt;http://192.168.1.1/admin-config.asp&lt;/a&gt; and choose &lt;em&gt;Erase all data in NVRAM memory (thorough)&lt;/em&gt; under the &lt;em&gt;Restore Default Configuration&lt;/em&gt; section.&lt;/p&gt;
+&lt;p&gt;To ensure everything is dandy please go to &lt;a href=&#39;http://192.168.1.1/admin-config.asp&#39;&gt;http://192.168.1.1/admin-config.asp&lt;/a&gt; and choose &lt;em&gt;Erase all data in NVRAM memory (thorough)&lt;/em&gt; under the &lt;em&gt;Restore Default Configuration&lt;/em&gt; section.&lt;/p&gt;
 &lt;/li&gt;
 
 &lt;li&gt;
@@ -770,11 +860,11 @@ beforeEach(function(){
 &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id='troubleshooting'&gt;Troubleshooting:&lt;/h2&gt;
+&lt;h2 id=&#39;troubleshooting&#39;&gt;Troubleshooting:&lt;/h2&gt;
 
-&lt;p&gt;How to see the version of my n300 router? Scroll down in the menu to the knowledge base link, this link contains the router version, mine was &lt;a href='http://support.netgear.com/product/WNR3500Lv'&gt;http://support.netgear.com/product/WNR3500Lv1&lt;/a&gt;, so a version 1 WNR3500l router.&lt;/p&gt;
+&lt;p&gt;How to see the version of my n300 router? Scroll down in the menu to the knowledge base link, this link contains the router version, mine was &lt;a href=&#39;http://support.netgear.com/product/WNR3500Lv&#39;&gt;http://support.netgear.com/product/WNR3500Lv1&lt;/a&gt;, so a version 1 WNR3500l router.&lt;/p&gt;
 
-&lt;h2 id='future_improvements'&gt;Future improvements..&lt;/h2&gt;
+&lt;h2 id=&#39;future_improvements&#39;&gt;Future improvements..&lt;/h2&gt;
 
 &lt;p&gt;The short ammount of time I spent in dd-wrt was actually not that bad, depending on the stability of the tomato firmware I might jump back to DD-WRT. I found it more visually pleasing than tomato and especially the stock firmware.&lt;/p&gt;</content>
  </entry>
@@ -786,49 +876,49 @@ beforeEach(function(){
    <id>hhttp://casadelkrogh.dk/code/2012/07/08/js-app-frameworks</id>
    <content type="html">&lt;p&gt;In order to brush off my JS skills a bit I want to build a small HTML5 app, for mobile and desktop use. As not to start from scratch I poked around in the toolbox for frameworks to use.&lt;/p&gt;
 
-&lt;p&gt;I take a 10.000 km overview of &lt;a href='http://emberjs.com/'&gt;ember.js&lt;/a&gt;, &lt;a href='http://backbonejs.org/'&gt;backbone.js&lt;/a&gt;, and &lt;a href='http://spinejs.com/'&gt;spine.js&lt;/a&gt; for the core app development, and try to decide which testing framework to use.&lt;/p&gt;
+&lt;p&gt;I take a 10.000 km overview of &lt;a href=&#39;http://emberjs.com/&#39;&gt;ember.js&lt;/a&gt;, &lt;a href=&#39;http://backbonejs.org/&#39;&gt;backbone.js&lt;/a&gt;, and &lt;a href=&#39;http://spinejs.com/&#39;&gt;spine.js&lt;/a&gt; for the core app development, and try to decide which testing framework to use.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;h2 id='testing'&gt;Testing&lt;/h2&gt;
+&lt;h2 id=&#39;testing&#39;&gt;Testing&lt;/h2&gt;
 
 &lt;p&gt;The first thing I took a look at after chiseling out the idea was which testing framework to use. The reason for that is that my normal approach to coding often end up a bit unwieldy, and for this App I wanted to do a bit of TDD/BDD (Test driven development/Behavior driven development).&lt;/p&gt;
 
-&lt;p&gt;I have used &lt;a href='http://docs.jquery.com/QUnit'&gt;QUint&lt;/a&gt;, the jQuery unit testing framework before, and it is a nice unit testing framework. When I write ruby code I have grown fond of &lt;a href='http://rspec.info/'&gt;Rspec&lt;/a&gt; which is a BDD style testing framework. Therefore I have had an eye at the &lt;a href='http://pivotal.github.com/jasmine/'&gt;Jasmine&lt;/a&gt; testing framework for some time.&lt;/p&gt;
+&lt;p&gt;I have used &lt;a href=&#39;http://docs.jquery.com/QUnit&#39;&gt;QUint&lt;/a&gt;, the jQuery unit testing framework before, and it is a nice unit testing framework. When I write ruby code I have grown fond of &lt;a href=&#39;http://rspec.info/&#39;&gt;Rspec&lt;/a&gt; which is a BDD style testing framework. Therefore I have had an eye at the &lt;a href=&#39;http://pivotal.github.com/jasmine/&#39;&gt;Jasmine&lt;/a&gt; testing framework for some time.&lt;/p&gt;
 
 &lt;p&gt;These are the only two testing frameworks I have chosen to look at, I am sure there are a lot of other brilliant frameworks, but these two fit my needs.&lt;/p&gt;
 
-&lt;h3 id='qunit'&gt;QUnit&lt;/h3&gt;
+&lt;h3 id=&#39;qunit&#39;&gt;QUnit&lt;/h3&gt;
 
-&lt;p&gt;A simple, well documented, unit testing framework used to keep the jQuery code working. Instead of showing off some tests here it is way easier to point to the &lt;a href='http://docs.jquery.com/QUnit#Using_QUnit'&gt;official documentation&lt;/a&gt;, which as stated is more than enough to get started.&lt;/p&gt;
+&lt;p&gt;A simple, well documented, unit testing framework used to keep the jQuery code working. Instead of showing off some tests here it is way easier to point to the &lt;a href=&#39;http://docs.jquery.com/QUnit#Using_QUnit&#39;&gt;official documentation&lt;/a&gt;, which as stated is more than enough to get started.&lt;/p&gt;
 
 &lt;p&gt;Tests run in a dedicated HTML page that outputs a nice overview of the test results.&lt;/p&gt;
 
-&lt;h3 id='jasmine'&gt;Jasmine&lt;/h3&gt;
+&lt;h3 id=&#39;jasmine&#39;&gt;Jasmine&lt;/h3&gt;
 
-&lt;p&gt;As mentioned Jasmine has a lot of similarity to Rspec, it allows you to describe and test features as a set of test cases. Again the documentation of this testing framework is ace, allowing me to just point at it and be done with it &lt;a href='http://pivotal.github.com/jasmine/'&gt;jasmine example&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As mentioned Jasmine has a lot of similarity to Rspec, it allows you to describe and test features as a set of test cases. Again the documentation of this testing framework is ace, allowing me to just point at it and be done with it &lt;a href=&#39;http://pivotal.github.com/jasmine/&#39;&gt;jasmine example&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;The most irritating thing about jasmine is that it was not very straight forward where the distributable could be downloaded, but then again I could just have read the entire introduction. The download link is at the way bottom, and includes a nice template for getting up and running.&lt;/p&gt;
 
 &lt;p&gt;Just like QUnit the tests can be run from a dedicated HTML page, which is nice e.g. for testing in multiple browsers.&lt;/p&gt;
 
-&lt;h3 id='choosing_a_testing_framework'&gt;Choosing a testing framework&lt;/h3&gt;
+&lt;h3 id=&#39;choosing_a_testing_framework&#39;&gt;Choosing a testing framework&lt;/h3&gt;
 
 &lt;p&gt;I have ended up choosing Jasmine as it resembles Rspec. Only time will tell if it is a good choice or if I end up backtracking.&lt;/p&gt;
 
-&lt;h2 id='javascript_framework'&gt;JavaScript framework&lt;/h2&gt;
+&lt;h2 id=&#39;javascript_framework&#39;&gt;JavaScript framework&lt;/h2&gt;
 
 &lt;p&gt;After choosing a testing framework I set out to find a suitable JS framework. I have mostly rolled my own MVC up until now, but I am a great fan of building on top of other peoples work, as it often means you can focus on the functionality rather than the nuts and bolts/stitching of the App.&lt;/p&gt;
 
 &lt;p&gt;So I feel like it is time to to bring in the cavalry, but when you are somewhat used to looking under the hood you get a bit picky. I have played around with Backbone.js before and liked many of the things it enables you to do, and the freedom you get. I have also had my eye on ember.js for some time, and the vision of spine.js has had me intrigued.&lt;/p&gt;
 
-&lt;p&gt;There are other frameworks out there, e.g. &lt;a href='http://angularjs.org/'&gt;angular.js&lt;/a&gt; by some Googler&amp;#8217;s, but I have chosen to look at these three frameworks because they fit my idea of how a JS framework should be.&lt;/p&gt;
+&lt;p&gt;There are other frameworks out there, e.g. &lt;a href=&#39;http://angularjs.org/&#39;&gt;angular.js&lt;/a&gt; by some Googler&amp;#8217;s, but I have chosen to look at these three frameworks because they fit my idea of how a JS framework should be.&lt;/p&gt;
 
-&lt;h3 id='backbonejs'&gt;Backbone.js&lt;/h3&gt;
+&lt;h3 id=&#39;backbonejs&#39;&gt;Backbone.js&lt;/h3&gt;
 
 &lt;p&gt;Backbone.js is a bare bone lightweight MVC framework developed as a part of the DocumentCloud project. It clocks in at 5.6kb minified which is impressive, it does however require Undersocore.js which adds 4kb, json2 (1kb), and for DOM manipulation jQuery (32kb) or Zepto (8.4kb). I will probably end up including jQuery anyway, so excluding that payload the Backbone.js setup clocks in at about 11kb, which is very impressive.&lt;/p&gt;
 
 &lt;p&gt;Backbone.js provides base methods for creating Models, Collections, Controllers, Views and more. It leaves it up to you how to connect the dots, but it also gives you a lot of documentation and a healthy community to get you up and running.&lt;/p&gt;
 
-&lt;h3 id='emberjs'&gt;Ember.js&lt;/h3&gt;
+&lt;h3 id=&#39;emberjs&#39;&gt;Ember.js&lt;/h3&gt;
 
 &lt;p&gt;Ember.js was created by Tom Dale and Yehuda Katz as a reboot of SproutCore done from the ground up with focus on removing developer frustrations. On a slight side note Katz is one of the core Rails guys, who did a lot of work on the Rails 3.&lt;/p&gt;
 
@@ -836,7 +926,7 @@ beforeEach(function(){
 
 &lt;p&gt;All in all Ember.js is sporting some nice features. The big drawback is the documentation, which is either out of date or simply missing, and often out of sync with the current implementation.&lt;/p&gt;
 
-&lt;h3 id='spinejs'&gt;Spine.js&lt;/h3&gt;
+&lt;h3 id=&#39;spinejs&#39;&gt;Spine.js&lt;/h3&gt;
 
 &lt;p&gt;As far as I remember Spine.js was created as a Backbone.js done right. It sports a lot of philosophy and pattern ideas. One being that the interface must be non-blocking, which is bold and brave, but nice to see.&lt;/p&gt;
 
@@ -844,7 +934,7 @@ beforeEach(function(){
 
 &lt;p&gt;Spine.js also have fairly good documentation along with some screen casts. The hem development server seems nice, allowing you to make proper integration testing right from your dev machine, without having to setup a server.&lt;/p&gt;
 
-&lt;h3 id='choosing_a_js_framework'&gt;Choosing a JS framework&lt;/h3&gt;
+&lt;h3 id=&#39;choosing_a_js_framework&#39;&gt;Choosing a JS framework&lt;/h3&gt;
 
 &lt;p&gt;I chose ember.js because I like Handlebars, and some of the ideas behind the framework. However after fiddling around, trying to do even simple tasks such as setting up a new model I became increasingly frustrated with the inconsistency of the documentation.&lt;/p&gt;
 
@@ -862,7 +952,7 @@ beforeEach(function(){
    <id>hhttp://casadelkrogh.dk/code/2012/04/20/creating-a-ruby-project</id>
    <content type="html">&lt;p&gt;Setting up a new project is not necessarily something one does every day. The process always include some hoops and loops, along with spying on the previous projects one has created. Well at least thats how it is for me, at work however we keep some information on project initialization in a wiki. But as a single person a wiki feels like overkill, and it is often a lot less likely to be found by and help other people.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;p&gt;I have started a few ruby projects so far, and I have become a great fan of &lt;a href='http://gembundler.com/'&gt;bundler&lt;/a&gt; mostly due to the rails development I have been doing. With bundler, dependency management becomes a breeze, just as it should be. Starting a new project using bundler means running:&lt;/p&gt;
+&lt;p&gt;I have started a few ruby projects so far, and I have become a great fan of &lt;a href=&#39;http://gembundler.com/&#39;&gt;bundler&lt;/a&gt; mostly due to the rails development I have been doing. With bundler, dependency management becomes a breeze, just as it should be. Starting a new project using bundler means running:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;bundle init&lt;/code&gt;&lt;/pre&gt;
 
@@ -878,11 +968,11 @@ require &amp;quot;{project-name}&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;To make this main file work you will need to create the folder &lt;code&gt;lib/&lt;/code&gt; and add another &lt;code&gt;{project-name}.rb&lt;/code&gt; file.&lt;/p&gt;
 
-&lt;h2 id='go_ahead_and_test_it'&gt;Go ahead and test it&lt;/h2&gt;
+&lt;h2 id=&#39;go_ahead_and_test_it&#39;&gt;Go ahead and test it&lt;/h2&gt;
 
 &lt;p&gt;Really, you should make some test cases. Some people like TDD red-green testing, others like to write test cases when the functionality is present. Any which way you like to test is fine by me, personally I always end up mixing red-green testing and follow up testing. The most important thing is to actually add tests!&lt;/p&gt;
 
-&lt;p&gt;I have grown fond of &lt;a href='http://rspec.info/'&gt;Rspec&lt;/a&gt; lately, and find its DSL awesome. Therefore we shall look at how to add a some Rspec test cases to a new project. Start by adding &lt;code&gt;gem &amp;quot;rspec&amp;quot;&lt;/code&gt; to the &lt;code&gt;Gemfile&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I have grown fond of &lt;a href=&#39;http://rspec.info/&#39;&gt;Rspec&lt;/a&gt; lately, and find its DSL awesome. Therefore we shall look at how to add a some Rspec test cases to a new project. Start by adding &lt;code&gt;gem &amp;quot;rspec&amp;quot;&lt;/code&gt; to the &lt;code&gt;Gemfile&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&amp;#8230; To be continued (sorry, forgot I started writing this post, I might return to it later).&lt;/p&gt;</content>
  </entry>
@@ -894,19 +984,19 @@ require &amp;quot;{project-name}&amp;quot;&lt;/code&gt;&lt;/pre&gt;
    <id>hhttp://casadelkrogh.dk/tech/2012/03/24/backup-backup-backup</id>
    <content type="html">&lt;p&gt;Backup is something you always wish you had, when you have had a system failure. Sometimes you have a backup, but no way to restore it quickly. If done right backup can be a godsend, but backups are not just for system failures.&lt;/p&gt;
 
-&lt;p&gt;During some spring cleaning when I moved to a new &lt;abbr title='Virtual Private Server'&gt;VPS&lt;/abbr&gt; recently I ended up needing my backup as I had not gotten round to move everything. But my backup/archive turned out not to be that recent. This however gave me an excuse to play around with the &lt;a href='https://sm.beginrescueend.com/'&gt;SM Framework&lt;/a&gt;, a shell scripting abstraction devised by &lt;a href='https://twitter.com/#!/wayneeseguin'&gt;Wayne E. Seguin&lt;/a&gt; and &lt;a href='https://twitter.com/#!/mpapis'&gt;Michal Papis&lt;/a&gt;.&lt;/p&gt;
-&lt;!--more--&gt;&lt;aside class='right span2 well'&gt;I have a VPS at &lt;a href='http://www.hosteurope.de/'&gt;Host Europe&lt;/a&gt;, which btw. is an awesome German based hosting firm. They provide a service where you can upgrade your VPS for free, and when you upgrade from an older series to a newer series you get 7 days as a transfer period. During these 7 days you have access to two VPSs, your current and your future VPS. You are in charge of moving everything to the new VPS yourself. This is great if you want to change something in your production setup.&lt;/aside&gt;
-&lt;h2 id='but_why'&gt;But why?&lt;/h2&gt;
+&lt;p&gt;During some spring cleaning when I moved to a new &lt;abbr title=&#39;Virtual Private Server&#39;&gt;VPS&lt;/abbr&gt; recently I ended up needing my backup as I had not gotten round to move everything. But my backup/archive turned out not to be that recent. This however gave me an excuse to play around with the &lt;a href=&#39;https://sm.beginrescueend.com/&#39;&gt;SM Framework&lt;/a&gt;, a shell scripting abstraction devised by &lt;a href=&#39;https://twitter.com/#!/wayneeseguin&#39;&gt;Wayne E. Seguin&lt;/a&gt; and &lt;a href=&#39;https://twitter.com/#!/mpapis&#39;&gt;Michal Papis&lt;/a&gt;.&lt;/p&gt;
+&lt;!--more--&gt;&lt;aside class=&#39;right span2 well&#39;&gt;I have a VPS at &lt;a href=&#39;http://www.hosteurope.de/&#39;&gt;Host Europe&lt;/a&gt;, which btw. is an awesome German based hosting firm. They provide a service where you can upgrade your VPS for free, and when you upgrade from an older series to a newer series you get 7 days as a transfer period. During these 7 days you have access to two VPSs, your current and your future VPS. You are in charge of moving everything to the new VPS yourself. This is great if you want to change something in your production setup.&lt;/aside&gt;
+&lt;h2 id=&#39;but_why&#39;&gt;But why?&lt;/h2&gt;
 
 &lt;p&gt;The reason for giving the SM Framework a go was because I personally find sh scripting a pain to read and write. SM provides a tonne of abstractions that make it easier to follow what the script is doing.&lt;/p&gt;
 
 &lt;p&gt;Initially I had some problems getting the SM Framework up and running, this was mainly due to the lack of updated documentation, or rather; The framework was undergoing a name change, from bdsm to SM Framework, and the site did not really reflect the changes, and a lot of the pages were missing. Luckily Michal Papis was at hand on the #beginrescueend irc channel on freenode and patiently answered my questions and helped me get SM up and running.&lt;/p&gt;
 
-&lt;p&gt;Michal Papis had actually made a bdsm extension called &lt;a href='https://github.com/mpapis/sm_backup'&gt;sm_backup&lt;/a&gt; that covered a lot of standard backup stuff, such as shorthand functions for using mysqldump, rsync data and file rotation. I was however not able to get it to work on the newer version of the SM framework (0.10.2). Papis did offer to look into fixing the extension, but said he did not actively use it.&lt;/p&gt;
+&lt;p&gt;Michal Papis had actually made a bdsm extension called &lt;a href=&#39;https://github.com/mpapis/sm_backup&#39;&gt;sm_backup&lt;/a&gt; that covered a lot of standard backup stuff, such as shorthand functions for using mysqldump, rsync data and file rotation. I was however not able to get it to work on the newer version of the SM framework (0.10.2). Papis did offer to look into fixing the extension, but said he did not actively use it.&lt;/p&gt;
 
 &lt;p&gt;Since my needs were quite basic there were no reason to try and rush the extension update, and I therefore went about and dabbled with creating my own set of functions whilst looking closely, and trying to learn from the functions in sm_backup.&lt;/p&gt;
 
-&lt;h2 id='documentation'&gt;Documentation&lt;/h2&gt;
+&lt;h2 id=&#39;documentation&#39;&gt;Documentation&lt;/h2&gt;
 
 &lt;p&gt;As mentioned the documentation at the time of writing is a bit sparse, but one of the things I can recommend is to install the &lt;code&gt;apidoc&lt;/code&gt; extension.&lt;/p&gt;
 
@@ -932,15 +1022,24 @@ drwxr-xr-x 2 markus markus 4096 2012-03-24 19:37 remove
 # Cleanup after ourselves
 path remove /tmp/paths&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The &lt;code&gt;sm apidoc&lt;/code&gt; is the little &lt;a href='http://en.wikipedia.org/wiki/The_Hitchhiker&amp;apos;s_Guide_to_the_Galaxy'&gt;HHGTTG&lt;/a&gt; of the SM framework, although it does still contain some &lt;em&gt;Add an example&lt;/em&gt; type of entries.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;sm apidoc&lt;/code&gt; is the little &lt;a href=&#39;http://en.wikipedia.org/wiki/The_Hitchhiker&amp;apos;s_Guide_to_the_Galaxy&#39;&gt;HHGTTG&lt;/a&gt; of the SM framework, although it does still contain some &lt;em&gt;Add an example&lt;/em&gt; type of entries.&lt;/p&gt;
 
-&lt;h2 id='the_power_of_sm'&gt;The power of SM&lt;/h2&gt;
+&lt;h2 id=&#39;the_power_of_sm&#39;&gt;The power of SM&lt;/h2&gt;
 
 &lt;p&gt;Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:&lt;/p&gt;
-
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;c1&#39;&gt;# usage:&lt;/span&gt;
+&lt;span class=&#39;c1&#39;&gt;#   backup_dir directory&lt;/span&gt;
+&lt;span class=&#39;c1&#39;&gt;# ensures that the given directory exists and sets it as target for backups&lt;/span&gt;
+&lt;span class=&#39;n&#39;&gt;function&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;backup_dir&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;(){&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;echo&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;Backup directory $1&amp;quot;&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;exists&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;||&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;create&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;enter&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
+&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.&lt;/p&gt;
 
-&lt;h3 id='backing_up_mysql'&gt;Backing up mysql&lt;/h3&gt;
+&lt;h3 id=&#39;backing_up_mysql&#39;&gt;Backing up mysql&lt;/h3&gt;
 
 &lt;p&gt;The simple answer is just use &lt;code&gt;mysqldump&lt;/code&gt; and be done with it, but wrapping it up in a function can make it much simpler to work with it.&lt;/p&gt;
 
@@ -969,11 +1068,11 @@ function dump_mysql() {
 
 &lt;p&gt;The log function is fantastic, and combined with log step it makes it easy to generate sane console output that change based on whether or not a function succeeds.&lt;/p&gt;
 
-&lt;h3 id='the_rest'&gt;The rest&lt;/h3&gt;
+&lt;h3 id=&#39;the_rest&#39;&gt;The rest&lt;/h3&gt;
 
-&lt;p&gt;Now this post is heading in the direction of being overpopulated with code examples, so to keep it a bit more tidy I will just add my backup.sh file at the &lt;a href='#files'&gt;bottom of this post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now this post is heading in the direction of being overpopulated with code examples, so to keep it a bit more tidy I will just add my backup.sh file at the &lt;a href=&#39;#files&#39;&gt;bottom of this post&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id='putting_it_together'&gt;Putting it together&lt;/h2&gt;
+&lt;h2 id=&#39;putting_it_together&#39;&gt;Putting it together&lt;/h2&gt;
 
 &lt;p&gt;The final concrete backup script ends up looking like this:&lt;/p&gt;
 
@@ -988,7 +1087,7 @@ backup_dir &amp;quot;db_backup&amp;quot;
 dump_mysql &amp;quot;nice_db&amp;quot;
 rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id='just_add_cron'&gt;Just add CRON&lt;/h3&gt;
+&lt;h3 id=&#39;just_add_cron&#39;&gt;Just add CRON&lt;/h3&gt;
 
 &lt;p&gt;All that is left is to add this script to CRON on the server I wish to backup. And of cause add another script that uses rsync to retrieve the backups.&lt;/p&gt;
 
@@ -1000,25 +1099,25 @@ rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code&gt;PATH=THAT_INSANELY_LONG_PATH&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id='not_using_bash'&gt;Not using bash&lt;/h2&gt;
+&lt;h2 id=&#39;not_using_bash&#39;&gt;Not using bash&lt;/h2&gt;
 
-&lt;p&gt;Another challenge I had was that just the day before I decided to use the SM framework I had changed my shell to &lt;a href='http://www.zsh.org/'&gt;zsh&lt;/a&gt;. The default SM installer sets up a lot of stuff for you, such as adding SM to &lt;code&gt;/etc/profile.d/&lt;/code&gt; which bash includes in its environment setup. A newly installed zsh however does not, as not to impose any preferences onto you. So after countless questions back and forth with a very patient Michal Papis I got it working.&lt;/p&gt;
+&lt;p&gt;Another challenge I had was that just the day before I decided to use the SM framework I had changed my shell to &lt;a href=&#39;http://www.zsh.org/&#39;&gt;zsh&lt;/a&gt;. The default SM installer sets up a lot of stuff for you, such as adding SM to &lt;code&gt;/etc/profile.d/&lt;/code&gt; which bash includes in its environment setup. A newly installed zsh however does not, as not to impose any preferences onto you. So after countless questions back and forth with a very patient Michal Papis I got it working.&lt;/p&gt;
 
 &lt;p&gt;I ended up just sourcing SM in my &lt;code&gt;~/.zshrc&lt;/code&gt; file, this is perhaps not the ideal place, but it works for now:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#load sm
 . /etc/profile.d/sm.sh&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id='ahh_now_safe_no_longer_sorry'&gt;Ahh now safe, no longer sorry&lt;/h2&gt;
+&lt;h2 id=&#39;ahh_now_safe_no_longer_sorry&#39;&gt;Ahh now safe, no longer sorry&lt;/h2&gt;
 
 &lt;p&gt;All in all, using the SM framework has probably taken longer than to just crank out a standard shell script, but the framework definitely has some potential. And if you embrace it fully and create your own extension etc. then the re-usability will be awesome.&lt;/p&gt;
 
 &lt;p&gt;But now my files are safe again, my database is being backuped and all that remains would be to run a restore firedrill, but given the simplicity of my setup that wont be necessary, I can live with being offline for a day.&lt;/p&gt;
 
-&lt;h2 id='files'&gt;Files&lt;/h2&gt;
+&lt;h2 id=&#39;files&#39;&gt;Files&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href='/files/backup.sh'&gt;backup.sh&lt;/a&gt; - functions to use in a backup script.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#39;/files/backup.sh&#39;&gt;backup.sh&lt;/a&gt; - functions to use in a backup script.&lt;/li&gt;
 &lt;/ul&gt;</content>
  </entry>
  
@@ -1027,7 +1126,7 @@ rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
    <link href="http://casadelkrogh.dk/tech/2012/03/17/a-theme-a-dream-and-some-bumps"/>
    <updated>2012-03-17T00:00:00+01:00</updated>
    <id>hhttp://casadelkrogh.dk/tech/2012/03/17/a-theme-a-dream-and-some-bumps</id>
-   <content type="html">&lt;p&gt;So after a days work or so the theme is coming along, as mentioned before the theme is based on &lt;a href='http://twitter.github.com/bootstrap/'&gt;Twitter Bootstrap&lt;/a&gt;. The background image still needs some work, but my GIMP skills seems to have rusted a bit.&lt;/p&gt;
+   <content type="html">&lt;p&gt;So after a days work or so the theme is coming along, as mentioned before the theme is based on &lt;a href=&#39;http://twitter.github.com/bootstrap/&#39;&gt;Twitter Bootstrap&lt;/a&gt;. The background image still needs some work, but my GIMP skills seems to have rusted a bit.&lt;/p&gt;
 
 &lt;p&gt;However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named &lt;em&gt;adaptive design&lt;/em&gt; rather than &lt;em&gt;responsive design&lt;/em&gt;?)&lt;/p&gt;
 &lt;!--more--&gt;
@@ -1036,7 +1135,7 @@ rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The Sass converter is mostly based on a gist I found https://gist.github.com/960150. To enable Sass partials I had to specify my full theme path, however I am quite sure it is possible to derive it from the &lt;code&gt;_config.yml&lt;/code&gt; or the Jekyll configuration. Also the Sass files have to start with a &lt;em&gt;YAML Front Matter&lt;/em&gt; block in order to be processed automagically.&lt;/p&gt;
 
 &lt;p&gt;Other than than I have made a couple of small liquid filters, a read-more filter that triggers on &lt;code&gt;&amp;lt;!--more--&amp;gt;&lt;/code&gt; and a simple &lt;code&gt;or&lt;/code&gt; filter, which could be seen as an attempt to make a simple &lt;em&gt;default to a piece of text&lt;/em&gt; if &lt;code&gt;nil&lt;/code&gt; or empty.&lt;/p&gt;
-&lt;p&gt;&lt;span class='label label-info'&gt;Update&lt;/span&gt; Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(&lt;/p&gt;</content>
+&lt;p&gt;&lt;span class=&#39;label label-info&#39;&gt;Update&lt;/span&gt; Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -1050,7 +1149,7 @@ rotate &amp;quot;nice_db&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;But all in all I think I am going to enjoy using jekyll.&lt;/p&gt;
 &lt;!--more--&gt;
-&lt;h2 id='why_use_jekyll'&gt;Why use Jekyll?&lt;/h2&gt;
+&lt;h2 id=&#39;why_use_jekyll&#39;&gt;Why use Jekyll?&lt;/h2&gt;
 
 &lt;p&gt;The main reason for using jekyll for this blog is quite simply the joy of new technology, the exact same reason why I started the blog. I enjoy new technology, and I love to learn new things, so having dabbled with rails for some time I thought I wanted to revive my CasaDelKrogh blog.&lt;/p&gt;
 

@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>A theme, a dream and some bumps</title>
+    <title>Embedding simpleSAMLphp using nginx</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -123,30 +123,103 @@
         </div>
         
 <div class="page-header">
-  <h1>A theme, a dream and some bumps <small>tech</small></h1>
+  <h1>Embedding simpleSAMLphp using nginx <small>code</small></h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>So after a days work or so the theme is coming along, as mentioned before the theme is based on <a href='http://twitter.github.com/bootstrap/'>Twitter Bootstrap</a>. The background image still needs some work, but my GIMP skills seems to have rusted a bit.</p>
+    <p>I recently had to embed <a href='https://simplesamlphp.org/'>simpleSAMLphp</a> into another application, in order to provide SAML2 federate login. Well embed might be the wrong term, perhaps mount describes it better.</p>
 
-<p>However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named <em>adaptive design</em> rather than <em>responsive design</em>?)</p>
+<p>As my web server of choice these days is nginx I wanted to use it rather than apache. This posed a couple of problems, so I decided to document my endeavour, mostly because I have been through this process once before and it turns out my memory is not really that good.</p>
 <!--more-->
-<p>I have also added some sweet sweet Haml and Sass support. The Sass support was possible to implement via a Jekyll Converter, Haml however ended up as a <code>rake haml</code> task. The reason behind the rake task is the way Jekyll handles the <code>_</code> folders, it does not process these folders, and it makes most sense to place my haml files in the theme folder.</p>
+<p>The exact premise in this case is an integration of federate login for <a href='http://vanillaforums.org/'>vanilla forums</a>, I will try to make a follow up post on how I achieved the integration when I’m done. My environment in this case is a <a href='https://www.vagrantup.com/'>vagrant box</a> running ubuntu 14.04.</p>
 
-<p>The Sass converter is mostly based on a gist I found https://gist.github.com/960150. To enable Sass partials I had to specify my full theme path, however I am quite sure it is possible to derive it from the <code>_config.yml</code> or the Jekyll configuration. Also the Sass files have to start with a <em>YAML Front Matter</em> block in order to be processed automagically.</p>
+<h2 id='installation'>Installation</h2>
 
-<p>Other than than I have made a couple of small liquid filters, a read-more filter that triggers on <code>&lt;!--more--&gt;</code> and a simple <code>or</code> filter, which could be seen as an attempt to make a simple <em>default to a piece of text</em> if <code>nil</code> or empty.</p>
-<p><span class='label label-info'>Update</span> Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(</p>
+<p>Install nginx and php5.</p>
+
+<pre><code>sudo apt-get install nginx php5-fpm</code></pre>
+
+<p>Download simpleSAMLphp from https://simplesamlphp.org/download and extract it where you want it.</p>
+
+<h3 id='configuration'>Configuration</h3>
+
+<p>Start by configuring the simpleSAMLphp by following the <a href='https://simplesamlphp.org/docs/stable/simplesamlphp-install'>Installation</a> and <a href='https://simplesamlphp.org/docs/stable/simplesamlphp-sp'>SP guide</a>.</p>
+
+<p>Next up is configuration of the nginx server directive. To get it out of the way here is a condensed version of the server configuration.</p>
+
+<pre><code>server {
+  listen 8080 default_server;
+  listen [::]:8080 default_server ipv6only=on;
+  server_name localhost;
+
+  root /home/vagrant/vanilla;
+  index index.php index.html index.htm;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location  /simplesaml {
+    alias /home/vagrant/simplesaml/www/;
+    location ~ \.php(/|$) {
+      fastcgi_split_path_info ^(.+?\.php)(/.+)$;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
+      fastcgi_index index.php;
+      include fastcgi_params;
+    }
+  }
+
+  location ~ \.php(/|$) {
+    #… same as above
+  }
+}</code></pre>
+
+<p>So multiple things are rather important here, lets look at it line by line.</p>
+
+<pre><code> location /simplesaml {</code></pre>
+
+<p>You can choose any location you want, but if you change it you must tell simplesaml this in <code>config/config.php</code>, look for the <code>baseurlpath</code> entry.</p>
+
+<pre><code> alias /home/vagrant/simplesaml/www/;</code></pre>
+
+<p>Alias allows you to change where nginx will serve the requests from, it will handle the &#8220;removal&#8221; of <code>/simplesaml</code> from the request url.</p>
+
+<pre><code>  location ~ \.php(/|$) {</code></pre>
+
+<p>A regex location to handle php request (all urls containing .php/ or .php). This is needed because alias would otherwise not be carried on into the default php</p>
+
+<pre><code> fastcgi_split_path_info ^(.+?\.php)(/.+)$;</code></pre>
+
+<p>This one is quite <strong>important</strong> to make simpleSAMLphp work correctly. The default ubuntu/debian nginx php configuration will use a greedy regex that will make for some entertaining bugs that make metadata exchange unusable.</p>
+
+<pre><code> fastcgi_param PATH_INFO $fastcgi_path_info;</code></pre>
+
+<p>Another addition that is not part of the default nginx configuration example. In short set the server environment variable <code>PATH_INFO</code> to the extracted path info.</p>
+
+<pre><code> fastcgi_pass unix:/var/run/php5-fpm.sock;
+ fastcgi_index index.php;
+ include fastcgi_params; </code></pre>
+
+<p>Delegate the request to fpm via fastcgi.</p>
+
+<p>With all this done you should now have a simpleSAMLphp instance running &#8220;inside&#8221; your site. For testing I can recommend the default Feide OpenIdP, it will serve you well until you are ready for integration with your desired IdPs.</p>
+
+<h2 id='the_missing_bits'>The missing bits</h2>
+
+<p>I have not yet looked into if this setup is configured correctly in terms of security, and access rights. So beware of this, after all you are doing authentication :)</p>
+
+<p>If you have any questions hit me up on twitter, I might or might not be abele to help.</p>
     <hr>
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2012/03/11/jekyll-seems-usable" title="Jekyll seems usable">&larr; Previous</a></li>
+        <li class="prev"><a href="/2013/11/28/cas-proxy-tickets" title="CAS Proxy Tickets">&larr; Previous</a></li>
       
         <li><a href="/archive.html">Archive</a></li>
       
-        <li class="next"><a href="/tech/2012/03/24/backup-backup-backup" title="Backup, backup, backup">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -156,7 +229,7 @@
   
   <div class="span4">
     <h4>Published</h4>
-    <div class="date"><span>17 March 2012</span></div>
+    <div class="date"><span>30 September 2014</span></div>
 
   
     <h4>Tags</h4>
@@ -167,9 +240,13 @@
 
   
      
-    	<li><a href="/tags.html#jekyll-ref">jekyll <span>2</span></a></li>
+    	<li><a href="/tags.html#php-ref">php <span>1</span></a></li>
      
-    	<li><a href="/tags.html#design-ref">design <span>2</span></a></li>
+    	<li><a href="/tags.html#simpleSAMLphp-ref">simpleSAMLphp <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#integration-ref">integration <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
     
   
 
