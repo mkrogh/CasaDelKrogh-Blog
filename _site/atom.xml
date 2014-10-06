@@ -4,13 +4,95 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2014-09-30T16:30:04+02:00</updated>
+ <updated>2014-10-06T12:32:28+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
    <email>markus@casadelkrogh.dk</email>
  </author>
 
+ 
+ <entry>
+   <title>SimpleSAMLphp and Vanilla jsConnect</title>
+   <link href="http://casadelkrogh.dk/code/2014/10/06/simplesamlphp-and-vanilla-jsconnect"/>
+   <updated>2014-10-06T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2014/10/06/simplesamlphp-and-vanilla-jsconnect</id>
+   <content type="html">&lt;p&gt;Recently I have been looking into setting up a forum that uses a federated SAML login for authentication. When you say forum these days, your choices are kind of limited to a myriad of PHP solutions. There are a lot of solutions out there, with classics such as phpBB, simple machines 2, and myBB. Then there are &amp;#8220;newcomers&amp;#8221; such as vanilla forums, and even discourse. Granted discourse it is more of a community tool than a forum, and it not written in PHP.&lt;/p&gt;
+
+&lt;p&gt;Normally I have had a tendency to roll my own forum software when I need the functionality. In this case though this would be a bit of an overkill, especially since it doesn’t need to interact with anything. Except for a SAML based login.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;After looking at some different solutions, I ended up with &lt;a href=&#39;http://www.vanillaforums.org/&#39;&gt;vanilla forums&lt;/a&gt;. It seems like a decent forum, and it has some fresh takes on how a forum should work. The deciding factor however was that it allows 3rd party login integration using something called jsConnect.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;http://blog.vanillaforums.com/help/vanilla-jsconnect-single-signon-on/&#39;&gt;Vanilla jsConnect&lt;/a&gt; is a single signon plugin for vanilla forums. In short it uses jsonp to achieve single signon by exchanging user information, and signs it with a shared key.&lt;/p&gt;
+
+&lt;h3 id=&#39;integrating_simplesamlphp_and_vanilla_forums&#39;&gt;Integrating SimpleSAMLphp and vanilla forums&lt;/h3&gt;
+
+&lt;p&gt;The first step is to setup both SimpleSAMLphp and vanilla forums. See my previous article on setting up &lt;a href=&#39;/code/2014/09/30/embedding-simplesamlphp-using-nginx/&#39;&gt;SimpleSAMLphp on nginx&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next you need to make a jsConnect page, the good folks at vanilla forums has made it easy if you are doing &lt;a href=&#39;http://blog.vanillaforums.com/help/vanilla-jsconnect-single-signon-on/#libraries&#39;&gt;PHP/Ruby/Java/.NET&lt;/a&gt;, so you only need to gather the user data, and focus on integrating with the single signon solution.&lt;/p&gt;
+
+&lt;p&gt;Let us start with the directory layout.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;simpleSAMLphp/www
+|-- jsConnectPHP
+|   |-- functions.jsconnect.php
+|   |-- index.php -not really used
+|   |-- jsconnect.php
+|   |-- login.php
+|   `-- README.md&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see I just cloned the jsConnectPHP project into my simpleSAMLphp www folder.&lt;/p&gt;
+
+&lt;h3 id=&#39;exchanging_user_data&#39;&gt;Exchanging user data&lt;/h3&gt;
+
+&lt;p&gt;The first file we will work with is &lt;code&gt;jsconnect.php&lt;/code&gt;. Which is used for exchanging user data.&lt;/p&gt;
+&lt;script src=&#39;https://gist.github.com/mkrogh/58afbaa55056ebe214b7.js?file=jsconnect.php &#39;&gt; &lt;/script&gt;
+&lt;ul&gt;
+&lt;li&gt;Start by including simpleSAMLphp as a library, and add the jsConnect php helper.&lt;/li&gt;
+
+&lt;li&gt;Setup clientID and the shared secret (you can either make your own secret, or let the jsConnect plugin in vanilla forums generate it).&lt;/li&gt;
+
+&lt;li&gt;Login with SimpleSAMLphp, using a specific service provider configuration.&lt;/li&gt;
+
+&lt;li&gt;Get the attributes, and map them to the user object.&lt;/li&gt;
+
+&lt;li&gt;Use the &lt;code&gt;WriteJsConnect&lt;/code&gt; function to sign and output the object.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And that is actually all it takes for doing the attribute exchange, simple and effective.&lt;/p&gt;
+
+&lt;h3 id=&#39;providing_a_seamless_login_experience&#39;&gt;Providing a seamless login experience&lt;/h3&gt;
+
+&lt;p&gt;Now in order to make it enjoyable to use the forum, we need to provide a login page. It should do the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Log the user into the single signon.&lt;/li&gt;
+
+&lt;li&gt;Trigger the attribute exchange via jsConnect.&lt;/li&gt;
+
+&lt;li&gt;Return the user to the page they started out from.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script src=&#39;https://gist.github.com/mkrogh/58afbaa55056ebe214b7.js?file=login.php &#39;&gt; &lt;/script&gt;
+&lt;p&gt;The only interesting thing here is &lt;code&gt;redirectURL&lt;/code&gt;, since it looks at the referal and extracts the page page where we came from. Other than that it just saves the referal url, logs the user in, and redirects the user to the constructed url.&lt;/p&gt;
+
+&lt;h3 id=&#39;configuring_jsconnect&#39;&gt;Configuring jsConnect&lt;/h3&gt;
+
+&lt;p&gt;Last thing to do is to configure the jsConnect plugin in vanilla forums. Start by downloading and installing it from &lt;a href=&#39;http://vanillaforums.org/addon/jsconnect-plugin&#39;&gt;http://vanillaforums.org/addon/jsconnect-plugin&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then enable it from the dashboard (click the cogs -&amp;gt; Dashboard -&amp;gt; Plugins). After enabling it you should have a jsConnect option in the user menu.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&#39;jsConnect configuration&#39; src=&#39;https://www.dropbox.com/s/3klhdcvy9nwr467/Screenshot%202014-10-06%2011.02.26.png?dl=1&#39; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Just add the urls for your &lt;code&gt;jsconnect.php&lt;/code&gt; and &lt;code&gt;login.php&lt;/code&gt; pages, either releative or absolute.&lt;/p&gt;
+
+&lt;p&gt;You can choose to make the connection default. If you do this and set the the registration method to connect, then you only allow users from the jsConnect sources to be created.&lt;/p&gt;
+
+&lt;p&gt;Please note that in this I&amp;#8217;m using &lt;code&gt;sha256&lt;/code&gt; since &lt;code&gt;sha1&lt;/code&gt; is considered &lt;a href=&#39;http://csrc.nist.gov/publications/nistpubs/800-131A/sp800-131A.pdf&#39;&gt;insecure as of 1st of January 2014&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#39;what_is_next&#39;&gt;What is next?&lt;/h3&gt;
+
+&lt;p&gt;This is just about all there is to adding single signon via SAML to vanilla forums. Right now I do not have any thing that seems to be missing, but perhaps my login page needs some error handling.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Embedding simpleSAMLphp using nginx</title>

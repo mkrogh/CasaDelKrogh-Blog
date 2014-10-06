@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>SimpleSAMLphp and Vanilla jsConnect</title>
+    
+    <!-- Styles -->
+    <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='/assets/themes/CasaDelKrogh/css/style.css?body=1' media='all' rel='stylesheet' type='text/css' />
+    <!-- Fav and touch icons -->
+    <link href='/assets/themes/CasaDelKrogh/imgs/favicon.ico' rel='shortcut icon' />
+    <script type='text/javascript'>
+      //<![CDATA[
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-38993454-1']);
+        _gaq.push(['_setDomainName', 'casadelkrogh.dk']);
+        _gaq.push(['_trackPageview']);
+        
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      //]]>
+    </script>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='navbar'>
+        <div class='navbar-inner'>
+          <div class='container'>
+            <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse' href='#'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </a>
+            <a class='brand' href='/'>CasaDelKrogh</a>
+            <div class='nav-collapse'>
+              <ul class='nav'>
+                
+                
+                
+
+
+  
+    
+    	
+    	<li><a href="/archive.html">Archive</a></li>
+    	
+    
+  
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/categories.html">Categories</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/pages.html">Pages</a></li>
+    	
+    
+  
+    
+  
+    
+    	
+    	<li><a href="/tags.html">Tags</a></li>
+    	
+    
+  
+
+
+
+              </ul>
+              <ul class='nav pull-right hidden-phone hidden-tablet'>
+                <li>
+                  <a class='feed-link' href='/atom.xml'>
+                    <img alt='feed' class='feed-icon' src='/assets/themes/CasaDelKrogh/imgs/rss.png' />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='content'>
+        <div class='author-bio cf row'>
+          <div class='span7'>
+            <img class='author-img' src='/assets/themes/CasaDelKrogh/imgs/author.png' />
+            <p>My name is Markus Krogh and I am a software developer at <a href="http://www.nordu.net/" title="NORDUnet">NORDUnet</a>. In my spare time I like to play around with web technologies. I am an avid beliver of dynamic languages, and I am thrilled by the revival of JavaScript along with HTML5.
+</p>
+          </div>
+          <ul class='span5 social-bar'>
+            <li class='social-icon'>
+              <a href='https://plus.google.com/+MarkusKrogh/posts' title='Google Plus'>
+                <img alt='Google Plus' src='/assets/themes/CasaDelKrogh/imgs/social/gplus_64.png' />
+              </a>
+            </li>
+            <li class='social-icon'>
+              <a href='http://www.linkedin.com/in/markuskrogh' title='LinkedIn'>
+                <img alt='LinkedIn' src='/assets/themes/CasaDelKrogh/imgs/social/linkedin_64.png' />
+              </a>
+            </li>
+            <li class='social-icon'>
+              <a href='https://github.com/mkrogh' title='Github'>
+                <img alt='Github' src='/assets/themes/CasaDelKrogh/imgs/social/github_64.png' />
+              </a>
+            </li>
+            <li class='social-icon'>
+              <a href='https://twitter.com/MarkusKrogh' title='Twitter'>
+                <img alt='Twitter' src='/assets/themes/CasaDelKrogh/imgs/social/twitter_64.png' />
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+<div class="page-header">
+  <h1>SimpleSAMLphp and Vanilla jsConnect <small>code</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>Recently I have been looking into setting up a forum that uses a federated SAML login for authentication. When you say forum these days, your choices are kind of limited to a myriad of PHP solutions. There are a lot of solutions out there, with classics such as phpBB, simple machines 2, and myBB. Then there are &#8220;newcomers&#8221; such as vanilla forums, and even discourse. Granted discourse it is more of a community tool than a forum, and it not written in PHP.</p>
+
+<p>Normally I have had a tendency to roll my own forum software when I need the functionality. In this case though this would be a bit of an overkill, especially since it doesn’t need to interact with anything. Except for a SAML based login.</p>
+<!--more-->
+<p>After looking at some different solutions, I ended up with <a href='http://www.vanillaforums.org/'>vanilla forums</a>. It seems like a decent forum, and it has some fresh takes on how a forum should work. The deciding factor however was that it allows 3rd party login integration using something called jsConnect.</p>
+
+<p><a href='http://blog.vanillaforums.com/help/vanilla-jsconnect-single-signon-on/'>Vanilla jsConnect</a> is a single signon plugin for vanilla forums. In short it uses jsonp to achieve single signon by exchanging user information, and signs it with a shared key.</p>
+
+<h3 id='integrating_simplesamlphp_and_vanilla_forums'>Integrating SimpleSAMLphp and vanilla forums</h3>
+
+<p>The first step is to setup both SimpleSAMLphp and vanilla forums. See my previous article on setting up <a href='/code/2014/09/30/embedding-simplesamlphp-using-nginx/'>SimpleSAMLphp on nginx</a>.</p>
+
+<p>Next you need to make a jsConnect page, the good folks at vanilla forums has made it easy if you are doing <a href='http://blog.vanillaforums.com/help/vanilla-jsconnect-single-signon-on/#libraries'>PHP/Ruby/Java/.NET</a>, so you only need to gather the user data, and focus on integrating with the single signon solution.</p>
+
+<p>Let us start with the directory layout.</p>
+
+<pre><code>simpleSAMLphp/www
+|-- jsConnectPHP
+|   |-- functions.jsconnect.php
+|   |-- index.php -not really used
+|   |-- jsconnect.php
+|   |-- login.php
+|   `-- README.md</code></pre>
+
+<p>As you can see I just cloned the jsConnectPHP project into my simpleSAMLphp www folder.</p>
+
+<h3 id='exchanging_user_data'>Exchanging user data</h3>
+
+<p>The first file we will work with is <code>jsconnect.php</code>. Which is used for exchanging user data.</p>
+<script src='https://gist.github.com/mkrogh/58afbaa55056ebe214b7.js?file=jsconnect.php '> </script>
+<ul>
+<li>Start by including simpleSAMLphp as a library, and add the jsConnect php helper.</li>
+
+<li>Setup clientID and the shared secret (you can either make your own secret, or let the jsConnect plugin in vanilla forums generate it).</li>
+
+<li>Login with SimpleSAMLphp, using a specific service provider configuration.</li>
+
+<li>Get the attributes, and map them to the user object.</li>
+
+<li>Use the <code>WriteJsConnect</code> function to sign and output the object.</li>
+</ul>
+
+<p>And that is actually all it takes for doing the attribute exchange, simple and effective.</p>
+
+<h3 id='providing_a_seamless_login_experience'>Providing a seamless login experience</h3>
+
+<p>Now in order to make it enjoyable to use the forum, we need to provide a login page. It should do the following:</p>
+
+<ul>
+<li>Log the user into the single signon.</li>
+
+<li>Trigger the attribute exchange via jsConnect.</li>
+
+<li>Return the user to the page they started out from.</li>
+</ul>
+<script src='https://gist.github.com/mkrogh/58afbaa55056ebe214b7.js?file=login.php '> </script>
+<p>The only interesting thing here is <code>redirectURL</code>, since it looks at the referal and extracts the page page where we came from. Other than that it just saves the referal url, logs the user in, and redirects the user to the constructed url.</p>
+
+<h3 id='configuring_jsconnect'>Configuring jsConnect</h3>
+
+<p>Last thing to do is to configure the jsConnect plugin in vanilla forums. Start by downloading and installing it from <a href='http://vanillaforums.org/addon/jsconnect-plugin'>http://vanillaforums.org/addon/jsconnect-plugin</a>.</p>
+
+<p>Then enable it from the dashboard (click the cogs -&gt; Dashboard -&gt; Plugins). After enabling it you should have a jsConnect option in the user menu.</p>
+
+<p><img alt='jsConnect configuration' src='https://www.dropbox.com/s/3klhdcvy9nwr467/Screenshot%202014-10-06%2011.02.26.png?dl=1' /></p>
+
+<p>Just add the urls for your <code>jsconnect.php</code> and <code>login.php</code> pages, either releative or absolute.</p>
+
+<p>You can choose to make the connection default. If you do this and set the the registration method to connect, then you only allow users from the jsConnect sources to be created.</p>
+
+<p>Please note that in this I&#8217;m using <code>sha256</code> since <code>sha1</code> is considered <a href='http://csrc.nist.gov/publications/nistpubs/800-131A/sp800-131A.pdf'>insecure as of 1st of January 2014</a>.</p>
+
+<h3 id='what_is_next'>What is next?</h3>
+
+<p>This is just about all there is to adding single signon via SAML to vanilla forums. Right now I do not have any thing that seems to be missing, but perhaps my login page needs some error handling.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/code/2014/09/30/embedding-simplesamlphp-using-nginx" title="Embedding simpleSAMLphp using nginx">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next disabled"><a>Next &rarr;</a>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>06 October 2014</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#php-ref">php <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#forum-ref">forum <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#simpleSAMLphp-ref">simpleSAMLphp <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#integration-ref">integration <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+      <footer>
+        <p>
+          &copy; Markus Krogh 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+    </div>
+    <!-- /container -->
+    <script src='/assets/themes/CasaDelKrogh/js/jquery-1.7.1.min.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/bootstrap/js/bootstrap-collapse.js' type='text/javascript'></script>
+    <script src='/assets/themes/CasaDelKrogh/js/slider.js' type='text/javascript'></script>
+  </body>
+</html>
+
