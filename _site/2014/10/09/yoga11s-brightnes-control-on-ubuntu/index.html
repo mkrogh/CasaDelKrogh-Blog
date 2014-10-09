@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>Coffee</title>
+    <title>Yoga11S brightnes control on ubuntu</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -123,41 +123,35 @@
         </div>
         
 <div class="page-header">
-  <h1>Coffee <small>Other</small></h1>
+  <h1>Yoga11S brightnes control on ubuntu <small></small></h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>Yesterday my new coffee grinder arrived. It is a <a href='http://www.imerco.dk/Default.aspx?id=6171&amp;ProductID=100329983'>Bodum Bistro</a> electric grinder that uses a conical burr grinder. For quite some time I have considered buying a coffee grinder.</p>
+    <p>After reinstalling my Yoga 11S laptop yet again I ran into the lovely problem with the brightness control. (Hint: It does not work out of the box) Luckily the internet came to the rescue, but not with all the info put together, so here goes.</p>
+<!--more-->
+<p>It is really just 4 simple steps (that sounds like a clickbait article).</p>
 
-<p>It all started when I bought my <a href='http://www.amazon.co.uk/Aerobie-AeroPress-80R08-Coffee-Maker/dp/B000GXZ2GS/'>Aero Press</a>. A couple of my friends had been praising it, and when I discovered that it was as cheap as it is I was sold.</p>
-<!--more--><img alt='coffee.jpg' class='right' src='/images/coffee/coffee.jpg' />
-<p>That was what got me started on my coffee adventure. Because I do not drink coffee by the bucket I started buying different brands of luxury coffee. It was nice and all was dandy, as time went by I began to think about grinding the coffee myself to keep it fresh.</p>
+<ol>
+<li>Change <code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet splash&quot;</code> to <code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet splash acpi_backlight=vendor&quot;</code> in <code>/etc/default/grub</code>.</li>
 
-<p>A couple of half hearted searches on amazon and a trip to city center yielded nothing really interesting. Then one night I was over at a friends apartment and he offered me a cup of freshly ground coffee; who would not want that?</p>
+<li>Run <code>sudo update-grub</code></li>
 
-<p>He mentioned that Imerco had an offer up for package with a coffee grinder and a French press. Their web shop did not have it in stock, but mentioned that some stores might still have some left. That prompted me to visit the two local shops with no luck what so ever.</p>
+<li>Blacklist the ideapad_laptop in modprobe by adding <code>blacklist ideapad_laptop</code> to your <code>/etc/modprobe.d/blacklist.conf</code> file.</li>
 
-<p>A week later I fortunately managed to order the set from the web shop. Because it was still out of stock it took over a fortnight for them to fulfill the order. But after a quick email exchange they polled around some of their shops and found a set for me \o/.</p>
+<li>Restart ;)</li>
+</ol>
 
-<p>As an added bonus to this waiting game, the French press was dead on arrival as the glass was cracked.</p>
-
-<p>But here I am writing a quick post whilst drinking a cup of coffee made on my aero press from my freshly ground coffee. Mmmmm.</p>
-<div class='slider'>
-<ul class='inner'>
-<li class='item'><img alt='Bodum_Bistro.jpg' src='/images/coffee/Bodum_Bistro.jpg' /></li>
-<li class='item'><img alt='coffee.jpg' src='/images/coffee/coffee.jpg' /></li>
-</ul>
-</div>
+<p>Thats all there is to it. Most of the information is taken from <a href='http://askubuntu.com/a/304762'>this Ask Ubuntu answer</a>. The only information that I needed to dig up was the location of the grub config file, that I found in <a href='http://askubuntu.com/questions/128463/how-to-control-brightness'>another Ask Ubuntu answer</a>.</p>
     <hr>
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/code/2013/06/09/tracking-time" title="Tracking time">&larr; Previous</a></li>
+        <li class="prev"><a href="/2013/11/28/cas-proxy-tickets" title="CAS Proxy Tickets">&larr; Previous</a></li>
       
         <li><a href="/archive.html">Archive</a></li>
       
-        <li class="next"><a href="/code/2013/11/08/battling-the-asset-pipeline" title="Battling the asset pipeline">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -167,7 +161,7 @@
   
   <div class="span4">
     <h4>Published</h4>
-    <div class="date"><span>04 October 2013</span></div>
+    <div class="date"><span>09 October 2014</span></div>
 
   
     <h4>Tags</h4>
@@ -178,9 +172,9 @@
 
   
      
-    	<li><a href="/tags.html#hobby-ref">hobby <span>1</span></a></li>
+    	<li><a href="/tags.html#ubuntu-ref">ubuntu <span>1</span></a></li>
      
-    	<li><a href="/tags.html#coffee-ref">coffee <span>1</span></a></li>
+    	<li><a href="/tags.html#laptop-ref">laptop <span>1</span></a></li>
     
   
 

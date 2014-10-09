@@ -4,13 +4,35 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2014-04-02T21:46:25+02:00</updated>
+ <updated>2014-10-09T19:44:34+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
    <email>markus@casadelkrogh.dk</email>
  </author>
 
+ 
+ <entry>
+   <title>Yoga11S brightnes control on ubuntu</title>
+   <link href="http://casadelkrogh.dk/2014/10/09/yoga11s-brightnes-control-on-ubuntu"/>
+   <updated>2014-10-09T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/2014/10/09/yoga11s-brightnes-control-on-ubuntu</id>
+   <content type="html">&lt;p&gt;After reinstalling my Yoga 11S laptop yet again I ran into the lovely problem with the brightness control. (Hint: It does not work out of the box) Luckily the internet came to the rescue, but not with all the info put together, so here goes.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;It is really just 4 simple steps (that sounds like a clickbait article).&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Change &lt;code&gt;GRUB_CMDLINE_LINUX_DEFAULT=&amp;quot;quiet splash&amp;quot;&lt;/code&gt; to &lt;code&gt;GRUB_CMDLINE_LINUX_DEFAULT=&amp;quot;quiet splash acpi_backlight=vendor&amp;quot;&lt;/code&gt; in &lt;code&gt;/etc/default/grub&lt;/code&gt;.&lt;/li&gt;
+
+&lt;li&gt;Run &lt;code&gt;sudo update-grub&lt;/code&gt;&lt;/li&gt;
+
+&lt;li&gt;Blacklist the ideapad_laptop in modprobe by adding &lt;code&gt;blacklist ideapad_laptop&lt;/code&gt; to your &lt;code&gt;/etc/modprobe.d/blacklist.conf&lt;/code&gt; file.&lt;/li&gt;
+
+&lt;li&gt;Restart ;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Thats all there is to it. Most of the information is taken from &lt;a href=&#39;http://askubuntu.com/a/304762&#39;&gt;this Ask Ubuntu answer&lt;/a&gt;. The only information that I needed to dig up was the location of the grub config file, that I found in &lt;a href=&#39;http://askubuntu.com/questions/128463/how-to-control-brightness&#39;&gt;another Ask Ubuntu answer&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>CAS Proxy Tickets</title>
