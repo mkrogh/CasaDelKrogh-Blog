@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>Diving for Dahab</title>
+    <title>Embedding simpleSAMLphp using nginx</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -123,41 +123,103 @@
         </div>
         
 <div class="page-header">
-  <h1>Diving for Dahab <small></small></h1>
+  <h1>Embedding simpleSAMLphp using nginx <small>code</small></h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>A mate and I are planning a trip to Dahab (Egypt) in late March.</p>
+    <p>I recently had to embed <a href='https://simplesamlphp.org/'>simpleSAMLphp</a> into another application, in order to provide SAML2 federate login. Well embed might be the wrong term, perhaps mount describes it better.</p>
 
-<p>We stumbled upon an offer from kilroy travels where you could get 7 days in Dahab, including a PADI Open Water certification for about <a href='https://www.google.dk/search?q=3700+dkk+in+usd'>3700 dkk</a>. This was a nice offer, and all we had to do was book the flight. Well at least so we thought.</p>
-
-<p>After we bought the tickets from Copenhagen to Sharm El Sheikh, we recieved an offer from kilroy for diving in Sharm El Sheikh, not Dahab, and it was suddenly <a href='https://www.google.dk/search?q=4600+dkk+in+usd'>4600 dkk</a> rather than the aforementioned 3700 dkk.</p>
+<p>As my web server of choice these days is nginx I wanted to use it rather than apache. This posed a couple of problems, so I decided to document my endeavour, mostly because I have been through this process once before and it turns out my memory is not really that good.</p>
 <!--more-->
-<p>When we recieved this &#8220;offer&#8221; we were a bit perplexed. When we looked at <a href='http://www.kilroy.dk/'>kilroy.dk</a> the offer on Diving in Dahab was gone. This made us a bit uneasy and we wrote to the travelagent that had sent us the offer. It turned out that the Dive center in Dahab with wich they had an agreement was undergoing rennovations, and the travel agent then had assumed that we then rather would like to dive in Sharm El Sheikh.</p>
+<p>The exact premise in this case is an integration of federate login for <a href='http://vanillaforums.org/'>vanilla forums</a>, I will try to make a follow up post on how I achieved the integration when I’m done. My environment in this case is a <a href='https://www.vagrantup.com/'>vagrant box</a> running ubuntu 14.04.</p>
 
-<p>This was not what we had anticipated.. We had already booked the flight ourselves, and planned the time off for the holiday, so we decided to take a look at booking diving and hotel in Dahab ourselves.</p>
+<h2 id='installation'>Installation</h2>
 
-<p>We looked at different hotels in Dahab using <a href='http://www.tripadvisor.com'>tripadvisor</a> and <a href='http://www.booking.com'>booking.com</a>. And quickly boiled it down to three hotels: the <a href='http://starofdahab.com/'>Star of Dahab</a>, the <a href='http://www.dahabdivers.com/start.htm'>Dahab Divers</a>, and as backup the <a href='http://www.mirage.com.eg/'>Mirage village</a>. All were available, and it was even possible to get two single rooms (I snore quite a lot).</p>
+<p>Install nginx and php5.</p>
 
-<p>We ended up choosing Star of Dahab, as it seemed nice and cozy, and near most of the dive centers. Or at least we reserved two rooms there, but they might be subject to change (dahab divers looks so nice).</p>
+<pre><code>sudo apt-get install nginx php5-fpm</code></pre>
 
-<p>In order to cover the diving we wrote to three diving centers: <a href='http://www.bigbluedahab.com/'>Big Blue Dahab</a>, <a href='http://www.h2odiversdahab.com/'>H2O divers</a> and <a href='http://www.poseidondivers.com/'>Poseidon Divers</a>. Again these dive centers were chosen based on reviews on tripadvisor and comments on booking.com.</p>
+<p>Download simpleSAMLphp from https://simplesamlphp.org/download and extract it where you want it.</p>
 
-<p>All of the three dive centers replied within 12 hours which was awesome! All were super nice, and all actually answered our enquries, and added additional information. Currently we have not decided on which dive center we are going to use. But I am leaning towards Big Blue Dahab or H2O.</p>
+<h3 id='configuration'>Configuration</h3>
 
-<p>As of now it seems like we are approaching 3600 dkk for staying at Dahab. However this is with seperate bedrooms and two extra days included in the price. Thats pretty good for using a couple of afternoons, in short if you do not buy a packaged trip, you should probably check out if it makes sense to book it all yourself.</p>
+<p>Start by configuring the simpleSAMLphp by following the <a href='https://simplesamlphp.org/docs/stable/simplesamlphp-install'>Installation</a> and <a href='https://simplesamlphp.org/docs/stable/simplesamlphp-sp'>SP guide</a>.</p>
 
-<p>I will probably be posting a couple of posts soon on what we end up choosing, and how the trip goes.</p>
+<p>Next up is configuration of the nginx server directive. To get it out of the way here is a condensed version of the server configuration.</p>
+
+<pre><code>server {
+  listen 8080 default_server;
+  listen [::]:8080 default_server ipv6only=on;
+  server_name localhost;
+
+  root /home/vagrant/vanilla;
+  index index.php index.html index.htm;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location  /simplesaml {
+    alias /home/vagrant/simplesaml/www/;
+    location ~ \.php(/|$) {
+      fastcgi_split_path_info ^(.+?\.php)(/.+)$;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
+      fastcgi_index index.php;
+      include fastcgi_params;
+    }
+  }
+
+  location ~ \.php(/|$) {
+    #… same as above
+  }
+}</code></pre>
+
+<p>So multiple things are rather important here, lets look at it line by line.</p>
+
+<pre><code> location /simplesaml {</code></pre>
+
+<p>You can choose any location you want, but if you change it you must tell simplesaml this in <code>config/config.php</code>, look for the <code>baseurlpath</code> entry.</p>
+
+<pre><code> alias /home/vagrant/simplesaml/www/;</code></pre>
+
+<p>Alias allows you to change where nginx will serve the requests from, it will handle the &#8220;removal&#8221; of <code>/simplesaml</code> from the request url.</p>
+
+<pre><code>  location ~ \.php(/|$) {</code></pre>
+
+<p>A regex location to handle php request (all urls containing .php/ or .php). This is needed because alias would otherwise not be carried on into the default php</p>
+
+<pre><code> fastcgi_split_path_info ^(.+?\.php)(/.+)$;</code></pre>
+
+<p>This one is quite <strong>important</strong> to make simpleSAMLphp work correctly. The default ubuntu/debian nginx php configuration will use a greedy regex that will make for some entertaining bugs that make metadata exchange unusable.</p>
+
+<pre><code> fastcgi_param PATH_INFO $fastcgi_path_info;</code></pre>
+
+<p>Another addition that is not part of the default nginx configuration example. In short set the server environment variable <code>PATH_INFO</code> to the extracted path info.</p>
+
+<pre><code> fastcgi_pass unix:/var/run/php5-fpm.sock;
+ fastcgi_index index.php;
+ include fastcgi_params; </code></pre>
+
+<p>Delegate the request to fpm via fastcgi.</p>
+
+<p>With all this done you should now have a simpleSAMLphp instance running &#8220;inside&#8221; your site. For testing I can recommend the default Feide OpenIdP, it will serve you well until you are ready for integration with your desired IdPs.</p>
+
+<h2 id='the_missing_bits'>The missing bits</h2>
+
+<p>I have not yet looked into if this setup is configured correctly in terms of security, and access rights. So beware of this, after all you are doing authentication :)</p>
+
+<p>If you have any questions hit me up on twitter, I might or might not be abele to help.</p>
     <hr>
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/code/2012/11/01/treasures-on-rails" title="Treasures on rails">&larr; Previous</a></li>
+        <li class="prev"><a href="/2013/11/28/cas-proxy-tickets" title="CAS Proxy Tickets">&larr; Previous</a></li>
       
         <li><a href="/archive.html">Archive</a></li>
       
-        <li class="next"><a href="/2013/05/02/colors-in-vim" title="Colors... in vim">Next &rarr;</a></li>
+        <li class="next"><a href="/code/2014/10/06/simplesamlphp-and-vanilla-jsconnect" title="SimpleSAMLphp and Vanilla jsConnect">Next &rarr;</a></li>
       
       </ul>
     </div>
@@ -167,7 +229,7 @@
   
   <div class="span4">
     <h4>Published</h4>
-    <div class="date"><span>27 February 2013</span></div>
+    <div class="date"><span>30 September 2014</span></div>
 
   
     <h4>Tags</h4>
@@ -178,11 +240,13 @@
 
   
      
-    	<li><a href="/tags.html#vacation-ref">vacation <span>1</span></a></li>
+    	<li><a href="/tags.html#php-ref">php <span>2</span></a></li>
      
-    	<li><a href="/tags.html#fun-ref">fun <span>2</span></a></li>
+    	<li><a href="/tags.html#simpleSAMLphp-ref">simpleSAMLphp <span>2</span></a></li>
      
-    	<li><a href="/tags.html#diving-ref">diving <span>1</span></a></li>
+    	<li><a href="/tags.html#integration-ref">integration <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
     
   
 
