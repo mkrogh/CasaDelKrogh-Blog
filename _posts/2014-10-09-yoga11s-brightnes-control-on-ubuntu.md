@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Yoga11S brightnes control on ubuntu"
+title: "Yoga11S brightness control on Ubuntu"
 category: 
 tags: [ubuntu, laptop]
 ---
