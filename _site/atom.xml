@@ -4,13 +4,125 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2014-10-10T19:55:14+02:00</updated>
+ <updated>2014-10-14T09:00:46+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
    <email>markus@casadelkrogh.dk</email>
  </author>
 
+ 
+ <entry>
+   <title>Mockito cheat sheet</title>
+   <link href="http://casadelkrogh.dk/code/2014/10/14/mockito-cheat-sheet"/>
+   <updated>2014-10-14T00:00:00+02:00</updated>
+   <id>hhttp://casadelkrogh.dk/code/2014/10/14/mockito-cheat-sheet</id>
+   <content type="html">&lt;p&gt;I have been using Mockito for a project recently and made a cheat sheet that is meant to be easy to digest.&lt;/p&gt;
+
+&lt;p&gt;First things first, stop and think if you really need ot use a mocking framework.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id=&#39;to_spy_or_to_mock&#39;&gt;To spy or to Mock.&lt;/h2&gt;
+
+&lt;p&gt;A mock: no implementation at all, just a shell.&lt;/p&gt;
+
+&lt;p&gt;A spy: hooking into a real object, unless you specify anything else the object will behave as normal.&lt;/p&gt;
+
+&lt;h3 id=&#39;usage&#39;&gt;Usage:&lt;/h3&gt;
+
+&lt;p&gt;Normal usage is with the static methods on Mockito (you can of cause use static import for these).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SomeClass mock = Mockito.mock(SomeClass.class);
+SomeClass spy = Mockito.spy(new SomeClass());&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Mockito can also be used with annotations, you just need to use the JUnit runner.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@RunWith(MockitoJUnitRunner.class)
+class MyTestClass {
+  @Mock
+  SomeClass mock2;
+  @Spy 
+  SomeClass spy2 = new SomeClass();
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#39;mocking_your_methods&#39;&gt;Mocking you(r methods)&lt;/h2&gt;
+
+&lt;h3 id=&#39;methods_with_return_types&#39;&gt;Methods with return types&lt;/h3&gt;
+
+&lt;p&gt;Here we are mocking the &lt;code&gt;List&amp;lt;String&amp;gt; fetch&lt;/code&gt; method of the mock2 object.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//Our mock return value:
+List&amp;lt;String&amp;gt; mockResult = Arrays.asList(&amp;quot;result1&amp;quot;,&amp;quot;result2&amp;quot;;&amp;quot;result3&amp;quot;);
+
+//Here we are using the any matchers.
+Mockito.when(
+  mock2.fetch(
+    Mockito.any(credentials.getClass()), 
+    Mockito.anyBoolean(), 
+    Mockito.anyString()
+  )).thenReturn(mockResult);
+
+//Using specific values
+Mockito.when(mock2.fetch(credentials, true, &amp;quot;foo&amp;quot;)).thenReturn(mockResult);
+
+//Mixing specifics and &amp;quot;wildcards&amp;quot;
+Mockito.when(
+  mock2.fetch(
+    Mockito.eq(credentials), 
+    Mockito.eq(true), 
+    Mockito.anyString()
+  )).thenReturn(mockResult);&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see if you want to mix matchers and specifics you need to use the &lt;code&gt;Mockito.eq&lt;/code&gt; wrapper.&lt;/p&gt;
+
+&lt;p&gt;You can also make the method throw exceptions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Mockito.when(mock2.fetch(credentials, true, &amp;quot;foo&amp;quot;))
+  .thenThrow(new IllegalArgumentException());&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#39;enter_the_void_methods&#39;&gt;Enter the void methods&lt;/h3&gt;
+
+&lt;p&gt;When mocking void methods, you normally don&amp;#8217;t have to do anything. But you might want to test exception handling from a void method.&lt;/p&gt;
+
+&lt;p&gt;Here we are mocking the void method &lt;code&gt;spy2.logError(String message)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//Using matchers
+Mockito.doThrow(new IllegalArgumentException())
+  .when(spy2).logError(Mockito.anyString());
+
+//Make the method do nothing
+Mockito.doNothing().when(spy2).logError(Mockito.anyString());&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#39;verifying&#39;&gt;Verifying&lt;/h2&gt;
+
+&lt;p&gt;You can also use mockito for verifying if a method was called, how many times it was called and with which parameters. This is usefull for verifying that some class actually uses a&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//throws exception if fetch was not called with the specific arguments
+Mockito.verify(spy).fetch(credentials, true, &amp;quot;foo&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#39;other_tips_and_tricks&#39;&gt;Other tips and tricks&lt;/h2&gt;
+
+&lt;h3 id=&#39;create_helper_methods&#39;&gt;Create helper methods&lt;/h3&gt;
+
+&lt;p&gt;If you need to mock a specific method multiple times you might want to make a helper method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private OngoingStubbing&amp;lt;List&amp;lt;String&amp;gt;&amp;gt; mockFetch(SomeClass toMock){
+  return Mockito.when(
+  toMock.fetch(
+    Mockito.any(credentials.getClass()), 
+    Mockito.anyBoolean(), 
+    Mockito.anyString()
+  ));
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can then use this method to quickly setup different return values or throwing different exceptions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//Example usage
+mockFetch(mock2).thenReturn(new ArrayList&amp;lt;String&amp;gt;());&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#39;resources&#39;&gt;Resources&lt;/h3&gt;
+
+&lt;p&gt;Another good, and still simple article to read would be: http://www.vogella.com/tutorials/Mockito/article.html&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Yoga11S brightness control on Ubuntu</title>
@@ -1131,7 +1243,16 @@ path remove /tmp/paths&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#39;the_power_of_sm&#39;&gt;The power of SM&lt;/h2&gt;
 
 &lt;p&gt;Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:&lt;/p&gt;
-
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;c1&#39;&gt;# usage:&lt;/span&gt;
+&lt;span class=&#39;c1&#39;&gt;#   backup_dir directory&lt;/span&gt;
+&lt;span class=&#39;c1&#39;&gt;# ensures that the given directory exists and sets it as target for backups&lt;/span&gt;
+&lt;span class=&#39;n&#39;&gt;function&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;backup_dir&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;(){&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;echo&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;Backup directory $1&amp;quot;&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;exists&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;||&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;create&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
+  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;enter&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
+&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.&lt;/p&gt;
 
 &lt;h3 id=&#39;backing_up_mysql&#39;&gt;Backing up mysql&lt;/h3&gt;

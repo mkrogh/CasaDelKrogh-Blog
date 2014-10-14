@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>A theme, a dream and some bumps</title>
+    <title>Mockito cheat sheet</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -123,30 +123,125 @@
         </div>
         
 <div class="page-header">
-  <h1>A theme, a dream and some bumps <small>tech</small></h1>
+  <h1>Mockito cheat sheet <small>code</small></h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>So after a days work or so the theme is coming along, as mentioned before the theme is based on <a href='http://twitter.github.com/bootstrap/'>Twitter Bootstrap</a>. The background image still needs some work, but my GIMP skills seems to have rusted a bit.</p>
+    <p>I have been using Mockito for a project recently and made a cheat sheet that is meant to be easy to digest.</p>
 
-<p>However I must say the responsive design extension to bootstrap is quite nice. (Why has it not been named <em>adaptive design</em> rather than <em>responsive design</em>?)</p>
+<p>First things first, stop and think if you really need ot use a mocking framework.</p>
 <!--more-->
-<p>I have also added some sweet sweet Haml and Sass support. The Sass support was possible to implement via a Jekyll Converter, Haml however ended up as a <code>rake haml</code> task. The reason behind the rake task is the way Jekyll handles the <code>_</code> folders, it does not process these folders, and it makes most sense to place my haml files in the theme folder.</p>
+<h2 id='to_spy_or_to_mock'>To spy or to Mock.</h2>
 
-<p>The Sass converter is mostly based on a gist I found https://gist.github.com/960150. To enable Sass partials I had to specify my full theme path, however I am quite sure it is possible to derive it from the <code>_config.yml</code> or the Jekyll configuration. Also the Sass files have to start with a <em>YAML Front Matter</em> block in order to be processed automagically.</p>
+<p>A mock: no implementation at all, just a shell.</p>
 
-<p>Other than than I have made a couple of small liquid filters, a read-more filter that triggers on <code>&lt;!--more--&gt;</code> and a simple <code>or</code> filter, which could be seen as an attempt to make a simple <em>default to a piece of text</em> if <code>nil</code> or empty.</p>
-<p><span class='label label-info'>Update</span> Hmm it seems like my nice Sass trick makes Jekyll believe that my css file is a page :(</p>
+<p>A spy: hooking into a real object, unless you specify anything else the object will behave as normal.</p>
+
+<h3 id='usage'>Usage:</h3>
+
+<p>Normal usage is with the static methods on Mockito (you can of cause use static import for these).</p>
+
+<pre><code>SomeClass mock = Mockito.mock(SomeClass.class);
+SomeClass spy = Mockito.spy(new SomeClass());</code></pre>
+
+<p>Mockito can also be used with annotations, you just need to use the JUnit runner.</p>
+
+<pre><code>@RunWith(MockitoJUnitRunner.class)
+class MyTestClass {
+  @Mock
+  SomeClass mock2;
+  @Spy 
+  SomeClass spy2 = new SomeClass();
+}</code></pre>
+
+<h2 id='mocking_your_methods'>Mocking you(r methods)</h2>
+
+<h3 id='methods_with_return_types'>Methods with return types</h3>
+
+<p>Here we are mocking the <code>List&lt;String&gt; fetch</code> method of the mock2 object.</p>
+
+<pre><code>//Our mock return value:
+List&lt;String&gt; mockResult = Arrays.asList(&quot;result1&quot;,&quot;result2&quot;;&quot;result3&quot;);
+
+//Here we are using the any matchers.
+Mockito.when(
+  mock2.fetch(
+    Mockito.any(credentials.getClass()), 
+    Mockito.anyBoolean(), 
+    Mockito.anyString()
+  )).thenReturn(mockResult);
+
+//Using specific values
+Mockito.when(mock2.fetch(credentials, true, &quot;foo&quot;)).thenReturn(mockResult);
+
+//Mixing specifics and &quot;wildcards&quot;
+Mockito.when(
+  mock2.fetch(
+    Mockito.eq(credentials), 
+    Mockito.eq(true), 
+    Mockito.anyString()
+  )).thenReturn(mockResult);</code></pre>
+
+<p>As you can see if you want to mix matchers and specifics you need to use the <code>Mockito.eq</code> wrapper.</p>
+
+<p>You can also make the method throw exceptions:</p>
+
+<pre><code>Mockito.when(mock2.fetch(credentials, true, &quot;foo&quot;))
+  .thenThrow(new IllegalArgumentException());</code></pre>
+
+<h3 id='enter_the_void_methods'>Enter the void methods</h3>
+
+<p>When mocking void methods, you normally don&#8217;t have to do anything. But you might want to test exception handling from a void method.</p>
+
+<p>Here we are mocking the void method <code>spy2.logError(String message)</code>.</p>
+
+<pre><code>//Using matchers
+Mockito.doThrow(new IllegalArgumentException())
+  .when(spy2).logError(Mockito.anyString());
+
+//Make the method do nothing
+Mockito.doNothing().when(spy2).logError(Mockito.anyString());</code></pre>
+
+<h2 id='verifying'>Verifying</h2>
+
+<p>You can also use mockito for verifying if a method was called, how many times it was called and with which parameters. This is usefull for verifying that some class actually uses a</p>
+
+<pre><code>//throws exception if fetch was not called with the specific arguments
+Mockito.verify(spy).fetch(credentials, true, &quot;foo&quot;)</code></pre>
+
+<h2 id='other_tips_and_tricks'>Other tips and tricks</h2>
+
+<h3 id='create_helper_methods'>Create helper methods</h3>
+
+<p>If you need to mock a specific method multiple times you might want to make a helper method.</p>
+
+<pre><code>private OngoingStubbing&lt;List&lt;String&gt;&gt; mockFetch(SomeClass toMock){
+  return Mockito.when(
+  toMock.fetch(
+    Mockito.any(credentials.getClass()), 
+    Mockito.anyBoolean(), 
+    Mockito.anyString()
+  ));
+}</code></pre>
+
+<p>You can then use this method to quickly setup different return values or throwing different exceptions.</p>
+
+<pre><code>//Example usage
+mockFetch(mock2).thenReturn(new ArrayList&lt;String&gt;());</code></pre>
+
+<h3 id='resources'>Resources</h3>
+
+<p>Another good, and still simple article to read would be: http://www.vogella.com/tutorials/Mockito/article.html</p>
     <hr>
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2012/03/11/jekyll-seems-usable" title="Jekyll seems usable">&larr; Previous</a></li>
+        <li class="prev"><a href="/2014/10/09/yoga11s-brightnes-control-on-ubuntu" title="Yoga11S brightness control on Ubuntu">&larr; Previous</a></li>
       
         <li><a href="/archive.html">Archive</a></li>
       
-        <li class="next"><a href="/tech/2012/03/24/backup-backup-backup" title="Backup, backup, backup">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -156,7 +251,7 @@
   
   <div class="span4">
     <h4>Published</h4>
-    <div class="date"><span>17 March 2012</span></div>
+    <div class="date"><span>14 October 2014</span></div>
 
   
     <h4>Tags</h4>
@@ -167,9 +262,9 @@
 
   
      
-    	<li><a href="/tags.html#jekyll-ref">jekyll <span>2</span></a></li>
+    	<li><a href="/tags.html#mockito-ref">mockito <span>1</span></a></li>
      
-    	<li><a href="/tags.html#design-ref">design <span>2</span></a></li>
+    	<li><a href="/tags.html#java-ref">java <span>1</span></a></li>
     
   
 
