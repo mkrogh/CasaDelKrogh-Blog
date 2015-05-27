@@ -1,0 +1,68 @@
+==================================================================
+https://keybase.io/mkrogh
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://casadelkrogh.dk
+  * I am mkrogh (https://keybase.io/mkrogh) on keybase.
+  * I have a public key with fingerprint 9C3F 46F4 FEC5 8097 D8CC  65E9 981B 1E5E B208 0BDC
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "9c3f46f4fec58097d8cc65e9981b1e5eb2080bdc",
+            "host": "keybase.io",
+            "key_id": "981b1e5eb2080bdc",
+            "kid": "0101de8d372e8d4b4c257a20450ada8eead4092ccef6107bbf9f06d53a891f88f22e0a",
+            "uid": "2c0597c9baa520ff8c5135e6c9335e19",
+            "username": "mkrogh"
+        },
+        "service": {
+            "hostname": "casadelkrogh.dk",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1432712354,
+    "expire_in": 157680000,
+    "prev": "5f135bc554e8fe255e89f4ee330fe6737b02edfee3cc4630fd4a12e71762afa0",
+    "seqno": 3,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.8
+Comment: https://keybase.io/crypto
+
+yMIcAnicZVJdSBVBFL7+ZHVJFCEsC40t6O9is7M7+3MVNCiS6iH/qAfpOjs7c13v
+9e5t72pezIIIoozKXkyKonqooIeiNCmsjBSilwosCaEsTEIRNewPi2bFnpqHOcx3
+vu+bcw7nWWaaz58y0Vx7MeXs4OWUF31bG33V1L3aIhi2mRSCLUKEzgdmxcLUiTtW
+zBWCgk4kJitMZpQgDeiqqRGiIKrrmmiIFFEDAg0YJhECQp2d8BTcxsAJWmjZHOOP
+kGV6Pv/zI/MJIALRpJopqZDfsiETiFQMgYwANrFGKTZloENCKFNEoBoG0xlQTCRh
+TReZpjEIKcDcrnHeDhKAdJXoBsYIAsY0gkQJUYXoEg+i7hET1InhBsrZDRHHDtcJ
+rQGBY00Wod4AvD4W8gQnsEmj86xCM8LFccd2bWJHebLOdeNBT+sm4x75IDVCCzYh
+w4qZfI5c0ESdhGXHhKDImcS1PF9RlqAqQgnJAYE2xy2HhiyPgVRFA/x439AmbokY
+L94gCMlUYxQiRDWdyZRKEmBUUSXVAJCajAOEyAoHTRmLkKqiqkDMMBC8xg7EbCEo
+8TJxmFsmrHAMu40OFVqfPqlJ96X4fRmLUr1N8PmXZv/bj5rI4j/6nO/78+ivzAA4
+lx6XxW3Tm4d2nUuOZ12rrLpgBw7H515NVXXlDc6tVh+eeT9a/mBo4PiJd69nHh/N
+Xbe3d6IyMG6VZ6SurzbftO0L7U8UL/YVds8+z8k+eaV7eGV7wc+2+3VzMx0909Xf
+k/0f7/7o6265mype3pA/0+9ezx2rHhWGZr9Gh8PL00bqv+QyJ+FkdMIbFYHfA8s+
+HGiP7h6OF5UWlDQ7R8oewZFT28c2rll1L80/sjPv0NocY2pixe2K+s5VydJ8Yyjn
+26tjV9sy/Xs/L8meHUzuWNpeu+Xtp+yCjD3Fr9femuj59LKrt6bkdFnD5Pmsrpt3
+Ir4nVZMdRZsu/QWA9ip1
+=/9bO
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/mkrogh
+
+==================================================================
+

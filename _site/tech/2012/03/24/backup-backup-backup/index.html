@@ -173,16 +173,9 @@ path remove /tmp/paths</code></pre>
 <h2 id='the_power_of_sm'>The power of SM</h2>
 
 <p>Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:</p>
-<div class='highlight'><pre><code class='ruby'><span class='c1'># usage:</span>
-<span class='c1'>#   backup_dir directory</span>
-<span class='c1'># ensures that the given directory exists and sets it as target for backups</span>
-<span class='n'>function</span> <span class='n'>backup_dir</span><span class='p'>(){</span>
-  <span class='n'>echo</span> <span class='s2'>&quot;Backup directory $1&quot;</span>
-  <span class='n'>path</span> <span class='n'>exists</span> <span class='vg'>$1</span> <span class='o'>||</span> <span class='n'>path</span> <span class='n'>create</span> <span class='vg'>$1</span>
-  <span class='n'>path</span> <span class='n'>enter</span> <span class='vg'>$1</span>
-<span class='p'>}</span>
-</code></pre>
-</div>
+
+<p>Liquid error: No such file or directory - posix_spawnp</p>
+
 <p>Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.</p>
 
 <h3 id='backing_up_mysql'>Backing up mysql</h3>

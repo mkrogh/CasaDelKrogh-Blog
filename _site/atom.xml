@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2014-10-14T09:00:46+02:00</updated>
+ <updated>2015-05-27T09:43:59+02:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -1243,16 +1243,9 @@ path remove /tmp/paths&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#39;the_power_of_sm&#39;&gt;The power of SM&lt;/h2&gt;
 
 &lt;p&gt;Using SM to create higher level functions is quite nice. This next example is a function that handles creation and entering a backup directory:&lt;/p&gt;
-&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;c1&#39;&gt;# usage:&lt;/span&gt;
-&lt;span class=&#39;c1&#39;&gt;#   backup_dir directory&lt;/span&gt;
-&lt;span class=&#39;c1&#39;&gt;# ensures that the given directory exists and sets it as target for backups&lt;/span&gt;
-&lt;span class=&#39;n&#39;&gt;function&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;backup_dir&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;(){&lt;/span&gt;
-  &lt;span class=&#39;n&#39;&gt;echo&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;Backup directory $1&amp;quot;&lt;/span&gt;
-  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;exists&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;||&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;create&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
-  &lt;span class=&#39;n&#39;&gt;path&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;enter&lt;/span&gt; &lt;span class=&#39;vg&#39;&gt;$1&lt;/span&gt;
-&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;p&gt;Liquid error: No such file or directory - posix_spawnp&lt;/p&gt;
+
 &lt;p&gt;Yes the same sh equivalent is not impossible to create, but being able to read the script afterwards is simply fantastic.&lt;/p&gt;
 
 &lt;h3 id=&#39;backing_up_mysql&#39;&gt;Backing up mysql&lt;/h3&gt;
