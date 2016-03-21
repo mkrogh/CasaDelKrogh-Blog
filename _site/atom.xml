@@ -4,13 +4,113 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2015-05-27T09:43:59+02:00</updated>
+ <updated>2016-03-21T22:09:16+01:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
    <email>markus@casadelkrogh.dk</email>
  </author>
 
+ 
+ <entry>
+   <title>Adding TLS</title>
+   <link href="http://casadelkrogh.dk/2016/03/21/adding-tls"/>
+   <updated>2016-03-21T00:00:00+01:00</updated>
+   <id>hhttp://casadelkrogh.dk/2016/03/21/adding-tls</id>
+   <content type="html">&lt;p&gt;I just added TLS to the blog, since I was renewing another certificate. The last couple of years I have deployed quite a few certificates, and this post is really just a simple link collection.&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id=&#39;csr_all_the_way&#39;&gt;CSR all the way&lt;/h2&gt;
+
+&lt;p&gt;When getting a certificate please generate a certificate signing request (CSR). This way you keep you private key private, locally on your server or machine.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;https://www.digicert.com/easy-csr/openssl.htm&#39;&gt;DigiCert&lt;/a&gt; has a nice tool that helps you generate a CSR. Although the tool is nice you will probably need to add &lt;code&gt;-sha256&lt;/code&gt; to the options. Another thing to be aware of is special characters in e.g. an &lt;code&gt;A/S&lt;/code&gt; you need to escape it as &lt;code&gt;A\/S&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Another way is to do it interactively by only supplying openssl with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -new -sha256 -newkey rsa:2048 -nodes -keyout www_casadelkrogh_dk.key -out www_casadelkrogh_dk.csr&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#39;https://www.sslshopper.com/article-most-common-openssl-commands.html&#39;&gt;SSL shopper&lt;/a&gt; has a nice overview of useful openssl commands.&lt;/p&gt;
+
+&lt;h2 id=&#39;verify_your_csr&#39;&gt;Verify your CSR&lt;/h2&gt;
+
+&lt;p&gt;Before sending off your CSR you should verify the information in it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -text -noout -verify -in www_casadelkrogh_dk.csr&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Checklist:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The information&lt;/li&gt;
+
+&lt;li&gt;Check the &lt;code&gt;CN&lt;/code&gt; matches the desired domain&lt;/li&gt;
+
+&lt;li&gt;Check that the Signature Algorithm is sha256&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#39;choosing_a_ca&#39;&gt;Choosing a CA&lt;/h2&gt;
+
+&lt;p&gt;Next you need to choose your certificate authority (CA). I have used &lt;a href=&#39;https://www.startssl.com/Account&#39;&gt;StartSSL&lt;/a&gt; for a number of years now, primarily because they are free, and verifying your domain is done via mail (sent to the host/post/webmaster of the domain).&lt;/p&gt;
+
+&lt;p&gt;Another solution is using &lt;a href=&#39;https://letsencrypt.org&#39;&gt;Let&amp;#8217;s Encrypt&lt;/a&gt;, there are plenty of guides out there for that :)&lt;/p&gt;
+
+&lt;h2 id=&#39;intermediate_certificates&#39;&gt;Intermediate certificates&lt;/h2&gt;
+
+&lt;p&gt;When you get your certifcate from your CA you will probably get an intermediate certificate as well.&lt;/p&gt;
+
+&lt;p&gt;The order to add certificates (and the key if using e.g. HA proxy) is from most private to most public.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat www_casadelkrogh_dk.crt intermediate.pem &amp;gt; www_casadelkrogh_dk-bundle.crt&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These days StartSSL actually bundles the certificate for you, which is neat.&lt;/p&gt;
+
+&lt;h2 id=&#39;configuring_ngix&#39;&gt;Configuring ngix&lt;/h2&gt;
+
+&lt;p&gt;There have been a suite of bugs and vunerabilities with regards to SSL and cipher suites, such as &lt;a href=&#39;http://heartbleed.com&#39;&gt;Heartbleed&lt;/a&gt;, &lt;a href=&#39;https://weakdh.org&#39;&gt;Logjam&lt;/a&gt; and BEAST.&lt;/p&gt;
+
+&lt;p&gt;A nice resource for configuring your server is &lt;a href=&#39;https://cipherli.st/&#39;&gt;https://cipherli.st/&lt;/a&gt; by &lt;a href=&#39;https://raymii.org/&#39;&gt;Remy van Elst&lt;/a&gt; and &lt;a href=&#39;https://tnx.nl/&#39;&gt;Juerd&lt;/a&gt;. It contains configuration examples and cipher lists that are up to date.&lt;/p&gt;
+
+&lt;p&gt;However be aware that turning on &lt;code&gt;Strict-Transport-Security&lt;/code&gt; means that you will always need to run https, since browsers will refuse to use normal http for your site.&lt;/p&gt;
+
+&lt;p&gt;Another resource for ciphers to use is the &lt;a href=&#39;https://wiki.mozilla.org/Security/Server_Side_TLSi#Recommended_configurations&#39;&gt;Mozilla wiki&lt;/a&gt;, which is also nice.&lt;/p&gt;
+
+&lt;p&gt;Personally my nginx config consists of a share config:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#ssl_base.conf
+# Conf from https://cipherli.st
+ssl_prefer_server_ciphers on;
+ssl_ciphers &amp;quot;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&amp;quot;;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_session_cache shared:SSL:10m;
+ssl_ecdh_curve secp384r1;
+ssl_dhparam /etc/ssl/dhparams.pem;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then I have the following config:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+  listen 80;
+  server_name www.casadelkrogh.dk casadelkrogh.dk;
+  rewrite ^(.*) https://$host$1 permanent;
+}
+
+server {
+  listen 443;
+  server_name www.casadelkrogh.dk casadelkrogh.dk;
+
+  include ssl_base.conf;
+  ssl_certificate /etc/ssl/certs/www.casadelkrogh.dk_bundle.crt;
+  ssl_certificate_key /etc/ssl/certs/www_casadelkrogh_dk.key;
+
+  # other conf...
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#39;check_your_setup&#39;&gt;Check your setup&lt;/h2&gt;
+
+&lt;p&gt;Now you see that it works in your browser and all should be dandy. Even so please check if the rest of the internet agrees with you :)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;https://ssllabs.com/ssltest/&#39;&gt;SSL labs&lt;/a&gt; has a nice tool for checking if you have setup https properly, even if it is rather slow.&lt;/p&gt;
+
+&lt;p&gt;Another alternative that is oftent faster is &lt;a href=&#39;https://ssldecoder.org&#39;&gt;https://ssldecoder.org&lt;/a&gt;, which is made by the same person as &lt;a href=&#39;https://cipherli.st&#39;&gt;https://cipherli.st&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Mockito cheat sheet</title>

@@ -8,6 +8,7 @@ http://casadelkrogh.dk/pages.html
 http://casadelkrogh.dk/sitemap.txt
 http://casadelkrogh.dk/tags.html
 
+http://casadelkrogh.dk/2016/03/21/adding-tls
 http://casadelkrogh.dk/code/2014/10/14/mockito-cheat-sheet
 http://casadelkrogh.dk/2014/10/09/yoga11s-brightnes-control-on-ubuntu
 http://casadelkrogh.dk/code/2014/10/06/simplesamlphp-and-vanilla-jsconnect

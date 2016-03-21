@@ -3,7 +3,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>Mockito cheat sheet</title>
+    <title>Adding TLS</title>
     
     <!-- Styles -->
     <link href='/assets/themes/CasaDelKrogh/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css' />
@@ -123,125 +123,113 @@
         </div>
         
 <div class="page-header">
-  <h1>Mockito cheat sheet <small>code</small></h1>
+  <h1>Adding TLS <small></small></h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>I have been using Mockito for a project recently and made a cheat sheet that is meant to be easy to digest.</p>
-
-<p>First things first, stop and think if you really need ot use a mocking framework.</p>
+    <p>I just added TLS to the blog, since I was renewing another certificate. The last couple of years I have deployed quite a few certificates, and this post is really just a simple link collection.</p>
 <!--more-->
-<h2 id='to_spy_or_to_mock'>To spy or to Mock.</h2>
+<h2 id='csr_all_the_way'>CSR all the way</h2>
 
-<p>A mock: no implementation at all, just a shell.</p>
+<p>When getting a certificate please generate a certificate signing request (CSR). This way you keep you private key private, locally on your server or machine.</p>
 
-<p>A spy: hooking into a real object, unless you specify anything else the object will behave as normal.</p>
+<p><a href='https://www.digicert.com/easy-csr/openssl.htm'>DigiCert</a> has a nice tool that helps you generate a CSR. Although the tool is nice you will probably need to add <code>-sha256</code> to the options. Another thing to be aware of is special characters in e.g. an <code>A/S</code> you need to escape it as <code>A\/S</code>.</p>
 
-<h3 id='usage'>Usage:</h3>
+<p>Another way is to do it interactively by only supplying openssl with:</p>
 
-<p>Normal usage is with the static methods on Mockito (you can of cause use static import for these).</p>
+<pre><code>openssl req -new -sha256 -newkey rsa:2048 -nodes -keyout www_casadelkrogh_dk.key -out www_casadelkrogh_dk.csr</code></pre>
 
-<pre><code>SomeClass mock = Mockito.mock(SomeClass.class);
-SomeClass spy = Mockito.spy(new SomeClass());</code></pre>
+<p><a href='https://www.sslshopper.com/article-most-common-openssl-commands.html'>SSL shopper</a> has a nice overview of useful openssl commands.</p>
 
-<p>Mockito can also be used with annotations, you just need to use the JUnit runner.</p>
+<h2 id='verify_your_csr'>Verify your CSR</h2>
 
-<pre><code>@RunWith(MockitoJUnitRunner.class)
-class MyTestClass {
-  @Mock
-  SomeClass mock2;
-  @Spy 
-  SomeClass spy2 = new SomeClass();
+<p>Before sending off your CSR you should verify the information in it:</p>
+
+<pre><code>openssl req -text -noout -verify -in www_casadelkrogh_dk.csr</code></pre>
+
+<p>Checklist:</p>
+
+<ul>
+<li>The information</li>
+
+<li>Check the <code>CN</code> matches the desired domain</li>
+
+<li>Check that the Signature Algorithm is sha256</li>
+</ul>
+
+<h2 id='choosing_a_ca'>Choosing a CA</h2>
+
+<p>Next you need to choose your certificate authority (CA). I have used <a href='https://www.startssl.com/Account'>StartSSL</a> for a number of years now, primarily because they are free, and verifying your domain is done via mail (sent to the host/post/webmaster of the domain).</p>
+
+<p>Another solution is using <a href='https://letsencrypt.org'>Let&#8217;s Encrypt</a>, there are plenty of guides out there for that :)</p>
+
+<h2 id='intermediate_certificates'>Intermediate certificates</h2>
+
+<p>When you get your certifcate from your CA you will probably get an intermediate certificate as well.</p>
+
+<p>The order to add certificates (and the key if using e.g. HA proxy) is from most private to most public.</p>
+
+<pre><code>cat www_casadelkrogh_dk.crt intermediate.pem &gt; www_casadelkrogh_dk-bundle.crt</code></pre>
+
+<p>These days StartSSL actually bundles the certificate for you, which is neat.</p>
+
+<h2 id='configuring_ngix'>Configuring ngix</h2>
+
+<p>There have been a suite of bugs and vunerabilities with regards to SSL and cipher suites, such as <a href='http://heartbleed.com'>Heartbleed</a>, <a href='https://weakdh.org'>Logjam</a> and BEAST.</p>
+
+<p>A nice resource for configuring your server is <a href='https://cipherli.st/'>https://cipherli.st/</a> by <a href='https://raymii.org/'>Remy van Elst</a> and <a href='https://tnx.nl/'>Juerd</a>. It contains configuration examples and cipher lists that are up to date.</p>
+
+<p>However be aware that turning on <code>Strict-Transport-Security</code> means that you will always need to run https, since browsers will refuse to use normal http for your site.</p>
+
+<p>Another resource for ciphers to use is the <a href='https://wiki.mozilla.org/Security/Server_Side_TLSi#Recommended_configurations'>Mozilla wiki</a>, which is also nice.</p>
+
+<p>Personally my nginx config consists of a share config:</p>
+
+<pre><code>#ssl_base.conf
+# Conf from https://cipherli.st
+ssl_prefer_server_ciphers on;
+ssl_ciphers &quot;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&quot;;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_session_cache shared:SSL:10m;
+ssl_ecdh_curve secp384r1;
+ssl_dhparam /etc/ssl/dhparams.pem;</code></pre>
+
+<p>Then I have the following config:</p>
+
+<pre><code>server {
+  listen 80;
+  server_name www.casadelkrogh.dk casadelkrogh.dk;
+  rewrite ^(.*) https://$host$1 permanent;
+}
+
+server {
+  listen 443;
+  server_name www.casadelkrogh.dk casadelkrogh.dk;
+
+  include ssl_base.conf;
+  ssl_certificate /etc/ssl/certs/www.casadelkrogh.dk_bundle.crt;
+  ssl_certificate_key /etc/ssl/certs/www_casadelkrogh_dk.key;
+
+  # other conf...
 }</code></pre>
 
-<h2 id='mocking_your_methods'>Mocking you(r methods)</h2>
+<h2 id='check_your_setup'>Check your setup</h2>
 
-<h3 id='methods_with_return_types'>Methods with return types</h3>
+<p>Now you see that it works in your browser and all should be dandy. Even so please check if the rest of the internet agrees with you :)</p>
 
-<p>Here we are mocking the <code>List&lt;String&gt; fetch</code> method of the mock2 object.</p>
+<p><a href='https://ssllabs.com/ssltest/'>SSL labs</a> has a nice tool for checking if you have setup https properly, even if it is rather slow.</p>
 
-<pre><code>//Our mock return value:
-List&lt;String&gt; mockResult = Arrays.asList(&quot;result1&quot;,&quot;result2&quot;;&quot;result3&quot;);
-
-//Here we are using the any matchers.
-Mockito.when(
-  mock2.fetch(
-    Mockito.any(credentials.getClass()), 
-    Mockito.anyBoolean(), 
-    Mockito.anyString()
-  )).thenReturn(mockResult);
-
-//Using specific values
-Mockito.when(mock2.fetch(credentials, true, &quot;foo&quot;)).thenReturn(mockResult);
-
-//Mixing specifics and &quot;wildcards&quot;
-Mockito.when(
-  mock2.fetch(
-    Mockito.eq(credentials), 
-    Mockito.eq(true), 
-    Mockito.anyString()
-  )).thenReturn(mockResult);</code></pre>
-
-<p>As you can see if you want to mix matchers and specifics you need to use the <code>Mockito.eq</code> wrapper.</p>
-
-<p>You can also make the method throw exceptions:</p>
-
-<pre><code>Mockito.when(mock2.fetch(credentials, true, &quot;foo&quot;))
-  .thenThrow(new IllegalArgumentException());</code></pre>
-
-<h3 id='enter_the_void_methods'>Enter the void methods</h3>
-
-<p>When mocking void methods, you normally don&#8217;t have to do anything. But you might want to test exception handling from a void method.</p>
-
-<p>Here we are mocking the void method <code>spy2.logError(String message)</code>.</p>
-
-<pre><code>//Using matchers
-Mockito.doThrow(new IllegalArgumentException())
-  .when(spy2).logError(Mockito.anyString());
-
-//Make the method do nothing
-Mockito.doNothing().when(spy2).logError(Mockito.anyString());</code></pre>
-
-<h2 id='verifying'>Verifying</h2>
-
-<p>You can also use mockito for verifying if a method was called, how many times it was called and with which parameters. This is usefull for verifying that some class actually uses a</p>
-
-<pre><code>//throws exception if fetch was not called with the specific arguments
-Mockito.verify(spy).fetch(credentials, true, &quot;foo&quot;)</code></pre>
-
-<h2 id='other_tips_and_tricks'>Other tips and tricks</h2>
-
-<h3 id='create_helper_methods'>Create helper methods</h3>
-
-<p>If you need to mock a specific method multiple times you might want to make a helper method.</p>
-
-<pre><code>private OngoingStubbing&lt;List&lt;String&gt;&gt; mockFetch(SomeClass toMock){
-  return Mockito.when(
-  toMock.fetch(
-    Mockito.any(credentials.getClass()), 
-    Mockito.anyBoolean(), 
-    Mockito.anyString()
-  ));
-}</code></pre>
-
-<p>You can then use this method to quickly setup different return values or throwing different exceptions.</p>
-
-<pre><code>//Example usage
-mockFetch(mock2).thenReturn(new ArrayList&lt;String&gt;());</code></pre>
-
-<h3 id='resources'>Resources</h3>
-
-<p>Another good, and still simple article to read would be: http://www.vogella.com/tutorials/Mockito/article.html</p>
+<p>Another alternative that is oftent faster is <a href='https://ssldecoder.org'>https://ssldecoder.org</a>, which is made by the same person as <a href='https://cipherli.st'>https://cipherli.st</a>.</p>
     <hr>
     <div class="pagination">
       <ul>
       
-        <li class="prev"><a href="/2014/10/09/yoga11s-brightnes-control-on-ubuntu" title="Yoga11S brightness control on Ubuntu">&larr; Previous</a></li>
+        <li class="prev"><a href="/code/2014/10/14/mockito-cheat-sheet" title="Mockito cheat sheet">&larr; Previous</a></li>
       
         <li><a href="/archive.html">Archive</a></li>
       
-        <li class="next"><a href="/2016/03/21/adding-tls" title="Adding TLS">Next &rarr;</a></li>
+        <li class="next disabled"><a>Next &rarr;</a>
       
       </ul>
     </div>
@@ -251,7 +239,7 @@ mockFetch(mock2).thenReturn(new ArrayList&lt;String&gt;());</code></pre>
   
   <div class="span4">
     <h4>Published</h4>
-    <div class="date"><span>14 October 2014</span></div>
+    <div class="date"><span>21 March 2016</span></div>
 
   
     <h4>Tags</h4>
@@ -262,9 +250,9 @@ mockFetch(mock2).thenReturn(new ArrayList&lt;String&gt;());</code></pre>
 
   
      
-    	<li><a href="/tags.html#mockito-ref">mockito <span>1</span></a></li>
+    	<li><a href="/tags.html#https-ref">https <span>1</span></a></li>
      
-    	<li><a href="/tags.html#java-ref">java <span>1</span></a></li>
+    	<li><a href="/tags.html#tls-ref">tls <span>1</span></a></li>
     
   
 
