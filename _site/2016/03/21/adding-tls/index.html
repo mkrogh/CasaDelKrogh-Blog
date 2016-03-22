@@ -221,6 +221,12 @@ server {
 <p><a href='https://ssllabs.com/ssltest/'>SSL labs</a> has a nice tool for checking if you have setup https properly, even if it is rather slow.</p>
 
 <p>Another alternative that is oftent faster is <a href='https://ssldecoder.org'>https://ssldecoder.org</a>, which is made by the same person as <a href='https://cipherli.st'>https://cipherli.st</a>.</p>
+
+<h2 id='multiple_cns'>Multiple CNs</h2>
+
+<p>If you need to add multiple addresses to your certificate you can do that via the <code>-subj</code> that the digicert tool helps you create. You simply just add multiple <code>CN</code>s</p>
+
+<pre><code>openssl req -new -key www_casadelkrogh_dk.key -out www_casadelkrogh_dk.csr -subj &quot;/C=DK/ST=/L=/O=/CN=www.casadelkrogh.dk/CN=subdomain2.casadelkrogh.dk&quot; -sha256</code></pre>
     <hr>
     <div class="pagination">
       <ul>

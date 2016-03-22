@@ -4,7 +4,7 @@
  <title>CasaDelKrogh</title>
  <link href="http://casadelkrogh.dk/atom.xml" rel="self"/>
  <link href="http://casadelkrogh.dk"/>
- <updated>2016-03-21T22:09:16+01:00</updated>
+ <updated>2016-03-22T10:58:13+01:00</updated>
  <id>http://casadelkrogh.dk</id>
  <author>
    <name>Markus Krogh</name>
@@ -109,7 +109,13 @@ server {
 
 &lt;p&gt;&lt;a href=&#39;https://ssllabs.com/ssltest/&#39;&gt;SSL labs&lt;/a&gt; has a nice tool for checking if you have setup https properly, even if it is rather slow.&lt;/p&gt;
 
-&lt;p&gt;Another alternative that is oftent faster is &lt;a href=&#39;https://ssldecoder.org&#39;&gt;https://ssldecoder.org&lt;/a&gt;, which is made by the same person as &lt;a href=&#39;https://cipherli.st&#39;&gt;https://cipherli.st&lt;/a&gt;.&lt;/p&gt;</content>
+&lt;p&gt;Another alternative that is oftent faster is &lt;a href=&#39;https://ssldecoder.org&#39;&gt;https://ssldecoder.org&lt;/a&gt;, which is made by the same person as &lt;a href=&#39;https://cipherli.st&#39;&gt;https://cipherli.st&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#39;multiple_cns&#39;&gt;Multiple CNs&lt;/h2&gt;
+
+&lt;p&gt;If you need to add multiple addresses to your certificate you can do that via the &lt;code&gt;-subj&lt;/code&gt; that the digicert tool helps you create. You simply just add multiple &lt;code&gt;CN&lt;/code&gt;s&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -new -key www_casadelkrogh_dk.key -out www_casadelkrogh_dk.csr -subj &amp;quot;/C=DK/ST=/L=/O=/CN=www.casadelkrogh.dk/CN=subdomain2.casadelkrogh.dk&amp;quot; -sha256&lt;/code&gt;&lt;/pre&gt;</content>
  </entry>
  
  <entry>

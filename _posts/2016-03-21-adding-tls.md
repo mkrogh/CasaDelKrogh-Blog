@@ -109,3 +109,10 @@ Now you see that it works in your browser and all should be dandy. Even so pleas
 [SSL labs](https://ssllabs.com/ssltest/) has a nice tool for checking if you have setup https properly, even if it is rather slow.
 
 Another alternative that is oftent faster is [https://ssldecoder.org](https://ssldecoder.org), which is made by the same person as [https://cipherli.st](https://cipherli.st).
+
+Multiple CNs
+------------
+
+If you need to add multiple addresses to your certificate you can do that via the `-subj` that the digicert tool helps you create. You simply just add multiple `CN`s
+
+    openssl req -new -key www_casadelkrogh_dk.key -out www_casadelkrogh_dk.csr -subj "/C=DK/ST=/L=/O=/CN=www.casadelkrogh.dk/CN=subdomain2.casadelkrogh.dk" -sha256
