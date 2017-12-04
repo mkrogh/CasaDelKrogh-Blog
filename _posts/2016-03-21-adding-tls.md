@@ -42,9 +42,7 @@ Choosing a CA
 -------------
 
 Next you need to choose your certificate authority (CA).
-I have used [StartSSL](https://www.startssl.com/Account) for a number of years now, primarily because they are free, and verifying your domain is done via mail (sent to the host/post/webmaster of the domain).
-
-Another solution is using [Let's Encrypt](https://letsencrypt.org), there are plenty of guides out there for that :)
+I have used StartSSL for a number of years, but following their acquisition they lost a lot of trust, so these days i have switched to [Let's Encrypt](https://letsencrypt.org) which is also free. There are plenty of guides out there for setting up Let's Encrypt :) And a great thing is that it has autorenewal built in.
 
 
 Intermediate certificates
